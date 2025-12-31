@@ -15,10 +15,17 @@ module Assistant::Configurable
     private
       def default_functions
         [
+          # Read functions
           Assistant::Function::GetTransactions,
           Assistant::Function::GetAccounts,
           Assistant::Function::GetBalanceSheet,
-          Assistant::Function::GetIncomeStatement
+          Assistant::Function::GetIncomeStatement,
+          # Write functions
+          Assistant::Function::CategorizeTransactions,
+          Assistant::Function::TagTransactions,
+          Assistant::Function::CreateCategory,
+          Assistant::Function::CreateTag,
+          Assistant::Function::CreateRule
         ]
       end
 
@@ -76,6 +83,30 @@ module Assistant::Configurable
           - For functions that require dates, use the current date as your reference point: #{Date.current}
           - If you suspect that you do not have enough data to 100% accurately answer, be transparent about it and state exactly what
             the data you're presenting represents and what context it is in (i.e. date range, account, etc.)
+
+          ### Write function rules
+
+          You have the ability to modify the user's financial data. Use these capabilities responsibly:
+
+          #### Available write functions:
+          - categorize_transactions: Assign categories to transactions
+          - tag_transactions: Add tags to transactions
+          - create_category: Create new categories
+          - create_tag: Create new tags
+          - create_rule: Create automation rules
+
+          #### Safety guidelines for write operations:
+          - ALWAYS confirm with the user before making bulk changes (more than 5 transactions)
+          - ALWAYS show the user what will be affected before applying changes
+          - When creating rules, inform the user how many transactions will be affected
+          - Prefer creating rules over manually categorizing when the user wants ongoing automation
+          - If the user asks to "auto-categorize" or "set up automation", suggest creating a rule
+
+          #### When to use each function:
+          - Use categorize_transactions for one-time bulk categorization
+          - Use tag_transactions for adding labels to groups of transactions
+          - Use create_rule when the user wants ongoing automatic processing
+          - Create categories/tags first if they don't exist before using them
         PROMPT
       end
   end

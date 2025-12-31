@@ -57,8 +57,10 @@ class Assistant
 
       if data[:function_tool_calls].present?
         assistant_message.tool_calls = data[:function_tool_calls]
-        latest_response_id = data[:id]
+        # Don't update latest_response_id here - the intermediate response with function calls
+        # expects function output. Wait for the final response after function execution.
       else
+        latest_response_id = data[:id]
         chat.update_latest_response!(data[:id])
       end
     end
