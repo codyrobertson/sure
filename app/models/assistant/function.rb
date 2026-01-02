@@ -11,6 +11,13 @@ class Assistant::Function
 
   def initialize(user)
     @user = user
+    @progress_callback = nil
+  end
+
+  # Set a callback to receive progress updates during execution
+  def on_progress(&block)
+    @progress_callback = block
+    self
   end
 
   def call(params = {})
@@ -44,7 +51,11 @@ class Assistant::Function
   end
 
   private
-    attr_reader :user
+    attr_reader :user, :progress_callback
+
+    def report_progress(message)
+      progress_callback&.call(message)
+    end
 
     def build_schema(properties: {}, required: [])
       {

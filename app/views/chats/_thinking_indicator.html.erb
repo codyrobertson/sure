@@ -1,6 +1,27 @@
 <%# locals: (chat:, message: "Thinking ...") -%>
+<%
+  msg_lower = message.to_s.downcase
+
+  # Map message content to appropriate animated avatar state
+  avatar_state = case msg_lower
+    when /creating|setting up/
+      "creating"
+    when /searching|finding|looking up|found \d+|transactions\.\.\./
+      "searching"
+    when /categorizing|applying category/
+      "categorizing"
+    when /tagging/
+      "tagging"
+    when /updating|processing/
+      "processing"
+    when /analyzing|income|expense|net worth|balance|calculating/
+      "analyzing"
+    else
+      "thinking"
+    end
+%>
 
 <div id="thinking-indicator" class="flex items-start gap-3">
-  <%= render "chats/ai_avatar" %>
-  <p class="text-sm text-secondary animate-pulse"><%= message %></p>
+  <%= render "chats/ai_avatar", state: avatar_state %>
+  <p class="text-sm text-secondary"><%= message %></p>
 </div>

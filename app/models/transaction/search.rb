@@ -32,7 +32,7 @@ class Transaction::Search
       query = apply_type_filter(query, types)
       query = apply_merchant_filter(query, merchants)
       query = apply_tag_filter(query, tags)
-      query = EntrySearch.apply_search_filter(query, search)
+      query = apply_search_filter(query, search)
       query = EntrySearch.apply_date_filters(query, start_date, end_date)
       query = EntrySearch.apply_amount_filter(query, amount, amount_operator)
       query = EntrySearch.apply_accounts_filter(query, accounts, account_ids)
@@ -152,5 +152,21 @@ class Transaction::Search
     def apply_tag_filter(query, tags)
       return query unless tags.present?
       query.joins(:tags).where(tags: { name: tags })
+    end
+
+    # Full-text search using tsvector on entries (name + notes) with GIN index,
+    # plus ILIKE fallback for merchant and category names
+    def apply_search_filter(query, search_term)
+      return query if search_term.blank?
+
+      sanitized_ilike = "%#{ActiveRecord::Base.sanitize_sql_like(search_term)}%"
+
+      # Use plainto_tsquery for full-text search on entries.search_vector (uses GIN index)
+      # Also search merchant and category names with ILIKE
+      query.left_joins(:merchant, :category).where(
+        "entries.search_vector @@ plainto_tsquery('simple', :term) OR merchants.name ILIKE :ilike_term OR categories.name ILIKE :ilike_term",
+        term: search_term,
+        ilike_term: sanitized_ilike
+      )
     end
 end

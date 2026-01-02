@@ -45,6 +45,8 @@ class Assistant::Function::CreateTag < Assistant::Function
   end
 
   def call(params = {})
+    report_progress("Creating tag '#{params['name']}'...")
+
     # Check if tag already exists
     existing = family.tags.find_by("LOWER(name) = ?", params["name"].downcase)
     return { error: "Tag '#{params['name']}' already exists", tag_id: existing.id } if existing

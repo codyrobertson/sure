@@ -32,6 +32,9 @@ Rails.application.routes.draw do
   # Uses basic auth - see config/initializers/sidekiq.rb
   mount Sidekiq::Web => "/sidekiq"
 
+  # View sent emails in development
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+
   # AI chats
   resources :chats do
     resources :messages, only: :create

@@ -10,6 +10,8 @@ class Assistant::Function::GetAccounts < Assistant::Function
   end
 
   def call(params = {})
+    report_progress("Looking up your accounts...")
+
     {
       as_of_date: Date.current,
       accounts: family.accounts.includes(:balances, :account_providers).map do |account|

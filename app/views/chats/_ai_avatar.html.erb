@@ -1,7 +1,32 @@
-<%# locals: (theme: "light") %>
+<%# locals: (theme: "light", state: "default") %>
+<%# state can be: "default", "thinking", "analyzing", "searching", "categorizing", "tagging", "processing", "creating" %>
 
 <div class="shrink-0 w-8 h-8 antialiased" style="filter: drop-shadow(0px 6px 8px rgba(244, 78, 247, 0.10));">
   <%# Never use svg as an image tag, it appears blurry in Safari %>
-  <%= inline_svg_tag "ai-dark.svg", alt: "AI", class: "w-full h-full hidden theme-dark:block" %>
-  <%= inline_svg_tag "ai.svg", alt: "AI", class: "w-full h-full theme-dark:hidden" %>
+  <% case state %>
+  <% when "thinking" %>
+    <%= inline_svg_tag "ai-thinking.svg", alt: "AI Thinking", class: "w-full h-full hidden theme-dark:block" %>
+    <%= inline_svg_tag "ai-thinking-light.svg", alt: "AI Thinking", class: "w-full h-full theme-dark:hidden" %>
+  <% when "analyzing" %>
+    <%= inline_svg_tag "ai-analyzing.svg", alt: "AI Analyzing", class: "w-full h-full hidden theme-dark:block" %>
+    <%= inline_svg_tag "ai-analyzing-light.svg", alt: "AI Analyzing", class: "w-full h-full theme-dark:hidden" %>
+  <% when "searching" %>
+    <%= inline_svg_tag "ai-searching.svg", alt: "AI Searching", class: "w-full h-full hidden theme-dark:block" %>
+    <%= inline_svg_tag "ai-searching-light.svg", alt: "AI Searching", class: "w-full h-full theme-dark:hidden" %>
+  <% when "categorizing" %>
+    <%= inline_svg_tag "ai-categorizing.svg", alt: "AI Categorizing", class: "w-full h-full hidden theme-dark:block" %>
+    <%= inline_svg_tag "ai-categorizing-light.svg", alt: "AI Categorizing", class: "w-full h-full theme-dark:hidden" %>
+  <% when "tagging" %>
+    <%= inline_svg_tag "ai-tagging.svg", alt: "AI Tagging", class: "w-full h-full hidden theme-dark:block" %>
+    <%= inline_svg_tag "ai-tagging-light.svg", alt: "AI Tagging", class: "w-full h-full theme-dark:hidden" %>
+  <% when "processing" %>
+    <%= inline_svg_tag "ai-processing.svg", alt: "AI Processing", class: "w-full h-full hidden theme-dark:block" %>
+    <%= inline_svg_tag "ai-processing-light.svg", alt: "AI Processing", class: "w-full h-full theme-dark:hidden" %>
+  <% when "creating" %>
+    <%= inline_svg_tag "ai-creating.svg", alt: "AI Creating", class: "w-full h-full hidden theme-dark:block" %>
+    <%= inline_svg_tag "ai-creating-light.svg", alt: "AI Creating", class: "w-full h-full theme-dark:hidden" %>
+  <% else %>
+    <%= inline_svg_tag "ai-dark.svg", alt: "AI", class: "w-full h-full hidden theme-dark:block" %>
+    <%= inline_svg_tag "ai.svg", alt: "AI", class: "w-full h-full theme-dark:hidden" %>
+  <% end %>
 </div>

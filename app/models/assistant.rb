@@ -42,25 +42,31 @@ class Assistant
     responder.on(:output_text) do |text|
       if assistant_message.content.blank?
         stop_thinking
-
-        Chat.transaction do
-          assistant_message.append_text!(text)
-          chat.update_latest_response!(latest_response_id)
-        end
+        assistant_message.append_text!(text)
       else
         assistant_message.append_text!(text)
       end
     end
 
-    responder.on(:response) do |data|
-      update_thinking("Analyzing your data...")
+    # Show thinking message BEFORE functions start executing
+    responder.on(:functions_starting) do |data|
+      Rails.logger.info("Assistant received functions_starting - names: #{data[:function_names].inspect}")
+      thinking_message = build_thinking_message_from_names(data[:function_names])
+      Rails.logger.info("Assistant thinking message: #{thinking_message}")
+      update_thinking(thinking_message)
+    end
 
+    responder.on(:response) do |data|
       if data[:function_tool_calls].present?
         assistant_message.tool_calls = data[:function_tool_calls]
         # Don't update latest_response_id here - the intermediate response with function calls
         # expects function output. Wait for the final response after function execution.
+      elsif data[:has_pending_functions]
+        # AI tried to make another function call but we don't support recursive calls
+        # Don't save this response ID as it expects function output we won't provide
+        Rails.logger.warn("Not saving response ID due to unsupported recursive function call")
       else
-        latest_response_id = data[:id]
+        # Only save the final response ID (after function execution completes)
         chat.update_latest_response!(data[:id])
       end
     end
@@ -74,12 +80,46 @@ class Assistant
   private
     attr_reader :functions
 
+    FUNCTION_MESSAGES = {
+      "get_transactions" => "Searching transactions...",
+      "get_accounts" => "Looking up your accounts...",
+      "get_balance_sheet" => "Calculating net worth...",
+      "get_income_statement" => "Analyzing income & expenses...",
+      "categorize_transactions" => "Categorizing transactions...",
+      "tag_transactions" => "Tagging transactions...",
+      "update_transactions" => "Updating transactions...",
+      "create_category" => "Creating category...",
+      "create_tag" => "Creating tag...",
+      "create_rule" => "Setting up automation rule..."
+    }.freeze
+
+    def build_thinking_message(tool_calls)
+      return "Analyzing your data..." if tool_calls.blank?
+      function_names = tool_calls.map(&:function_name).uniq
+      build_thinking_message_from_names(function_names)
+    end
+
+    def build_thinking_message_from_names(function_names)
+      return "Analyzing your data..." if function_names.blank?
+
+      # Build contextual messages
+      messages = function_names.map do |name|
+        FUNCTION_MESSAGES[name] || "Processing #{name.humanize.downcase}..."
+      end
+
+      messages.join(" ")
+    end
+
     def function_tool_caller
       function_instances = functions.map do |fn|
         fn.new(chat.user)
       end
 
-      @function_tool_caller ||= FunctionToolCaller.new(function_instances)
+      @function_tool_caller ||= begin
+        caller = FunctionToolCaller.new(function_instances)
+        caller.on_progress { |msg| update_thinking(msg) }
+        caller
+      end
     end
 
     def build_no_provider_error_message(requested_model)

@@ -76,6 +76,8 @@ class Assistant::Function::CreateCategory < Assistant::Function
   end
 
   def call(params = {})
+    report_progress("Creating category '#{params['name']}'...")
+
     # Check if category already exists
     existing = family.categories.find_by("LOWER(name) = ?", params["name"].downcase)
     return { error: "Category '#{params['name']}' already exists", category_id: existing.id } if existing

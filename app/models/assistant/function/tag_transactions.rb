@@ -61,46 +61,73 @@ class Assistant::Function::TagTransactions < Assistant::Function
     )
   end
 
+  MAX_BATCH_SIZE = 500
+
   def call(params = {})
+    report_progress("Finding matching transactions...")
     transactions = find_transactions(params)
 
     return { error: "No transactions found matching criteria" } if transactions.empty?
+
+    total_matching = transactions.count
+    report_progress("Found #{total_matching} transactions, preparing tag...")
 
     tag = find_or_create_tag(params)
 
     return { error: "Tag '#{params['tag_name']}' not found. Set create_if_missing to true to create it." } if tag.nil?
 
-    tagged_count = 0
-    transactions.each do |transaction|
-      unless transaction.tags.include?(tag)
-        transaction.tags << tag
-        tagged_count += 1
+    # Get transaction IDs, limited to prevent timeouts
+    report_progress("Processing up to #{MAX_BATCH_SIZE} transactions...")
+    transaction_ids = transactions.limit(MAX_BATCH_SIZE).pluck(:id)
+
+    # Find which transactions already have this tag
+    existing_taggings = Tagging.where(tag_id: tag.id, taggable_type: "Transaction", taggable_id: transaction_ids).pluck(:taggable_id)
+
+    # Only insert for transactions that don't already have the tag
+    new_transaction_ids = transaction_ids - existing_taggings
+
+    if new_transaction_ids.any?
+      report_progress("Tagging #{new_transaction_ids.size} transactions with '#{tag.name}'...")
+      # Bulk insert taggings
+      tagging_records = new_transaction_ids.map do |txn_id|
+        { tag_id: tag.id, taggable_type: "Transaction", taggable_id: txn_id, created_at: Time.current, updated_at: Time.current }
       end
+      Tagging.insert_all(tagging_records)
     end
 
-    {
+    result = {
       success: true,
-      tagged_count: tagged_count,
+      tagged_count: new_transaction_ids.size,
+      already_tagged: existing_taggings.size,
       tag_name: tag.name,
       tag_id: tag.id
     }
+
+    # Warn if there are more transactions to process
+    if total_matching > MAX_BATCH_SIZE
+      result[:warning] = "Processed #{MAX_BATCH_SIZE} of #{total_matching} matching transactions. Run again to continue."
+      result[:remaining] = total_matching - MAX_BATCH_SIZE
+    end
+
+    result
   end
 
   private
 
   def find_transactions(params)
-    scope = family.transactions.joins(:entry).includes(:merchant)
+    scope = family.transactions.joins(:entry)
 
     if params["transaction_ids"].present?
       scope = scope.where(id: params["transaction_ids"])
     end
 
     if params["search"].present?
-      search_term = "%#{params['search']}%"
-      # Search in entry name, merchant name, and notes
+      sanitized_ilike = "%#{ActiveRecord::Base.sanitize_sql_like(params['search'])}%"
+      # Use tsvector full-text search (fast, uses GIN index) plus ILIKE fallback for merchant
       scope = scope.left_joins(:merchant).where(
-        "entries.name ILIKE :term OR merchants.name ILIKE :term OR entries.notes ILIKE :term",
-        term: search_term
+        "entries.search_vector @@ plainto_tsquery('simple', :term) OR merchants.name ILIKE :ilike_term",
+        term: params["search"],
+        ilike_term: sanitized_ilike
       )
     end
 

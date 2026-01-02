@@ -123,6 +123,8 @@ class Assistant::Function::CreateRule < Assistant::Function
   end
 
   def call(params = {})
+    report_progress("Setting up automation rule...")
+
     conditions_attrs = build_conditions(params["conditions"])
     actions_attrs = build_actions(params["actions"])
 
@@ -131,6 +133,8 @@ class Assistant::Function::CreateRule < Assistant::Function
     # Default to including past transactions unless explicitly set to false
     include_past = params["include_past_transactions"] != false
     effective_date = include_past ? Date.new(1970, 1, 1) : Date.current
+
+    report_progress("Creating rule and checking affected transactions...")
 
     rule = family.rules.create!(
       name: params["name"],

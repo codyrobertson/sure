@@ -132,6 +132,8 @@ class Assistant::Function::GetTransactions < Assistant::Function
   end
 
   def call(params = {})
+    report_progress("Searching transactions...")
+
     search_params = params.except("order", "page")
 
     search = Transaction::Search.new(family, filters: search_params)
@@ -155,6 +157,8 @@ class Assistant::Function::GetTransactions < Assistant::Function
     normalized_transactions = paginated_transactions.map do |txn|
       entry = txn.entry
       {
+        id: txn.id,
+        name: entry.name,
         date: entry.date,
         amount: entry.amount.abs,
         currency: entry.currency,
@@ -164,6 +168,7 @@ class Assistant::Function::GetTransactions < Assistant::Function
         category: txn.category&.name,
         merchant: txn.merchant&.name,
         tags: txn.tags.map(&:name),
+        notes: entry.notes,
         is_transfer: txn.transfer?
       }
     end

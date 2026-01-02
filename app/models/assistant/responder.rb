@@ -52,10 +52,22 @@ class Assistant::Responder
         when "output_text"
           emit(:output_text, chunk.data)
         when "response"
-          # We do not currently support function executions for a follow-up response (avoid recursive LLM calls that could lead to high spend)
-          emit(:response, { id: chunk.data.id })
+          follow_up = chunk.data
+          # We do not currently support recursive function executions (avoid runaway LLM costs)
+          # Only emit clean response if no further function calls requested
+          if follow_up.function_requests.any?
+            Rails.logger.warn("Ignoring recursive function call request to prevent runaway costs")
+            emit(:response, { id: follow_up.id, has_pending_functions: true })
+          else
+            emit(:response, { id: follow_up.id })
+          end
         end
       end
+
+      # Emit function names BEFORE execution so UI can show what's happening
+      function_names = response.function_requests.map(&:function_name)
+      Rails.logger.info("Functions starting - function_names: #{function_names.inspect}")
+      emit(:functions_starting, { function_names: function_names })
 
       function_tool_calls = function_tool_caller.fulfill_requests(response.function_requests)
 

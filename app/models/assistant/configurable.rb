@@ -23,6 +23,7 @@ module Assistant::Configurable
           # Write functions
           Assistant::Function::CategorizeTransactions,
           Assistant::Function::TagTransactions,
+          Assistant::Function::UpdateTransactions,
           Assistant::Function::CreateCategory,
           Assistant::Function::CreateTag,
           Assistant::Function::CreateRule
@@ -91,6 +92,7 @@ module Assistant::Configurable
           #### Available write functions:
           - categorize_transactions: Assign categories to transactions
           - tag_transactions: Add tags to transactions
+          - update_transactions: Rename transactions or add notes
           - create_category: Create new categories
           - create_tag: Create new tags
           - create_rule: Create automation rules
@@ -105,6 +107,7 @@ module Assistant::Configurable
           #### When to use each function:
           - Use categorize_transactions for one-time bulk categorization
           - Use tag_transactions for adding labels to groups of transactions
+          - Use update_transactions to rename transactions or add notes/descriptions
           - Use create_rule when the user wants ongoing automatic processing
           - Create categories/tags first if they don't exist before using them
         PROMPT
