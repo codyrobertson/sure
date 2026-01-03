@@ -22,6 +22,7 @@ module Assistant::Configurable
           Assistant::Function::GetIncomeStatement,
           Assistant::Function::GetRecurringTransactions,
           Assistant::Function::FindRelatedTransactions,
+          Assistant::Function::GetCashFlow,
           # Web search
           Assistant::Function::WebSearch,
           # Write functions
@@ -108,6 +109,26 @@ module Assistant::Configurable
           | Monthly fixed expenses (rent, car payment, subscriptions) | get_recurring_transactions |
           | Finding specific transactions | get_transactions |
           | Account list with details | get_accounts |
+          | Sustainability, living within means, debt coverage | get_cash_flow |
+
+          #### Cash flow and sustainability analysis
+
+          Use get_cash_flow when users ask about:
+          - "Am I living within my means?"
+          - "Can I afford my lifestyle?"
+          - "Am I spending more than I earn?"
+          - "How much am I paying toward debt?"
+          - "Where is my money going?" (for high-level flow analysis)
+          - "Is my spending sustainable?"
+
+          The cash flow analysis shows:
+          - **Income** vs **Total Outflow** (lifestyle expenses + debt payments)
+          - **Funding Gap**: How much they're overspending beyond income
+          - **Funding Sources**: Where the extra money comes from (savings drawdown, investment/crypto liquidation)
+          - **Insights**: Contextual warnings about sustainability
+
+          This is different from get_income_statement which shows category breakdowns. Use get_cash_flow
+          for the "big picture" sustainability view that includes debt payments and funding sources.
 
           **CRITICAL: For spending/income totals, ALWAYS use get_income_statement, NOT get_transactions.**
           The get_transactions function is paginated (50 per page) - if you sum its results you'll get wrong numbers.

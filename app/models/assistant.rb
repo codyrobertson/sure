@@ -91,6 +91,7 @@ class Assistant
       "get_accounts" => "Looking up your accounts...",
       "get_balance_sheet" => "Calculating net worth...",
       "get_income_statement" => "Analyzing income & expenses...",
+      "get_cash_flow" => "Analyzing cash flow & sustainability...",
       "categorize_transactions" => "Categorizing transactions...",
       "tag_transactions" => "Tagging transactions...",
       "update_transactions" => "Updating transactions...",
