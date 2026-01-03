@@ -1,10 +1,9 @@
 <% return unless data.present? %>
 
-<div class="space-y-6">
-  <%# Header Stats Grid %>
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-    <%# Current Savings Rate %>
-    <div class="bg-container rounded-xl shadow-border-xs p-5">
+<div class="space-y-8">
+  <%# Key Metrics - Simple layout without boxes %>
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+    <div>
       <p class="text-sm text-secondary mb-1"><%= t("reports.insights.savings_rate.current_rate") %></p>
       <% rate = data[:current_rate][:percent] %>
       <% target = data[:target][:rate] %>
@@ -16,24 +15,21 @@
       </p>
     </div>
 
-    <%# Income %>
-    <div class="bg-container rounded-xl shadow-border-xs p-5">
+    <div>
       <p class="text-sm text-secondary mb-1"><%= t("reports.insights.savings_rate.income") %></p>
       <p class="text-2xl font-semibold text-success">
         <%= data[:current_rate][:income][:formatted] %>
       </p>
     </div>
 
-    <%# Expenses %>
-    <div class="bg-container rounded-xl shadow-border-xs p-5">
+    <div>
       <p class="text-sm text-secondary mb-1"><%= t("reports.insights.savings_rate.expenses") %></p>
       <p class="text-2xl font-semibold text-destructive">
         <%= data[:current_rate][:expenses][:formatted] %>
       </p>
     </div>
 
-    <%# Net Savings %>
-    <div class="bg-container rounded-xl shadow-border-xs p-5">
+    <div>
       <p class="text-sm text-secondary mb-1"><%= t("reports.insights.savings_rate.net_savings") %></p>
       <% savings_amount = data[:current_rate][:savings][:amount] %>
       <p class="text-2xl font-semibold <%= savings_amount >= 0 ? 'text-success' : 'text-destructive' %>">
@@ -42,10 +38,10 @@
     </div>
   </div>
 
-  <%# Progress Bar %>
-  <div class="bg-container rounded-xl shadow-border-xs p-5">
-    <div class="flex items-center justify-between mb-3">
-      <p class="text-sm font-medium text-primary">Savings Progress</p>
+  <%# Progress Bar - Inline, no container %>
+  <div>
+    <div class="flex items-center justify-between mb-2">
+      <p class="text-sm text-secondary">Progress to Target</p>
       <% rate = data[:current_rate][:percent] %>
       <% target = data[:target][:rate] %>
       <span class="text-sm <%= rate >= target ? 'text-success' : rate >= 0 ? 'text-secondary' : 'text-destructive' %>">
@@ -53,134 +49,98 @@
       </span>
     </div>
 
-    <div class="relative h-3 bg-surface-inset rounded-full overflow-hidden">
+    <div class="relative h-2 bg-secondary/20 rounded-full overflow-hidden">
       <% if rate >= 0 %>
-        <%# Positive rate - show progress toward 100% %>
         <% width = [rate, 100].min %>
-        <div class="absolute inset-y-0 left-0 <%= rate >= target ? 'bg-success' : 'bg-warning' %> rounded-full transition-all duration-500"
+        <div class="absolute inset-y-0 left-0 <%= rate >= target ? 'bg-success' : 'bg-warning' %> rounded-full"
              style="width: <%= width %>%"></div>
-        <%# Target marker %>
-        <div class="absolute inset-y-0 w-0.5 bg-primary/50" style="left: <%= target %>%"></div>
+        <div class="absolute inset-y-0 w-0.5 bg-primary/40" style="left: <%= target %>%"></div>
       <% else %>
-        <%# Negative rate - show red bar from right %>
         <% width = [[rate.abs, 100].min, 10].max %>
-        <div class="absolute inset-y-0 right-0 bg-destructive rounded-full transition-all duration-500"
-             style="width: <%= width %>%"></div>
+        <div class="absolute inset-y-0 right-0 bg-destructive rounded-full" style="width: <%= width %>%"></div>
       <% end %>
-    </div>
-
-    <div class="flex justify-between mt-2 text-xs text-tertiary">
-      <span>0%</span>
-      <span><%= target %>% target</span>
-      <span>100%</span>
     </div>
   </div>
 
   <%# 12-Month Trend %>
   <% if data[:historical_rates].present? && data[:historical_rates].length > 1 %>
-    <div class="bg-container rounded-xl shadow-border-xs p-5">
-      <p class="text-sm font-medium text-primary mb-4">12-Month Trend</p>
+    <div>
+      <p class="text-sm text-secondary mb-4">12-Month Trend</p>
 
-      <%# Simplified bar chart - just bars and month labels %>
-      <div class="relative">
-        <% rates = data[:historical_rates] %>
-        <% max_abs = [rates.map { |r| r[:rate].abs }.max, 20].max %>
-        <% bar_height = 80 %>
+      <% rates = data[:historical_rates] %>
+      <% max_abs = [rates.map { |r| r[:rate].abs }.max, 20].max %>
 
-        <div class="flex items-end justify-between gap-1" style="height: <%= bar_height %>px;">
-          <% rates.each_with_index do |month, idx| %>
-            <% is_positive = month[:rate] >= 0 %>
-            <% height_pct = (month[:rate].abs / max_abs * 100).clamp(5, 100) %>
-            <% bar_color = month[:rate] >= data[:target][:rate] ? 'bg-success' : month[:rate] >= 0 ? 'bg-warning' : 'bg-destructive' %>
-            <% is_current = idx == rates.length - 1 %>
+      <div class="flex items-end gap-1 h-16">
+        <% rates.each_with_index do |month, idx| %>
+          <% height_pct = (month[:rate].abs / max_abs * 100).clamp(8, 100) %>
+          <% bar_color = month[:rate] >= data[:target][:rate] ? 'bg-success' : month[:rate] >= 0 ? 'bg-warning' : 'bg-destructive' %>
+          <% is_current = idx == rates.length - 1 %>
 
-            <div class="flex-1 flex flex-col items-center justify-end h-full"
-                 title="<%= month[:month] %>: <%= month[:rate] %>% (<%= month[:savings][:formatted] %>)">
-              <div class="w-full max-w-[24px] <%= bar_color %> rounded-t <%= is_current ? 'opacity-100' : 'opacity-70 hover:opacity-100' %> transition-opacity cursor-default"
-                   style="height: <%= height_pct %>%;"></div>
-            </div>
-          <% end %>
-        </div>
-
-        <%# Month labels %>
-        <div class="flex justify-between mt-2">
-          <% rates.each_with_index do |month, idx| %>
-            <% is_current = idx == rates.length - 1 %>
-            <span class="flex-1 text-center text-[10px] <%= is_current ? 'text-primary font-medium' : 'text-tertiary' %>">
-              <%= month[:month_short] %>
-            </span>
-          <% end %>
-        </div>
+          <div class="flex-1 flex flex-col items-center justify-end h-full"
+               title="<%= month[:month] %>: <%= month[:rate] %>%">
+            <div class="w-full max-w-5 <%= bar_color %> rounded-sm <%= is_current ? 'opacity-100' : 'opacity-60' %>"
+                 style="height: <%= height_pct %>%;"></div>
+          </div>
+        <% end %>
       </div>
 
-      <%# Legend %>
-      <div class="flex items-center justify-center gap-4 mt-4 text-xs text-secondary">
-        <div class="flex items-center gap-1.5">
-          <div class="w-2.5 h-2.5 bg-success rounded-sm"></div>
-          <span>On target</span>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <div class="w-2.5 h-2.5 bg-warning rounded-sm"></div>
-          <span>Below target</span>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <div class="w-2.5 h-2.5 bg-destructive rounded-sm"></div>
-          <span>Negative</span>
-        </div>
+      <div class="flex justify-between mt-1">
+        <% rates.each_with_index do |month, idx| %>
+          <% is_current = idx == rates.length - 1 %>
+          <span class="flex-1 text-center text-[10px] <%= is_current ? 'text-primary font-medium' : 'text-tertiary' %>">
+            <%= month[:month_short] %>
+          </span>
+        <% end %>
+      </div>
+
+      <div class="flex items-center justify-center gap-4 mt-3 text-xs text-tertiary">
+        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-success rounded-sm"></span> On target</span>
+        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-warning rounded-sm"></span> Below</span>
+        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-destructive rounded-sm"></span> Negative</span>
       </div>
     </div>
   <% end %>
 
-  <%# Best/Worst Months - only show if meaningful %>
+  <%# Best/Worst Months - Compact inline %>
   <% best = data[:best_month] %>
   <% worst = data[:worst_month] %>
   <% if best && worst && (best[:rate] != worst[:rate] || best[:rate] != 0) %>
-    <div class="grid grid-cols-2 gap-4">
+    <div class="flex gap-6 text-sm">
       <% if best[:rate] > 0 || best[:savings][:amount] > 0 %>
-        <div class="bg-container rounded-xl shadow-border-xs p-4 border-l-4 border-success">
-          <div class="flex items-center gap-2 mb-1">
-            <%= icon("trophy", class: "w-4 h-4 text-success") %>
-            <span class="text-xs font-medium text-success uppercase tracking-wide">Best Month</span>
-          </div>
-          <p class="text-lg font-semibold text-primary"><%= best[:month] %></p>
-          <p class="text-sm text-secondary">
-            <%= best[:rate] %>% &middot; <%= best[:savings][:formatted] %>
-          </p>
-        </div>
-      <% else %>
-        <div class="bg-container rounded-xl shadow-border-xs p-4 opacity-60">
-          <p class="text-xs text-tertiary uppercase tracking-wide mb-1">Best Month</p>
-          <p class="text-sm text-secondary">No positive savings months</p>
+        <div class="flex items-center gap-2">
+          <%= icon("trophy", class: "w-4 h-4 text-success") %>
+          <span class="text-secondary">Best:</span>
+          <span class="font-medium text-primary"><%= best[:month] %></span>
+          <span class="text-success"><%= best[:rate] %>%</span>
         </div>
       <% end %>
-
-      <div class="bg-container rounded-xl shadow-border-xs p-4 border-l-4 border-destructive">
-        <div class="flex items-center gap-2 mb-1">
-          <%= icon("alert-triangle", class: "w-4 h-4 text-destructive") %>
-          <span class="text-xs font-medium text-destructive uppercase tracking-wide">Needs Attention</span>
-        </div>
-        <p class="text-lg font-semibold text-primary"><%= worst[:month] %></p>
-        <p class="text-sm text-secondary">
-          <%= worst[:rate] %>% &middot; <%= worst[:savings][:formatted] %>
-        </p>
+      <div class="flex items-center gap-2">
+        <%= icon("alert-triangle", class: "w-4 h-4 text-destructive") %>
+        <span class="text-secondary">Worst:</span>
+        <span class="font-medium text-primary"><%= worst[:month] %></span>
+        <span class="text-destructive"><%= worst[:rate] %>%</span>
       </div>
     </div>
   <% end %>
 
-  <%# Insights %>
+  <%# Insights - Keep subtle styling %>
   <% if data[:insights].present? %>
-    <div class="space-y-2">
+    <div class="space-y-2 pt-4 border-t border-secondary/20">
       <% data[:insights].each do |insight| %>
-        <% severity_styles = {
-          positive: { bg: "bg-success/10", border: "border-success/20", icon: "check-circle", icon_color: "text-success" },
-          warning: { bg: "bg-warning/10", border: "border-warning/20", icon: "alert-triangle", icon_color: "text-warning" },
-          alert: { bg: "bg-destructive/10", border: "border-destructive/20", icon: "alert-circle", icon_color: "text-destructive" }
+        <% colors = {
+          positive: "text-success",
+          warning: "text-warning",
+          alert: "text-destructive"
         } %>
-        <% style = severity_styles[insight[:severity]] || { bg: "bg-surface-inset", border: "border-secondary/20", icon: "info", icon_color: "text-secondary" } %>
+        <% icons = {
+          positive: "check-circle",
+          warning: "alert-triangle",
+          alert: "alert-circle"
+        } %>
 
-        <div class="flex items-start gap-3 p-3 rounded-lg <%= style[:bg] %> border <%= style[:border] %>">
-          <%= icon(style[:icon], class: "w-4 h-4 mt-0.5 flex-shrink-0 #{style[:icon_color]}") %>
-          <p class="text-sm text-primary"><%= insight[:message] %></p>
+        <div class="flex items-start gap-2 text-sm">
+          <%= icon(icons[insight[:severity]] || "info", class: "w-4 h-4 mt-0.5 flex-shrink-0 #{colors[insight[:severity]] || 'text-secondary'}") %>
+          <p class="text-primary"><%= insight[:message] %></p>
         </div>
       <% end %>
     </div>
