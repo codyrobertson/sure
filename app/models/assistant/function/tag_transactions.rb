@@ -27,6 +27,15 @@ class Assistant::Function::TagTransactions < Assistant::Function
         })
         ```
 
+        Example - tag only income (refunds) from Amazon:
+        ```
+        tag_transactions({
+          search: "amazon",
+          types: ["income"],
+          tag_name: "Refund"
+        })
+        ```
+
         IMPORTANT: Always confirm with the user before tagging large numbers of transactions.
       INSTRUCTIONS
     end
@@ -48,6 +57,34 @@ class Assistant::Function::TagTransactions < Assistant::Function
         search: {
           type: "string",
           description: "Search term to find transactions to tag (by name/merchant)"
+        },
+        types: {
+          type: "array",
+          description: "Filter by transaction type: 'income' (positive cash flow like refunds/returns), 'expense' (purchases), or 'transfer'",
+          items: { enum: %w[income expense transfer] }
+        },
+        categories: {
+          type: "array",
+          description: "Filter to transactions currently in these categories",
+          items: { type: "string" }
+        },
+        accounts: {
+          type: "array",
+          description: "Filter by account names",
+          items: { type: "string" }
+        },
+        merchants: {
+          type: "array",
+          description: "Filter by merchant names",
+          items: { type: "string" }
+        },
+        start_date: {
+          type: "string",
+          description: "Filter transactions on or after this date (YYYY-MM-DD)"
+        },
+        end_date: {
+          type: "string",
+          description: "Filter transactions on or before this date (YYYY-MM-DD)"
         },
         tag_name: {
           type: "string",
@@ -93,6 +130,7 @@ class Assistant::Function::TagTransactions < Assistant::Function
         { tag_id: tag.id, taggable_type: "Transaction", taggable_id: txn_id, created_at: Time.current, updated_at: Time.current }
       end
       Tagging.insert_all(tagging_records)
+      broadcast_data_changed
     end
 
     result = {
@@ -115,20 +153,13 @@ class Assistant::Function::TagTransactions < Assistant::Function
   private
 
   def find_transactions(params)
-    scope = family.transactions.joins(:entry)
+    # Use Transaction::Search for consistent filtering
+    filters = params.slice("search", "types", "categories", "accounts", "merchants", "start_date", "end_date")
+    scope = Transaction::Search.new(family, filters: filters).transactions_scope
 
+    # Apply transaction_ids filter if specified (not supported by Transaction::Search)
     if params["transaction_ids"].present?
       scope = scope.where(id: params["transaction_ids"])
-    end
-
-    if params["search"].present?
-      sanitized_ilike = "%#{ActiveRecord::Base.sanitize_sql_like(params['search'])}%"
-      # Use tsvector full-text search (fast, uses GIN index) plus ILIKE fallback for merchant
-      scope = scope.left_joins(:merchant).where(
-        "entries.search_vector @@ plainto_tsquery('simple', :term) OR merchants.name ILIKE :ilike_term",
-        term: params["search"],
-        ilike_term: sanitized_ilike
-      )
     end
 
     scope

@@ -10,7 +10,7 @@ class Assistant::Function::UpdateTransactions < Assistant::Function
 
         You can either:
         1. Update specific transactions by ID
-        2. Update transactions matching a search term
+        2. Update transactions matching filters (search, types, categories, etc.)
 
         Example - rename specific transactions:
         ```
@@ -28,12 +28,12 @@ class Assistant::Function::UpdateTransactions < Assistant::Function
         })
         ```
 
-        Example - rename and add notes:
+        Example - rename only income (refunds) from a merchant:
         ```
         update_transactions({
-          search: "uber",
-          name: "Uber Ride",
-          notes: "Transportation"
+          search: "amazon",
+          types: ["income"],
+          name: "Amazon Refund"
         })
         ```
 
@@ -58,6 +58,39 @@ class Assistant::Function::UpdateTransactions < Assistant::Function
         search: {
           type: "string",
           description: "Search term to find transactions to update (by name/merchant)"
+        },
+        types: {
+          type: "array",
+          description: "Filter by transaction type: 'income' (positive cash flow like refunds/returns), 'expense' (purchases), or 'transfer'",
+          items: { enum: %w[income expense transfer] }
+        },
+        categories: {
+          type: "array",
+          description: "Filter to transactions currently in these categories",
+          items: { type: "string" }
+        },
+        accounts: {
+          type: "array",
+          description: "Filter by account names",
+          items: { type: "string" }
+        },
+        merchants: {
+          type: "array",
+          description: "Filter by merchant names",
+          items: { type: "string" }
+        },
+        tags: {
+          type: "array",
+          description: "Filter by tag names",
+          items: { type: "string" }
+        },
+        start_date: {
+          type: "string",
+          description: "Filter transactions on or after this date (YYYY-MM-DD)"
+        },
+        end_date: {
+          type: "string",
+          description: "Filter transactions on or before this date (YYYY-MM-DD)"
         },
         name: {
           type: "string",
@@ -100,8 +133,9 @@ class Assistant::Function::UpdateTransactions < Assistant::Function
     # Update entries (which hold the name and notes) - limited to batch size
     updates_desc = update_attrs.keys.map(&:to_s).join(" and ")
     report_progress("Updating #{updates_desc} for #{[total_matching, MAX_BATCH_SIZE].min} transactions...")
-    entry_ids = transactions.limit(MAX_BATCH_SIZE).pluck(:entry_id)
+    entry_ids = transactions.limit(MAX_BATCH_SIZE).pluck("entries.id")
     updated_count = Entry.where(id: entry_ids).update_all(update_attrs)
+    broadcast_data_changed
 
     result = {
       success: true,
@@ -121,20 +155,13 @@ class Assistant::Function::UpdateTransactions < Assistant::Function
   private
 
   def find_transactions(params)
-    scope = family.transactions.joins(:entry).includes(:merchant)
+    # Use Transaction::Search for consistent filtering
+    filters = params.slice("search", "types", "categories", "accounts", "merchants", "tags", "start_date", "end_date")
+    scope = Transaction::Search.new(family, filters: filters).transactions_scope
 
+    # Apply transaction_ids filter if specified (not supported by Transaction::Search)
     if params["transaction_ids"].present?
       scope = scope.where(id: params["transaction_ids"])
-    end
-
-    if params["search"].present?
-      sanitized_ilike = "%#{ActiveRecord::Base.sanitize_sql_like(params['search'])}%"
-      # Use tsvector full-text search on entries (uses GIN index) plus ILIKE for merchant
-      scope = scope.left_joins(:merchant).where(
-        "entries.search_vector @@ plainto_tsquery('simple', :term) OR merchants.name ILIKE :ilike_term",
-        term: params["search"],
-        ilike_term: sanitized_ilike
-      )
     end
 
     scope

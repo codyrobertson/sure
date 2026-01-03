@@ -143,6 +143,7 @@ class Assistant::Function::CreateRule < Assistant::Function
       conditions_attributes: conditions_attrs,
       actions_attributes: actions_attrs
     )
+    broadcast_data_changed
 
     affected_count = rule.affected_resource_count
 
@@ -157,6 +158,7 @@ class Assistant::Function::CreateRule < Assistant::Function
       modified = rule.apply
       result[:applied] = true
       result[:modified_count] = modified.is_a?(Hash) ? modified[:modified_count] : modified
+      broadcast_data_changed
     end
 
     result

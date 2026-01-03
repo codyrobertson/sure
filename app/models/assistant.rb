@@ -65,6 +65,9 @@ class Assistant
         # AI tried to make another function call but we don't support recursive calls
         # Don't save this response ID as it expects function output we won't provide
         Rails.logger.warn("Not saving response ID due to unsupported recursive function call")
+        # Still need to stop thinking and finalize the message
+        stop_thinking
+        assistant_message.save! if assistant_message.content.present?
       else
         # Only save the final response ID (after function execution completes)
         chat.update_latest_response!(data[:id])
@@ -72,6 +75,9 @@ class Assistant
     end
 
     responder.respond(previous_response_id: latest_response_id)
+
+    # Ensure thinking indicator is cleared when response completes
+    stop_thinking
   rescue => e
     stop_thinking
     chat.add_error(e)
@@ -89,8 +95,15 @@ class Assistant
       "tag_transactions" => "Tagging transactions...",
       "update_transactions" => "Updating transactions...",
       "create_category" => "Creating category...",
+      "update_category" => "Updating category...",
+      "delete_category" => "Deleting category...",
       "create_tag" => "Creating tag...",
-      "create_rule" => "Setting up automation rule..."
+      "create_rule" => "Setting up automation rule...",
+      "generate_time_series_chart" => "Generating time series chart...",
+      "generate_donut_chart" => "Generating donut chart...",
+      "generate_sankey_chart" => "Generating cash flow chart...",
+      "generate_account_balance_chart" => "Generating account balance chart...",
+      "web_search" => "Searching the web..."
     }.freeze
 
     def build_thinking_message(tool_calls)

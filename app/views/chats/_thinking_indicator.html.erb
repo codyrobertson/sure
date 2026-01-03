@@ -6,6 +6,12 @@
   avatar_state = case msg_lower
     when /creating|setting up/
       "creating"
+    when /web search|searching the web|querying exa/
+      "web_search"
+    when /generating.*chart|time series|donut|sankey|cash flow/
+      "charting"
+    when /deleting/
+      "deleting"
     when /searching|finding|looking up|found \d+|transactions\.\.\./
       "searching"
     when /categorizing|applying category/

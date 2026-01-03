@@ -1,0 +1,54 @@
+<%# locals: (chart:) %>
+
+<div class="my-4 p-4 bg-container-inset rounded-xl">
+  <% if chart[:title].present? %>
+    <h4 class="text-sm font-medium text-secondary mb-3"><%= chart[:title] %></h4>
+  <% end %>
+
+  <% case chart[:chart_type] %>
+  <% when "time_series" %>
+    <div class="h-48"
+         data-controller="time-series-chart"
+         data-time-series-chart-data-value="<%= chart[:data].to_json %>"
+         data-time-series-chart-use-labels-value="true"
+         data-time-series-chart-use-tooltip-value="true">
+    </div>
+  <% when "donut" %>
+    <% segments = chart[:data][:segments] || [] %>
+    <% total = segments.sum { |s| s[:amount] || 0 } %>
+    <% currency_symbol = chart[:data][:currency_symbol] || "$" %>
+    <div class="h-64 relative"
+         data-controller="donut-chart"
+         data-donut-chart-segments-value="<%= segments.to_json %>"
+         data-donut-chart-segment-opacity-value="0.9">
+      <div data-donut-chart-target="chartContainer" class="absolute inset-0 pointer-events-none"></div>
+
+      <div data-donut-chart-target="contentContainer" class="flex justify-center items-center h-full">
+        <div data-donut-chart-target="defaultContent" class="flex flex-col items-center">
+          <div class="text-secondary text-sm mb-2">Total</div>
+          <div class="text-2xl font-medium text-primary">
+            <%= currency_symbol %><%= number_with_delimiter(total.round(0), delimiter: ",") %>
+          </div>
+        </div>
+
+        <% segments.each do |segment| %>
+          <div id="segment_<%= segment[:id] %>" class="hidden">
+            <div class="flex flex-col gap-2 items-center">
+              <p class="text-sm text-secondary"><%= segment[:name] %></p>
+              <p class="text-2xl font-medium text-primary">
+                <%= currency_symbol %><%= number_with_delimiter(segment[:amount].round(0), delimiter: ",") %>
+              </p>
+              <p class="text-sm text-secondary"><%= segment[:percentage] %>%</p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% when "sankey" %>
+    <div class="h-64"
+         data-controller="sankey-chart"
+         data-sankey-chart-data-value="<%= chart[:data].to_json %>"
+         data-sankey-chart-currency-symbol-value="<%= chart[:data][:currency_symbol] %>">
+    </div>
+  <% end %>
+</div>

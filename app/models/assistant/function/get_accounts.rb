@@ -14,8 +14,9 @@ class Assistant::Function::GetAccounts < Assistant::Function
 
     {
       as_of_date: Date.current,
-      accounts: family.accounts.includes(:balances, :account_providers).map do |account|
+      accounts: family.accounts.visible.includes(:balances, :account_providers).map do |account|
         {
+          id: account.id,
           name: account.name,
           balance: account.balance,
           currency: account.currency,

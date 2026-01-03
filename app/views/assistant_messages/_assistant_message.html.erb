@@ -18,7 +18,30 @@
     <div class="flex items-start gap-3 mb-6">
       <%= render "chats/ai_avatar" %>
 
-      <div class="prose prose--ai-chat"><%= markdown(assistant_message.content) %></div>
+      <div class="space-y-4 max-w-[85%]">
+        <div class="prose prose--ai-chat"><%= markdown(assistant_message.content) %></div>
+
+        <% if assistant_message.has_chart? %>
+          <%= render "assistant_messages/chart", chart: assistant_message.chart_data %>
+        <% end %>
+
+        <% if assistant_message.has_web_search_results? %>
+          <%= render "assistant_messages/web_search_results", search_data: assistant_message.web_search_results %>
+        <% end %>
+
+        <% if assistant_message.has_suggestions? %>
+          <div class="flex flex-wrap gap-2">
+            <% assistant_message.suggested_options.each do |option| %>
+              <button type="button"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-full border border-primary/30 bg-container hover:bg-container-inset hover:border-primary transition-colors"
+                      data-action="click->chat#submitSuggestion"
+                      data-chat-suggestion-param="<%= option[:prompt] %>">
+                <%= option[:label] %>
+              </button>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
   <% end %>
 </div>

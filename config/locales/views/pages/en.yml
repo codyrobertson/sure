@@ -35,3 +35,9 @@ en:
         categories: "Categories"
         value: "Value"
         weight: "Weight"
+      inflows_donut:
+        title: "Inflows"
+        total_inflows: "Total Inflows"
+        categories: "Categories"
+        value: "Value"
+        weight: "Weight"

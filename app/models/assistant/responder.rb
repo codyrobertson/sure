@@ -1,9 +1,14 @@
 class Assistant::Responder
+  # Maximum function calls allowed per conversation turn to control costs
+  # This allows multi-step workflows and large bulk operations while preventing runaway API usage
+  MAX_FUNCTION_CALLS = 100
+
   def initialize(message:, instructions:, function_tool_caller:, llm:)
     @message = message
     @instructions = instructions
     @function_tool_caller = function_tool_caller
     @llm = llm
+    @total_calls_used = 0
   end
 
   def on(event_name, &block)
@@ -45,28 +50,41 @@ class Assistant::Responder
 
   private
     attr_reader :message, :instructions, :function_tool_caller, :llm
+    attr_accessor :total_calls_used
 
     def handle_follow_up_response(response)
+      follow_up_response = nil
+      had_text_output = false
+
+      # Check budget BEFORE executing function calls
+      call_count = response.function_requests.count
+      remaining_budget = MAX_FUNCTION_CALLS - total_calls_used
+
+      if call_count > remaining_budget
+        # Budget would be exceeded - don't execute, return early
+        Rails.logger.warn("Function call budget would be exceeded (#{total_calls_used}/#{MAX_FUNCTION_CALLS} used, #{call_count} requested)")
+        emit(:output_text, build_budget_exhausted_message)
+        emit(:response, { id: response.id, has_pending_functions: true })
+        return
+      end
+
       streamer = proc do |chunk|
         case chunk.type
         when "output_text"
+          had_text_output = true
           emit(:output_text, chunk.data)
         when "response"
-          follow_up = chunk.data
-          # We do not currently support recursive function executions (avoid runaway LLM costs)
-          # Only emit clean response if no further function calls requested
-          if follow_up.function_requests.any?
-            Rails.logger.warn("Ignoring recursive function call request to prevent runaway costs")
-            emit(:response, { id: follow_up.id, has_pending_functions: true })
-          else
-            emit(:response, { id: follow_up.id })
-          end
+          follow_up_response = chunk.data
+          # Response handling is done after streaming completes
+          # to ensure we have full context about what was output
         end
       end
 
-      # Emit function names BEFORE execution so UI can show what's happening
+      # Track function calls against budget
+      self.total_calls_used += call_count
+
       function_names = response.function_requests.map(&:function_name)
-      Rails.logger.info("Functions starting - function_names: #{function_names.inspect}")
+      Rails.logger.info("Functions starting (#{total_calls_used}/#{MAX_FUNCTION_CALLS} calls used) - function_names: #{function_names.inspect}")
       emit(:functions_starting, { function_names: function_names })
 
       function_tool_calls = function_tool_caller.fulfill_requests(response.function_requests)
@@ -76,12 +94,44 @@ class Assistant::Responder
         function_tool_calls: function_tool_calls
       })
 
-      # Get follow-up response with tool call results
       get_llm_response(
         streamer: streamer,
         function_results: function_tool_calls.map(&:to_result),
         previous_response_id: response.id
       )
+
+      # Handle the follow-up response after streaming completes
+      if follow_up_response
+        if follow_up_response.function_requests.any?
+          requested_calls = follow_up_response.function_requests.count
+          remaining_budget = MAX_FUNCTION_CALLS - total_calls_used
+
+          if requested_calls <= remaining_budget
+            # Budget allows more calls - recurse
+            Rails.logger.info("Allowing #{requested_calls} more function calls (#{remaining_budget} remaining in budget)")
+            handle_follow_up_response(follow_up_response)
+          else
+            # Budget exhausted
+            Rails.logger.warn("Function call budget exhausted (#{total_calls_used}/#{MAX_FUNCTION_CALLS} used, #{requested_calls} requested)")
+
+            # If no text was streamed, provide a fallback message
+            unless had_text_output
+              emit(:output_text, build_budget_exhausted_message)
+            end
+
+            # Emit response with flag so we don't save this ID (it expects function output)
+            emit(:response, { id: follow_up_response.id, has_pending_functions: true })
+          end
+        else
+          # Normal completion - AI returned text without more function requests
+          emit(:response, { id: follow_up_response.id })
+        end
+      end
+    end
+
+    def build_budget_exhausted_message
+      "I've gathered the available data but need to stop here to manage costs. " \
+      "Let me know if you'd like me to continue with additional queries."
     end
 
     def get_llm_response(streamer:, function_results: [], previous_response_id: nil)

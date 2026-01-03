@@ -7,9 +7,16 @@ export default class extends Controller {
   static values = {
     data: Object,
     nodeWidth: { type: Number, default: 15 },
-    nodePadding: { type: Number, default: 20 },
+    nodePadding: { type: Number, default: 8 },
     currencySymbol: { type: String, default: "$" }
   };
+
+  // Minimum node height to show label (px)
+  static MIN_NODE_HEIGHT_FOR_LABEL = 14;
+  // Minimum node height to show value below label
+  static MIN_NODE_HEIGHT_FOR_VALUE = 28;
+  // Maximum label length before truncation
+  static MAX_LABEL_LENGTH = 18;
 
   connect() {
     this.resizeObserver = new ResizeObserver(() => this.#draw());
@@ -219,20 +226,38 @@ export default class extends Controller {
       });
 
     const stimulusControllerInstance = this;
-    nodeGroups
+    const MIN_HEIGHT_FOR_LABEL = this.constructor.MIN_NODE_HEIGHT_FOR_LABEL;
+    const MIN_HEIGHT_FOR_VALUE = this.constructor.MIN_NODE_HEIGHT_FOR_VALUE;
+    const MAX_LABEL_LENGTH = this.constructor.MAX_LABEL_LENGTH;
+
+    // Helper to truncate text
+    const truncateText = (text, maxLength) => {
+      if (!text || text.length <= maxLength) return text;
+      return text.substring(0, maxLength - 1) + "…";
+    };
+
+    // Create labels for nodes
+    const labels = nodeGroups
       .append("text")
       .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
       .attr("y", (d) => (d.y1 + d.y0) / 2)
-      .attr("dy", "-0.2em")
+      .attr("dy", (d) => {
+        const nodeHeight = d.y1 - d.y0;
+        // Center vertically when only showing name (no value)
+        return nodeHeight < MIN_HEIGHT_FOR_VALUE ? "0.35em" : "-0.2em";
+      })
       .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
       .attr("class", "text-xs font-medium text-primary fill-current select-none")
       .style("cursor", "default")
+      .style("opacity", (d) => {
+        const nodeHeight = d.y1 - d.y0;
+        return nodeHeight >= MIN_HEIGHT_FOR_LABEL ? 1 : 0;
+      })
       .on("mouseenter", (event, d) => {
-        // Find all links connected to this node
-        const connectedLinks = sankeyData.links.filter(link => 
+        const connectedLinks = sankeyData.links.filter(link =>
           link.source === d || link.target === d
         );
-        
+
         applyHoverEffect(connectedLinks, linkPaths, nodeGroups);
         this.#showNodeTooltip(event, d);
       })
@@ -245,20 +270,87 @@ export default class extends Controller {
         const textElement = d3.select(this);
         textElement.selectAll("tspan").remove();
 
+        const nodeHeight = d.y1 - d.y0;
+
+        // Skip tiny nodes entirely
+        if (nodeHeight < MIN_HEIGHT_FOR_LABEL) return;
+
+        // Truncate name for readability
+        const displayName = truncateText(d.name, MAX_LABEL_LENGTH);
+
         // Node Name on the first line
         textElement.append("tspan")
-          .text(d.name);
+          .text(displayName);
 
-        // Financial details on the second line
-        const financialDetailsTspan = textElement.append("tspan")
-          .attr("x", textElement.attr("x"))
-          .attr("dy", "1.2em")
-          .attr("class", "font-mono text-secondary")
-          .style("font-size", "0.65rem"); // Explicitly set smaller font size
+        // Only show value if node is tall enough
+        if (nodeHeight >= MIN_HEIGHT_FOR_VALUE) {
+          const financialDetailsTspan = textElement.append("tspan")
+            .attr("x", textElement.attr("x"))
+            .attr("dy", "1.2em")
+            .attr("class", "font-mono text-secondary")
+            .style("font-size", "0.65rem");
 
-        financialDetailsTspan.append("tspan")
-          .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+          financialDetailsTspan.append("tspan")
+            .text(stimulusControllerInstance.currencySymbolValue + Number.parseFloat(d.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        }
       });
+
+    // Collision detection - hide overlapping labels on the same side
+    this.#resolveOverlappingLabels(labels, width);
+  }
+
+  #resolveOverlappingLabels(labels, chartWidth) {
+    const leftLabels = [];
+    const rightLabels = [];
+
+    labels.each(function(d) {
+      const el = d3.select(this);
+      if (el.style("opacity") === "0") return; // Skip already hidden
+
+      const bbox = this.getBBox();
+      const labelData = {
+        element: el,
+        y: (d.y1 + d.y0) / 2,
+        height: bbox.height,
+        top: (d.y1 + d.y0) / 2 - bbox.height / 2,
+        bottom: (d.y1 + d.y0) / 2 + bbox.height / 2,
+        value: d.value
+      };
+
+      if (d.x0 < chartWidth / 2) {
+        leftLabels.push(labelData);
+      } else {
+        rightLabels.push(labelData);
+      }
+    });
+
+    // Sort by y position and hide overlapping (keep higher value)
+    const hideOverlaps = (labelList) => {
+      labelList.sort((a, b) => a.y - b.y);
+
+      for (let i = 0; i < labelList.length; i++) {
+        if (labelList[i].element.style("opacity") === "0") continue;
+
+        for (let j = i + 1; j < labelList.length; j++) {
+          if (labelList[j].element.style("opacity") === "0") continue;
+
+          // Check for overlap with padding
+          const padding = 2;
+          if (labelList[j].top < labelList[i].bottom + padding) {
+            // Hide the one with smaller value
+            if (labelList[i].value >= labelList[j].value) {
+              labelList[j].element.style("opacity", 0);
+            } else {
+              labelList[i].element.style("opacity", 0);
+              break; // Move to next i since this one is hidden
+            }
+          }
+        }
+      }
+    };
+
+    hideOverlaps(leftLabels);
+    hideOverlaps(rightLabels);
   }
 
   #createTooltip() {

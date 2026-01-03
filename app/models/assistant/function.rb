@@ -57,6 +57,12 @@ class Assistant::Function
       progress_callback&.call(message)
     end
 
+    # Broadcast a page refresh to all family members so UI updates in real-time
+    # Call this after any write operation that modifies user data
+    def broadcast_data_changed
+      Turbo::StreamsChannel.broadcast_refresh_to(family)
+    end
+
     def build_schema(properties: {}, required: [])
       {
         type: "object",

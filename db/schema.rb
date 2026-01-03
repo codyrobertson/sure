@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_15_100443) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_03_042425) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -301,6 +301,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_15_100443) do
     t.jsonb "locked_attributes", default: {}
     t.string "external_id"
     t.string "source"
+    t.virtual "search_vector", type: :tsvector, as: "(to_tsvector('simple'::regconfig, (COALESCE(name, ''::character varying))::text) || to_tsvector('simple'::regconfig, COALESCE(notes, ''::text)))", stored: true
     t.index "lower((name)::text)", name: "index_entries_on_lower_name"
     t.index ["account_id", "date"], name: "index_entries_on_account_id_and_date"
     t.index ["account_id", "source", "external_id"], name: "index_entries_on_account_source_and_external_id", unique: true, where: "((external_id IS NOT NULL) AND (source IS NOT NULL))"
@@ -308,6 +309,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_15_100443) do
     t.index ["date"], name: "index_entries_on_date"
     t.index ["entryable_type"], name: "index_entries_on_entryable_type"
     t.index ["import_id"], name: "index_entries_on_import_id"
+    t.index ["search_vector"], name: "index_entries_on_search_vector", using: :gin
   end
 
   create_table "eval_datasets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -1131,6 +1133,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_15_100443) do
     t.datetime "set_onboarding_goals_at"
     t.string "default_account_order", default: "name_asc"
     t.jsonb "preferences", default: {}, null: false
+    t.integer "ai_sidebar_width"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["family_id"], name: "index_users_on_family_id"
     t.index ["last_viewed_chat_id"], name: "index_users_on_last_viewed_chat_id"

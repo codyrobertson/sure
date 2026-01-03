@@ -22,7 +22,7 @@
             <div class="hidden lg:flex">
               <% if transaction.merchant&.logo_url.present? %>
                 <%= image_tag transaction.merchant.logo_url,
-                    class: "w-9 h-9 rounded-full",
+                    class: "w-9 h-9 rounded-full object-contain bg-white p-1",
                     loading: "lazy" %>
               <% else %>
                 <div class="hidden lg:flex">
@@ -39,7 +39,7 @@
               <%= render "transactions/transaction_category", transaction: transaction %>
               <% if transaction.merchant&.logo_url.present? %>
                 <%= image_tag transaction.merchant.logo_url,
-                    class: "w-5 h-5 rounded-full absolute -bottom-1 -right-1 border border-secondary pointer-events-none",
+                    class: "w-5 h-5 rounded-full object-contain bg-white absolute -bottom-1 -right-1 border border-secondary pointer-events-none",
                     loading: "lazy" %>
               <% end %>
             </div>

@@ -11,6 +11,7 @@ class Setting < RailsSettings::Base
   field :openai_model, type: :string, default: ENV["OPENAI_MODEL"]
   field :openai_json_mode, type: :string, default: ENV["LLM_JSON_MODE"]
   field :brand_fetch_client_id, type: :string, default: ENV["BRAND_FETCH_CLIENT_ID"]
+  field :logo_dev_token, type: :string, default: ENV["LOGO_DEV_TOKEN"]
 
   # Provider selection
   field :exchange_rate_provider, type: :string, default: ENV.fetch("EXCHANGE_RATE_PROVIDER", "twelve_data")

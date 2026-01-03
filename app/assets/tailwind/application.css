@@ -129,6 +129,26 @@
     @apply text-sm text-primary;
   }
 
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-primary font-semibold;
+  }
+
+  h2 {
+    @apply text-base mt-4 mb-2;
+  }
+
+  h3 {
+    @apply text-sm mt-3 mb-1;
+  }
+
+  code {
+    @apply text-primary bg-gray-700/50 px-1.5 py-0.5 rounded text-sm;
+  }
+
+  pre code {
+    @apply bg-transparent p-0;
+  }
+
   scrollbar-width: thin;
   scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
 

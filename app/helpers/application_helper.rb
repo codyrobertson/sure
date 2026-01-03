@@ -97,6 +97,16 @@ module ApplicationHelper
     Chat.default_model
   end
 
+  def merchant_logo_url(domain)
+    return nil if domain.blank?
+
+    if Setting.logo_dev_token.present?
+      "https://img.logo.dev/#{domain}?token=#{Setting.logo_dev_token}"
+    elsif Setting.brand_fetch_client_id.present?
+      "https://cdn.brandfetch.io/#{domain}/icon/fallback/lettermark/w/40/h/40?c=#{Setting.brand_fetch_client_id}"
+    end
+  end
+
   # Renders Markdown text using Redcarpet
   def markdown(text)
     return "" if text.blank?

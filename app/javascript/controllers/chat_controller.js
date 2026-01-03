@@ -32,6 +32,18 @@ export default class extends Controller {
     }, 200);
   }
 
+  // Submit a suggested option from AI response
+  submitSuggestion(e) {
+    const prompt = e.currentTarget.dataset.chatSuggestionParam;
+    if (!prompt) return;
+
+    this.inputTarget.value = prompt;
+
+    setTimeout(() => {
+      this.formTarget.requestSubmit();
+    }, 100);
+  }
+
   // Newlines require shift+enter, otherwise submit the form (same functionality as ChatGPT and others)
   handleInputKeyDown(e) {
     if (e.key === "Enter" && !e.shiftKey) {

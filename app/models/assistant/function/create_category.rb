@@ -95,6 +95,7 @@ class Assistant::Function::CreateCategory < Assistant::Function
       lucide_icon: params["icon"] || "tag",
       parent: parent
     )
+    broadcast_data_changed
 
     {
       success: true,

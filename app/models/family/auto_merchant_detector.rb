@@ -66,8 +66,12 @@ class Family::AutoMerchantDetector
       Provider::Registry.get_provider(:openai)
     end
 
-    def default_logo_provider_url
-      "https://cdn.brandfetch.io"
+    def logo_url_for(domain)
+      if Setting.logo_dev_token.present?
+        "https://img.logo.dev/#{domain}?token=#{Setting.logo_dev_token}"
+      elsif Setting.brand_fetch_client_id.present?
+        "https://cdn.brandfetch.io/#{domain}/icon/fallback/lettermark/w/40/h/40?c=#{Setting.brand_fetch_client_id}"
+      end
     end
 
     def user_merchants_input
@@ -108,9 +112,7 @@ class Family::AutoMerchantDetector
         name: auto_detection.business_name
       ) do |pm|
         pm.website_url = auto_detection.business_url
-        if Setting.brand_fetch_client_id.present?
-          pm.logo_url = "#{default_logo_provider_url}/#{auto_detection.business_url}/icon/fallback/lettermark/w/40/h/40?c=#{Setting.brand_fetch_client_id}"
-        end
+        pm.logo_url = logo_url_for(auto_detection.business_url)
       end
     rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique
       # Race condition: another process created the merchant between our find and create
@@ -123,11 +125,7 @@ class Family::AutoMerchantDetector
       # Add website_url if missing
       if merchant.website_url.blank? && auto_detection.business_url.present?
         updates[:website_url] = auto_detection.business_url
-
-        # Add logo if BrandFetch is configured
-        if Setting.brand_fetch_client_id.present?
-          updates[:logo_url] = "#{default_logo_provider_url}/#{auto_detection.business_url}/icon/fallback/lettermark/w/40/h/40?c=#{Setting.brand_fetch_client_id}"
-        end
+        updates[:logo_url] = logo_url_for(auto_detection.business_url)
       end
 
       return false if updates.empty?

@@ -55,6 +55,7 @@ class Assistant::Function::CreateTag < Assistant::Function
       name: params["name"],
       color: Tag::COLORS.sample
     )
+    broadcast_data_changed
 
     {
       success: true,

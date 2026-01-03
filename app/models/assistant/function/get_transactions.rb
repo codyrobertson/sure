@@ -15,47 +15,31 @@ class Assistant::Function::GetTransactions < Assistant::Function
         Use this to search user's transactions by using various optional filters.
 
         This function is great for things like:
-        - Finding specific transactions
-        - Getting basic stats about a small group of transactions
+        - Finding specific transactions by name, merchant, or category
+        - Getting detailed transaction lists for analysis
+        - Finding specific payments or charges
 
-        This function is not great for:
-        - Large time periods (use the get_income_statement function for this)
+        IMPORTANT: For totals and aggregates, use get_income_statement instead!
+        This function returns paginated results (#{default_page_size} per page). If you need
+        accurate totals over a time period, ALWAYS use get_income_statement, not this function.
 
-        Note on pagination:
+        The response includes:
+        - `transactions`: Array of transactions for the current page only
+        - `total_results`: Count of ALL matching transactions (not just this page)
+        - `total_income`: Pre-calculated total income for ALL matching transactions
+        - `total_expenses`: Pre-calculated total expenses for ALL matching transactions
+        - `total_pages`: Number of pages available
 
-        This function can be paginated.  You can expect the following properties in the response:
+        CRITICAL: Use the provided `total_income` and `total_expenses` values!
+        DO NOT manually sum the transactions array - it only contains one page of data.
 
-        - `total_pages`: The total number of pages of results
-        - `page`: The current page of results
-        - `page_size`: The number of results per page (this will always be #{default_page_size})
-        - `total_results`: The total number of results for the given filters
-        - `total_income`: The total income for the given filters
-        - `total_expenses`: The total expenses for the given filters
-
-        Simple example (transactions from the last 30 days):
-
+        Example:
         ```
         get_transactions({
           page: 1,
+          order: "desc",
           start_date: "#{30.days.ago.to_date}",
           end_date: "#{Date.current}"
-        })
-        ```
-
-        More complex example (various filters):
-
-        ```
-        get_transactions({
-          page: 1,
-          search: "mcdonalds",
-          accounts: ["Checking", "Savings"],
-          start_date: "#{30.days.ago.to_date}",
-          end_date: "#{Date.current}",
-          categories: ["Restaurants"],
-          merchants: ["McDonald's"],
-          tags: ["Food"],
-          amount: "100",
-          amount_operator: "less"
         })
         ```
       INSTRUCTIONS
