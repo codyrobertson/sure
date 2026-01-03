@@ -1,10 +1,15 @@
 <% return unless data.present? %>
 
-<div class="space-y-8">
-  <%# Alerts - Simple inline style %>
+<div class="space-y-6">
+  <%# Alerts Card %>
   <% if data[:alerts].any? %>
     <div class="space-y-2">
       <% data[:alerts].each do |alert| %>
+        <% bg_class = case alert[:severity]
+          when :alert then "bg-destructive/10 border-destructive/30"
+          when :warning then "bg-warning/10 border-warning/30"
+          else "bg-surface-inset border-secondary"
+        end %>
         <% icon_class = case alert[:severity]
           when :alert then "text-destructive"
           when :warning then "text-warning"
@@ -16,41 +21,49 @@
           else "info"
         end %>
 
-        <div class="flex items-start gap-2 text-sm">
-          <%= icon(icon_name, class: "w-4 h-4 mt-0.5 flex-shrink-0 #{icon_class}") %>
-          <p class="text-primary"><%= alert[:message] %></p>
+        <div class="flex items-start gap-3 p-4 rounded-xl border <%= bg_class %>">
+          <%= icon(icon_name, class: "w-5 h-5 mt-0.5 #{icon_class}") %>
+          <p class="text-sm text-primary"><%= alert[:message] %></p>
         </div>
       <% end %>
     </div>
   <% end %>
 
-  <%# Income Timing - Simple highlight %>
+  <%# Income Timing Card %>
   <% if data[:income_timing] %>
-    <div class="border-l-2 border-success pl-4 py-2">
-      <div class="flex items-center gap-2 mb-2">
-        <%= icon("calendar-check", class: "w-4 h-4 text-success") %>
-        <span class="text-sm text-secondary"><%= t("reports.insights.cash_flow_timing.next_income") %></span>
+    <div class="bg-success/10 border border-success/30 rounded-xl p-5">
+      <div class="flex items-center gap-2 mb-4">
+        <%= icon("calendar-check", class: "w-5 h-5 text-success") %>
+        <h4 class="text-sm font-medium text-success">
+          <%= t("reports.insights.cash_flow_timing.next_income") %>
+        </h4>
       </div>
 
-      <div class="flex items-baseline gap-4">
-        <span class="text-2xl font-semibold text-success"><%= data[:income_timing][:amount][:formatted] %></span>
-        <span class="text-sm text-secondary">
-          in <span class="font-medium text-primary"><%= data[:income_timing][:days_until] %></span> days
-          (<%= Date.parse(data[:income_timing][:next_paycheck_date]).strftime("%b %d") %>)
-        </span>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <p class="text-2xl font-semibold text-success"><%= data[:income_timing][:amount][:formatted] %></p>
+          <p class="text-xs text-secondary"><%= t("reports.insights.cash_flow_timing.expected_amount") %></p>
+        </div>
+        <div>
+          <p class="text-2xl font-semibold text-primary"><%= data[:income_timing][:days_until] %></p>
+          <p class="text-xs text-secondary"><%= t("reports.insights.cash_flow_timing.days_away") %></p>
+        </div>
+        <div>
+          <p class="text-2xl font-semibold text-primary"><%= Date.parse(data[:income_timing][:next_paycheck_date]).strftime("%b %d") %></p>
+          <p class="text-xs text-secondary"><%= data[:income_timing][:frequency].to_s.humanize %></p>
+        </div>
       </div>
     </div>
   <% end %>
 
-  <%# Balance Projection Chart - No container %>
+  <%# Balance Projection Chart Card %>
   <% if data[:balance_projection].any? %>
-    <div>
-      <p class="text-sm text-secondary mb-4">
+    <div class="bg-container rounded-xl shadow-border-xs p-5">
+      <h4 class="text-sm font-medium text-primary mb-4">
         <%= t("reports.insights.cash_flow_timing.balance_projection") %>
-      </p>
+      </h4>
 
-      <%# Mini chart %>
-      <div class="relative h-20 flex items-end gap-0.5">
+      <div class="relative h-24 flex items-end gap-0.5">
         <% projections = data[:balance_projection].first(14) %>
         <% max_balance = projections.map { |p| p[:projected_balance][:amount] }.max %>
         <% min_balance = projections.map { |p| p[:projected_balance][:amount] }.min %>
@@ -71,96 +84,96 @@
         <% end %>
       </div>
 
-      <div class="flex justify-between mt-2 text-xs text-tertiary">
+      <div class="flex justify-between mt-2 text-xs text-subdued">
         <span><%= t("reports.insights.cash_flow_timing.today") %></span>
         <span><%= t("reports.insights.cash_flow_timing.in_two_weeks") %></span>
       </div>
     </div>
   <% end %>
 
-  <%# Upcoming Bills - Simple list with dividers %>
+  <%# Upcoming Bills Card %>
   <% if data[:upcoming_bills].any? %>
-    <div>
-      <div class="flex items-center gap-2 mb-3">
-        <%= icon("receipt", class: "w-4 h-4 text-secondary") %>
-        <p class="text-sm text-secondary">
+    <div class="bg-container rounded-xl shadow-border-xs p-5">
+      <div class="flex items-center gap-2 mb-4">
+        <%= icon("receipt", class: "w-5 h-5 text-primary") %>
+        <h4 class="text-sm font-medium text-primary">
           <%= t("reports.insights.cash_flow_timing.upcoming_bills") %>
-        </p>
+        </h4>
       </div>
 
-      <div class="divide-y divide-secondary/20">
-        <% data[:upcoming_bills].first(6).each do |bill| %>
-          <div class="flex items-center justify-between py-3 first:pt-0 last:pb-0">
-            <div class="flex items-center gap-3">
-              <div class="text-center min-w-10">
-                <p class="text-lg font-semibold text-primary"><%= Date.parse(bill[:date]).day %></p>
-                <p class="text-xs text-tertiary"><%= Date.parse(bill[:date]).strftime("%b") %></p>
-              </div>
-              <div>
+      <table class="w-full text-sm">
+        <tbody>
+          <% data[:upcoming_bills].first(6).each do |bill| %>
+            <tr class="border-b border-secondary/20 last:border-0">
+              <td class="py-3 w-14">
+                <div class="text-center">
+                  <p class="text-lg font-semibold text-primary"><%= Date.parse(bill[:date]).day %></p>
+                  <p class="text-xs text-subdued"><%= Date.parse(bill[:date]).strftime("%b") %></p>
+                </div>
+              </td>
+              <td class="py-3">
                 <p class="font-medium text-primary"><%= bill[:name] %></p>
                 <% if bill[:category] %>
-                  <p class="text-xs text-tertiary"><%= bill[:category] %></p>
+                  <p class="text-xs text-subdued"><%= bill[:category] %></p>
                 <% end %>
-              </div>
-            </div>
-            <div class="text-right">
-              <p class="font-medium text-primary"><%= bill[:amount][:formatted] %></p>
-              <% if bill[:can_afford] %>
-                <p class="text-xs text-success">
-                  <%= t("reports.insights.cash_flow_timing.can_afford") %>
-                </p>
-              <% else %>
-                <p class="text-xs text-destructive">
-                  <%= t("reports.insights.cash_flow_timing.short") %>
-                </p>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      </div>
+              </td>
+              <td class="py-3 text-right">
+                <p class="font-medium text-primary"><%= bill[:amount][:formatted] %></p>
+                <% if bill[:can_afford] %>
+                  <p class="text-xs text-success"><%= t("reports.insights.cash_flow_timing.can_afford") %></p>
+                <% else %>
+                  <p class="text-xs text-destructive"><%= t("reports.insights.cash_flow_timing.short") %></p>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
   <% end %>
 
-  <%# Weekly Summary - Simple grid %>
+  <%# Weekly Summary Cards %>
   <% if data[:daily_summary].any? %>
     <div>
-      <p class="text-sm text-secondary mb-4">
+      <h4 class="text-sm font-medium text-primary mb-4">
         <%= t("reports.insights.cash_flow_timing.weekly_outlook") %>
-      </p>
+      </h4>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <% data[:daily_summary].each_with_index do |week, index| %>
-          <div class="border-l-2 border-secondary/40 pl-4">
-            <div class="flex items-center justify-between mb-2">
-              <span class="font-medium text-primary">
+          <div class="bg-container rounded-xl shadow-border-xs p-5">
+            <div class="flex items-center justify-between mb-4">
+              <h5 class="font-medium text-primary">
                 <% if index == 0 %>
                   <%= t("reports.insights.cash_flow_timing.this_week") %>
                 <% else %>
                   <%= t("reports.insights.cash_flow_timing.next_week") %>
                 <% end %>
-              </span>
-              <span class="text-xs text-tertiary">
+              </h5>
+              <span class="text-xs text-subdued">
                 <%= Date.parse(week[:start_date]).strftime("%b %d") %> - <%= Date.parse(week[:end_date]).strftime("%b %d") %>
               </span>
             </div>
 
-            <div class="space-y-1 text-sm">
-              <div class="flex items-center justify-between">
-                <span class="text-tertiary"><%= t("reports.insights.cash_flow_timing.inflows") %></span>
-                <span class="font-medium text-success">+<%= week[:total_inflows][:formatted] %></span>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-tertiary"><%= t("reports.insights.cash_flow_timing.outflows") %></span>
-                <span class="font-medium text-destructive">-<%= week[:total_outflows][:formatted] %></span>
-              </div>
-              <div class="flex items-center justify-between pt-1 border-t border-secondary/20">
-                <span class="text-tertiary"><%= t("reports.insights.cash_flow_timing.net") %></span>
-                <% net = week[:net][:amount] %>
-                <span class="font-medium <%= net >= 0 ? 'text-success' : 'text-destructive' %>">
-                  <%= week[:net][:formatted] %>
-                </span>
-              </div>
-            </div>
+            <table class="w-full text-sm">
+              <tbody>
+                <tr class="border-b border-secondary/20">
+                  <td class="py-2 text-secondary"><%= t("reports.insights.cash_flow_timing.inflows") %></td>
+                  <td class="py-2 font-medium text-success text-right">+<%= week[:total_inflows][:formatted] %></td>
+                </tr>
+                <tr class="border-b border-secondary/20">
+                  <td class="py-2 text-secondary"><%= t("reports.insights.cash_flow_timing.outflows") %></td>
+                  <td class="py-2 font-medium text-destructive text-right">-<%= week[:total_outflows][:formatted] %></td>
+                </tr>
+                <tr>
+                  <td class="py-2 font-medium text-primary"><%= t("reports.insights.cash_flow_timing.net") %></td>
+                  <% net = week[:net][:amount] %>
+                  <td class="py-2 font-medium text-right <%= net >= 0 ? 'text-success' : 'text-destructive' %>">
+                    <%= week[:net][:formatted] %>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         <% end %>
       </div>
@@ -169,7 +182,7 @@
 
   <%# Insights %>
   <% if data[:insights].present? %>
-    <div class="space-y-2 pt-4 border-t border-secondary/20">
+    <div class="space-y-2">
       <% data[:insights].each do |insight| %>
         <% colors = { positive: "text-success", warning: "text-warning", alert: "text-destructive" } %>
         <% icons = { positive: "check-circle", warning: "alert-triangle", alert: "alert-circle" } %>

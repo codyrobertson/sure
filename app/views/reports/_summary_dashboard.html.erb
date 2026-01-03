@@ -1,131 +1,48 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-  <%# Total Income Card %>
-  <div class="bg-container rounded-xl shadow-border-xs p-6">
-    <div class="flex items-start justify-between mb-3">
-      <div class="flex items-center gap-2">
-        <%= icon("trending-up", class: "w-5 h-5 text-success") %>
-        <h3 class="text-sm font-medium text-secondary">
-          <%= t("reports.summary.total_income") %>
-        </h3>
-      </div>
-    </div>
-
-    <div class="space-y-2">
-      <p class="text-2xl font-semibold text-primary">
-        <%= metrics[:current_income].format %>
-      </p>
-
-      <% if metrics[:income_change] %>
-        <div class="flex items-center gap-1.5">
-          <% if metrics[:income_change] >= 0 %>
-            <%= icon("arrow-up", class: "w-4 h-4 text-success") %>
-            <span class="text-sm font-medium text-success">
-              +<%= metrics[:income_change] %>%
-            </span>
-          <% else %>
-            <%= icon("arrow-down", class: "w-4 h-4 text-destructive") %>
-            <span class="text-sm font-medium text-destructive">
-              <%= metrics[:income_change] %>%
-            </span>
-          <% end %>
-          <span class="text-sm text-tertiary">
-            <%= t("reports.summary.vs_previous") %>
-          </span>
-        </div>
-      <% end %>
-    </div>
-  </div>
-
-  <%# Total Expenses Card %>
-  <div class="bg-container rounded-xl shadow-border-xs p-6">
-    <div class="flex items-start justify-between mb-3">
-      <div class="flex items-center gap-2">
-        <%= icon("trending-down", class: "w-5 h-5 text-destructive") %>
-        <h3 class="text-sm font-medium text-secondary">
-          <%= t("reports.summary.total_expenses") %>
-        </h3>
-      </div>
-    </div>
-
-    <div class="space-y-2">
-      <p class="text-2xl font-semibold text-primary">
-        <%= metrics[:current_expenses].format %>
-      </p>
-
-      <% if metrics[:expense_change] %>
-        <div class="flex items-center gap-1.5">
-          <% if metrics[:expense_change] >= 0 %>
-            <%= icon("arrow-up", class: "w-4 h-4 text-destructive") %>
-            <span class="text-sm font-medium text-destructive">
-              +<%= metrics[:expense_change] %>%
-            </span>
-          <% else %>
-            <%= icon("arrow-down", class: "w-4 h-4 text-success") %>
-            <span class="text-sm font-medium text-success">
-              <%= metrics[:expense_change] %>%
-            </span>
-          <% end %>
-          <span class="text-sm text-tertiary">
-            <%= t("reports.summary.vs_previous") %>
-          </span>
-        </div>
-      <% end %>
-    </div>
-  </div>
-
-  <%# Net Savings Card %>
-  <div class="bg-container rounded-xl shadow-border-xs p-6">
-    <div class="flex items-start justify-between mb-3">
-      <div class="flex items-center gap-2">
-        <%= icon("piggy-bank", class: "w-5 h-5 text-primary") %>
-        <h3 class="text-sm font-medium text-secondary">
-          <%= t("reports.summary.net_savings") %>
-        </h3>
-      </div>
-    </div>
-
-    <div class="space-y-2">
-      <p class="text-2xl font-semibold <%= metrics[:net_savings] >= 0 ? "text-success" : "text-destructive" %>">
+<%# Hero metric - Net Savings as the main focus %>
+<div class="space-y-8">
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+    <%# Primary metric - Net Savings (like the €19,546.50 in reference) %>
+    <div>
+      <p class="text-sm text-secondary mb-1"><%= t("reports.summary.net_savings") %></p>
+      <p class="text-4xl lg:text-5xl font-semibold tracking-tight <%= metrics[:net_savings] >= 0 ? 'text-success' : 'text-destructive' %>">
         <%= metrics[:net_savings].format %>
       </p>
-
-      <p class="text-sm text-tertiary">
-        <%= t("reports.summary.income_minus_expenses") %>
-      </p>
+      <p class="text-sm text-tertiary mt-1"><%= t("reports.summary.income_minus_expenses") %></p>
     </div>
-  </div>
 
-  <%# Budget Performance Card %>
-  <div class="bg-container rounded-xl shadow-border-xs p-6">
-    <div class="flex items-start justify-between mb-3">
-      <div class="flex items-center gap-2">
-        <%= icon("gauge", class: "w-5 h-5 text-primary") %>
-        <h3 class="text-sm font-medium text-secondary">
-          <%= t("reports.summary.budget_performance") %>
-        </h3>
+    <%# Secondary metrics - Income, Expenses, Budget %>
+    <div class="flex flex-wrap gap-8 lg:gap-12">
+      <div>
+        <p class="text-sm text-secondary mb-1"><%= t("reports.summary.total_income") %></p>
+        <p class="text-2xl font-semibold text-success"><%= metrics[:current_income].format %></p>
+        <% if metrics[:income_change] %>
+          <p class="text-xs mt-1 <%= metrics[:income_change] >= 0 ? 'text-success' : 'text-destructive' %>">
+            <%= metrics[:income_change] >= 0 ? '+' : '' %><%= metrics[:income_change] %>% <%= t("reports.summary.vs_previous") %>
+          </p>
+        <% end %>
       </div>
-    </div>
 
-    <div class="space-y-2">
+      <div>
+        <p class="text-sm text-secondary mb-1"><%= t("reports.summary.total_expenses") %></p>
+        <p class="text-2xl font-semibold text-destructive"><%= metrics[:current_expenses].format %></p>
+        <% if metrics[:expense_change] %>
+          <p class="text-xs mt-1 <%= metrics[:expense_change] <= 0 ? 'text-success' : 'text-destructive' %>">
+            <%= metrics[:expense_change] >= 0 ? '+' : '' %><%= metrics[:expense_change] %>% <%= t("reports.summary.vs_previous") %>
+          </p>
+        <% end %>
+      </div>
+
       <% if metrics[:budget_percent] %>
-        <p class="text-2xl font-semibold text-primary">
-          <%= metrics[:budget_percent] %>%
-        </p>
-
-        <div class="space-y-1.5">
-          <div class="h-2 bg-surface-inset rounded-full overflow-hidden">
-            <div class="h-full <%= metrics[:budget_percent] >= 100 ? "bg-destructive" : metrics[:budget_percent] >= 80 ? "bg-warning" : "bg-success" %> rounded-full transition-all"
+        <div>
+          <p class="text-sm text-secondary mb-1"><%= t("reports.summary.budget_performance") %></p>
+          <p class="text-2xl font-semibold <%= metrics[:budget_percent] >= 100 ? 'text-destructive' : metrics[:budget_percent] >= 80 ? 'text-warning' : 'text-primary' %>">
+            <%= metrics[:budget_percent] %>%
+          </p>
+          <div class="w-24 h-1.5 bg-secondary/20 rounded-full mt-2 overflow-hidden">
+            <div class="h-full <%= metrics[:budget_percent] >= 100 ? 'bg-destructive' : metrics[:budget_percent] >= 80 ? 'bg-warning' : 'bg-success' %> rounded-full"
                  style="width: <%= [metrics[:budget_percent], 100].min %>%"></div>
           </div>
-
-          <p class="text-sm text-tertiary">
-            <%= t("reports.summary.of_budget_used") %>
-          </p>
         </div>
-      <% else %>
-        <p class="text-base text-tertiary">
-          <%= t("reports.summary.no_budget_data") %>
-        </p>
       <% end %>
     </div>
   </div>

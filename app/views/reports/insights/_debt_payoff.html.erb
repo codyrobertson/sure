@@ -1,156 +1,143 @@
 <% return unless data.present? %>
 
-<div class="space-y-8">
-  <%# Key Metrics - Simple layout %>
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
-    <div>
-      <p class="text-sm text-secondary mb-1"><%= t("reports.insights.debt_payoff.total_debt") %></p>
-      <p class="text-2xl font-semibold text-destructive">
-        <%= data[:total_debt][:formatted] %>
-      </p>
-    </div>
-
-    <div>
-      <p class="text-sm text-secondary mb-1"><%= t("reports.insights.debt_payoff.paid_this_period") %></p>
-      <p class="text-2xl font-semibold text-primary">
-        <%= data[:progress][:total_paid][:formatted] %>
-      </p>
-    </div>
-
-    <div>
-      <p class="text-sm text-secondary mb-1"><%= t("reports.insights.debt_payoff.principal") %></p>
-      <p class="text-2xl font-semibold text-success">
-        <%= data[:progress][:principal_paid][:formatted] %>
-      </p>
-    </div>
-
-    <div>
-      <p class="text-sm text-secondary mb-1"><%= t("reports.insights.debt_payoff.interest") %></p>
-      <p class="text-2xl font-semibold text-warning">
-        <%= data[:interest_this_period][:formatted] %>
-      </p>
-    </div>
-  </div>
-
-  <%# Principal vs Interest Bar %>
-  <% if data[:progress][:total_paid][:amount] > 0 %>
-    <div>
-      <div class="flex items-center justify-between mb-2">
-        <p class="text-sm text-secondary"><%= t("reports.insights.debt_payoff.payment_breakdown") %></p>
-        <p class="text-sm text-secondary">
-          <%= data[:progress][:principal_percent].round(1) %>% to principal
+<div class="space-y-6">
+  <%# Key Metrics Card %>
+  <div class="bg-container rounded-xl shadow-border-xs p-5">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      <div>
+        <p class="text-sm text-secondary mb-1"><%= t("reports.insights.debt_payoff.total_debt") %></p>
+        <p class="text-2xl font-semibold text-destructive">
+          <%= data[:total_debt][:formatted] %>
         </p>
       </div>
 
-      <div class="h-2 bg-secondary/20 rounded-full overflow-hidden flex">
+      <div>
+        <p class="text-sm text-secondary mb-1"><%= t("reports.insights.debt_payoff.paid_this_period") %></p>
+        <p class="text-2xl font-semibold text-primary">
+          <%= data[:progress][:total_paid][:formatted] %>
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm text-secondary mb-1"><%= t("reports.insights.debt_payoff.principal") %></p>
+        <p class="text-2xl font-semibold text-success">
+          <%= data[:progress][:principal_paid][:formatted] %>
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm text-secondary mb-1"><%= t("reports.insights.debt_payoff.interest") %></p>
+        <p class="text-2xl font-semibold text-warning">
+          <%= data[:interest_this_period][:formatted] %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <%# Principal vs Interest Bar Card %>
+  <% if data[:progress][:total_paid][:amount] > 0 %>
+    <div class="bg-container rounded-xl shadow-border-xs p-5">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-sm font-medium text-primary"><%= t("reports.insights.debt_payoff.payment_breakdown") %></p>
+        <p class="text-sm text-secondary">
+          <%= data[:progress][:principal_percent].round(1) %>% <%= t("reports.insights.debt_payoff.to_principal") %>
+        </p>
+      </div>
+
+      <div class="h-3 bg-secondary/20 rounded-full overflow-hidden flex">
         <% principal_pct = data[:progress][:principal_percent] %>
         <div class="h-full bg-success" style="width: <%= principal_pct %>%;"></div>
         <div class="h-full bg-warning" style="width: <%= 100 - principal_pct %>%;"></div>
       </div>
 
-      <div class="flex items-center gap-4 mt-2 text-xs text-tertiary">
-        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-success"></span> Principal</span>
-        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-warning"></span> Interest</span>
+      <div class="flex items-center gap-4 mt-3 text-xs text-subdued">
+        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-success"></span> <%= t("reports.insights.debt_payoff.principal") %></span>
+        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-warning"></span> <%= t("reports.insights.debt_payoff.interest") %></span>
       </div>
     </div>
   <% end %>
 
-  <%# Individual Debts - Use border dividers instead of cards %>
+  <%# Individual Debts Card %>
   <% if data[:debts].any? %>
-    <div>
-      <p class="text-sm text-secondary mb-4"><%= t("reports.insights.debt_payoff.your_debts") %></p>
+    <div class="bg-container rounded-xl shadow-border-xs p-5">
+      <p class="text-sm font-medium text-primary mb-4"><%= t("reports.insights.debt_payoff.your_debts") %></p>
 
-      <div class="divide-y divide-secondary/20">
-        <% data[:debts].each do |debt| %>
-          <div class="py-4 first:pt-0 last:pb-0">
-            <div class="flex items-center justify-between mb-2">
-              <div class="flex items-center gap-2">
-                <% icon_name = debt[:account][:type] == "CreditCard" ? "credit-card" : "landmark" %>
-                <%= icon(icon_name, class: "w-4 h-4 text-secondary") %>
-                <span class="font-medium text-primary"><%= debt[:account][:name] %></span>
-              </div>
-              <span class="text-lg font-semibold text-destructive"><%= debt[:balance][:formatted] %></span>
-            </div>
-
-            <% if debt[:percent_paid] > 0 %>
-              <div class="h-1 bg-secondary/20 rounded-full overflow-hidden mb-3">
-                <div class="h-full bg-success rounded-full" style="width: <%= debt[:percent_paid] %>%;"></div>
-              </div>
-            <% end %>
-
-            <div class="grid grid-cols-4 gap-4 text-sm">
-              <div>
-                <p class="text-xs text-tertiary"><%= t("reports.insights.debt_payoff.interest_rate") %></p>
-                <p class="font-medium text-primary"><%= debt[:interest_rate] %>%</p>
-              </div>
-              <div>
-                <p class="text-xs text-tertiary"><%= t("reports.insights.debt_payoff.monthly_payment") %></p>
-                <p class="font-medium text-primary"><%= debt[:monthly_payment][:formatted] %></p>
-              </div>
-              <div>
-                <p class="text-xs text-tertiary"><%= t("reports.insights.debt_payoff.months_remaining") %></p>
-                <p class="font-medium text-primary">
-                  <%= debt[:months_remaining] && debt[:months_remaining] < 999 ? debt[:months_remaining] : "—" %>
-                </p>
-              </div>
-              <div>
-                <p class="text-xs text-tertiary"><%= t("reports.insights.debt_payoff.payoff_date") %></p>
-                <p class="font-medium text-primary">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-secondary/30">
+              <th class="text-left py-2 text-xs text-subdued font-medium"><%= t("reports.insights.debt_payoff.account") %></th>
+              <th class="text-right py-2 text-xs text-subdued font-medium"><%= t("reports.insights.debt_payoff.interest_rate") %></th>
+              <th class="text-right py-2 text-xs text-subdued font-medium"><%= t("reports.insights.debt_payoff.monthly_payment") %></th>
+              <th class="text-right py-2 text-xs text-subdued font-medium"><%= t("reports.insights.debt_payoff.payoff_date") %></th>
+              <th class="text-right py-2 text-xs text-subdued font-medium"><%= t("reports.insights.debt_payoff.balance") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% data[:debts].each do |debt| %>
+              <tr class="border-b border-secondary/20 last:border-0">
+                <td class="py-3">
+                  <div class="flex items-center gap-2">
+                    <% icon_name = debt[:account][:type] == "CreditCard" ? "credit-card" : "landmark" %>
+                    <%= icon(icon_name, class: "w-4 h-4 text-secondary") %>
+                    <span class="font-medium text-primary"><%= debt[:account][:name] %></span>
+                  </div>
+                </td>
+                <td class="py-3 text-right text-primary"><%= debt[:interest_rate] %>%</td>
+                <td class="py-3 text-right text-primary"><%= debt[:monthly_payment][:formatted] %></td>
+                <td class="py-3 text-right text-subdued">
                   <%= debt[:payoff_date] ? debt[:payoff_date].strftime("%b %Y") : "—" %>
-                </p>
-              </div>
-            </div>
-
-            <% if debt[:total_interest][:amount] > 0 %>
-              <p class="mt-2 text-xs text-warning">
-                <%= t("reports.insights.debt_payoff.total_interest_cost", amount: debt[:total_interest][:formatted]) %>
-              </p>
+                </td>
+                <td class="py-3 text-right font-semibold text-destructive"><%= debt[:balance][:formatted] %></td>
+              </tr>
             <% end %>
-          </div>
-        <% end %>
+          </tbody>
+        </table>
       </div>
     </div>
   <% end %>
 
-  <%# Acceleration Scenarios - Simple table %>
+  <%# Acceleration Scenarios Card %>
   <% if data[:acceleration_scenarios].any? %>
-    <div>
+    <div class="bg-container rounded-xl shadow-border-xs p-5">
       <div class="flex items-center gap-2 mb-1">
         <%= icon("zap", class: "w-4 h-4 text-warning") %>
         <p class="text-sm font-medium text-primary"><%= t("reports.insights.debt_payoff.acceleration_title") %></p>
       </div>
       <p class="text-xs text-secondary mb-4"><%= t("reports.insights.debt_payoff.acceleration_description") %></p>
 
-      <table class="w-full text-sm">
-        <thead>
-          <tr class="border-b border-secondary/30">
-            <th class="text-left py-2 text-xs text-tertiary font-medium"><%= t("reports.insights.debt_payoff.extra_monthly") %></th>
-            <th class="text-right py-2 text-xs text-tertiary font-medium"><%= t("reports.insights.debt_payoff.months_saved") %></th>
-            <th class="text-right py-2 text-xs text-tertiary font-medium"><%= t("reports.insights.debt_payoff.interest_saved") %></th>
-            <th class="text-right py-2 text-xs text-tertiary font-medium"><%= t("reports.insights.debt_payoff.new_payoff") %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% data[:acceleration_scenarios].each do |scenario| %>
-            <tr class="border-b border-secondary/10">
-              <td class="py-2 font-medium text-primary">+<%= scenario[:extra_monthly][:formatted] %></td>
-              <td class="py-2 text-right text-success">
-                <%= scenario[:months_saved] > 0 ? "#{scenario[:months_saved]} mo" : "—" %>
-              </td>
-              <td class="py-2 text-right text-success font-medium"><%= scenario[:interest_saved][:formatted] %></td>
-              <td class="py-2 text-right text-secondary">
-                <%= scenario[:new_payoff_date] ? scenario[:new_payoff_date].strftime("%b %Y") : "—" %>
-              </td>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-secondary/30">
+              <th class="text-left py-2 text-xs text-subdued font-medium"><%= t("reports.insights.debt_payoff.extra_monthly") %></th>
+              <th class="text-right py-2 text-xs text-subdued font-medium"><%= t("reports.insights.debt_payoff.months_saved") %></th>
+              <th class="text-right py-2 text-xs text-subdued font-medium"><%= t("reports.insights.debt_payoff.interest_saved") %></th>
+              <th class="text-right py-2 text-xs text-subdued font-medium"><%= t("reports.insights.debt_payoff.new_payoff") %></th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <% data[:acceleration_scenarios].each do |scenario| %>
+              <tr class="border-b border-secondary/10 last:border-0">
+                <td class="py-2.5 font-medium text-primary">+<%= scenario[:extra_monthly][:formatted] %></td>
+                <td class="py-2.5 text-right text-success">
+                  <%= scenario[:months_saved] > 0 ? "#{scenario[:months_saved]} mo" : "—" %>
+                </td>
+                <td class="py-2.5 text-right text-success font-medium"><%= scenario[:interest_saved][:formatted] %></td>
+                <td class="py-2.5 text-right text-secondary">
+                  <%= scenario[:new_payoff_date] ? scenario[:new_payoff_date].strftime("%b %Y") : "—" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
   <% end %>
 
   <%# Insights %>
   <% if data[:insights].present? %>
-    <div class="space-y-2 pt-4 border-t border-secondary/20">
+    <div class="space-y-2">
       <% data[:insights].each do |insight| %>
         <% colors = { positive: "text-success", warning: "text-warning", alert: "text-destructive", info: "text-secondary" } %>
         <% icons = { positive: "check-circle", warning: "alert-triangle", alert: "alert-circle", info: "lightbulb" } %>

@@ -164,8 +164,10 @@ en:
         new_merchants: New Merchants
         unusual_spending: Unusual Spending by Category
         vs_average: "vs %{amount} avg"
+        category: Category
         current_label: Current
-        average_label: Avg
+        average_label: Average
+        variance: Variance
         top_transactions: View top transactions
         no_anomalies: No unusual spending detected. Your spending patterns are consistent with historical averages.
         new_merchants_title: New Merchants This Period
@@ -188,9 +190,13 @@ en:
         historical_trend: 12-Month Savings Rate
         on_target: On target
         below_target: Below target
+        below_target_by: "%{percent}% below target"
+        spending_exceeds_income: Spending exceeds income
         negative: Negative
         best_month: Best Month
         worst_month: Worst Month
+        progress_to_target: Progress to Target
+        trend_title: 12-Month Trend
       debt_payoff:
         title: Debt Payoff Progress
         total_debt: Total Debt
@@ -199,10 +205,13 @@ en:
         interest: Interest
         payment_breakdown: Payment Breakdown
         your_debts: Your Debts
+        account: Account
         interest_rate: Interest Rate
         monthly_payment: Monthly Payment
         months_remaining: Months Left
         payoff_date: Payoff Date
+        balance: Balance
+        to_principal: to principal
         indefinite: N/A
         total_interest_cost: "Total interest if paid as scheduled: %{amount}"
         acceleration_title: Accelerate Your Payoff
@@ -214,6 +223,7 @@ en:
         months: months
       recurring_costs:
         title: Recurring Costs
+        all_recurring_costs: All Recurring Costs
         monthly_total: Monthly Total
         annual_total: Annual Total
         fixed_costs: Fixed Costs
@@ -264,7 +274,10 @@ en:
         annual_potential: Annual Potential
         savings_rate_boost: Savings Rate Boost
         scenario_comparison: Scenario Comparison
+        scenario: Scenario
+        savings_rate: Savings Rate
         monthly_savings: Monthly Savings
+        current_badge: Current
         category_reductions: Category Reduction Scenarios
         current_label: Current
         cut_by: "Cut %{percent}%"

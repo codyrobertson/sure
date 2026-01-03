@@ -192,28 +192,24 @@
       } %>
     </section>
 
-    <%# Insights Section with Tabs %>
-    <section class="bg-container rounded-xl shadow-border-xs">
-      <div class="px-6 py-4 border-b border-secondary">
-        <h2 class="text-lg font-medium text-primary"><%= t("reports.insights.section_title") %></h2>
-      </div>
-
+    <%# Insights Section with Tabs - No heavy container, clean flow %>
+    <section class="mt-8">
       <%= render DS::Tabs.new(active_tab: params[:insights_tab].presence || "overview", url_param_key: "insights_tab") do |tabs| %>
-        <% tabs.with_nav(classes: "flex bg-surface-inset p-1 mx-6 mt-4 rounded-lg overflow-x-auto") do |nav| %>
-          <% nav.with_btn(id: "overview", label: t("reports.insights.tabs.overview"), classes: "whitespace-nowrap px-4 py-2 text-sm font-medium rounded-md transition-colors") %>
-          <% nav.with_btn(id: "spending", label: t("reports.insights.tabs.spending"), classes: "whitespace-nowrap px-4 py-2 text-sm font-medium rounded-md transition-colors") %>
-          <% nav.with_btn(id: "savings_debt", label: t("reports.insights.tabs.savings_debt"), classes: "whitespace-nowrap px-4 py-2 text-sm font-medium rounded-md transition-colors") %>
-          <% nav.with_btn(id: "optimize", label: t("reports.insights.tabs.optimize"), classes: "whitespace-nowrap px-4 py-2 text-sm font-medium rounded-md transition-colors") %>
+        <% tabs.with_nav(classes: "flex gap-1 border-b border-secondary/30 overflow-x-auto") do |nav| %>
+          <% nav.with_btn(id: "overview", label: t("reports.insights.tabs.overview"), classes: "whitespace-nowrap px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors") %>
+          <% nav.with_btn(id: "spending", label: t("reports.insights.tabs.spending"), classes: "whitespace-nowrap px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors") %>
+          <% nav.with_btn(id: "savings_debt", label: t("reports.insights.tabs.savings_debt"), classes: "whitespace-nowrap px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors") %>
+          <% nav.with_btn(id: "optimize", label: t("reports.insights.tabs.optimize"), classes: "whitespace-nowrap px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors") %>
         <% end %>
 
         <% tabs.with_panel(tab_id: "overview") do %>
-          <div class="p-6">
+          <div class="py-6">
             <%= render partial: "reports/insights/tab_overview", locals: { cash_flow: @cash_flow_analysis } %>
           </div>
         <% end %>
 
         <% tabs.with_panel(tab_id: "spending") do %>
-          <div class="p-6">
+          <div class="py-6">
             <%= render partial: "reports/insights/tab_spending", locals: {
               anomalies: @insights[:anomalies],
               merchants: @insights[:merchant_intelligence]
@@ -222,7 +218,7 @@
         <% end %>
 
         <% tabs.with_panel(tab_id: "savings_debt") do %>
-          <div class="p-6">
+          <div class="py-6">
             <%= render partial: "reports/insights/tab_savings_debt", locals: {
               savings_rate: @insights[:savings_rate],
               debt_payoff: @insights[:debt_payoff]
@@ -231,7 +227,7 @@
         <% end %>
 
         <% tabs.with_panel(tab_id: "optimize") do %>
-          <div class="p-6">
+          <div class="py-6">
             <%= render partial: "reports/insights/tab_optimize", locals: {
               recurring_costs: @insights[:recurring_costs],
               cash_flow_timing: @insights[:cash_flow_timing],
@@ -242,62 +238,50 @@
       <% end %>
     </section>
 
-    <%# Trends Section %>
+    <%# Trends Section - Collapsible with clean styling %>
     <% if @trends_data.present? %>
-      <section class="bg-container rounded-xl shadow-border-xs"
+      <section class="mt-8"
                data-controller="reports-section"
                data-reports-section-section-key-value="trends_insights"
                data-reports-section-collapsed-value="<%= Current.user.reports_section_collapsed?("trends_insights") %>">
-        <div class="px-4 py-3 flex items-center justify-between border-b border-secondary">
-          <div class="flex items-center gap-2">
-            <button
-              type="button"
-              class="text-secondary hover:text-primary transition-colors p-0.5"
-              data-action="click->reports-section#toggle"
-              data-reports-section-target="button"
-              aria-label="<%= t("reports.index.toggle_section") %>">
-              <%= icon("chevron-down", size: "sm", class: "transition-transform", data: { reports_section_target: "chevron" }) %>
-            </button>
+        <details open class="group">
+          <summary class="flex items-center gap-2 cursor-pointer list-none py-3 border-b border-secondary/30"
+                   data-action="click->reports-section#toggle">
+            <%= icon("chevron-down", size: "sm", class: "text-secondary transition-transform group-open:rotate-0 -rotate-90", data: { reports_section_target: "chevron" }) %>
             <h2 class="text-base font-medium text-primary">
               <%= t("reports.trends.title") %>
             </h2>
+          </summary>
+          <div class="py-6" data-reports-section-target="content">
+            <%= render partial: "reports/trends_insights", locals: { trends_data: @trends_data, spending_patterns: @spending_patterns } %>
           </div>
-        </div>
-        <div class="p-6" data-reports-section-target="content">
-          <%= render partial: "reports/trends_insights", locals: { trends_data: @trends_data, spending_patterns: @spending_patterns } %>
-        </div>
+        </details>
       </section>
     <% end %>
 
-    <%# Transactions Breakdown Section %>
+    <%# Transactions Breakdown Section - Collapsible with clean styling %>
     <% if @transactions.present? %>
-      <section class="bg-container rounded-xl shadow-border-xs"
+      <section class="mt-8"
                data-controller="reports-section"
                data-reports-section-section-key-value="transactions_breakdown"
                data-reports-section-collapsed-value="<%= Current.user.reports_section_collapsed?("transactions_breakdown") %>">
-        <div class="px-4 py-3 flex items-center justify-between border-b border-secondary">
-          <div class="flex items-center gap-2">
-            <button
-              type="button"
-              class="text-secondary hover:text-primary transition-colors p-0.5"
-              data-action="click->reports-section#toggle"
-              data-reports-section-target="button"
-              aria-label="<%= t("reports.index.toggle_section") %>">
-              <%= icon("chevron-down", size: "sm", class: "transition-transform", data: { reports_section_target: "chevron" }) %>
-            </button>
+        <details open class="group">
+          <summary class="flex items-center gap-2 cursor-pointer list-none py-3 border-b border-secondary/30"
+                   data-action="click->reports-section#toggle">
+            <%= icon("chevron-down", size: "sm", class: "text-secondary transition-transform group-open:rotate-0 -rotate-90", data: { reports_section_target: "chevron" }) %>
             <h2 class="text-base font-medium text-primary">
               <%= t("reports.transactions_breakdown.title") %>
             </h2>
+          </summary>
+          <div class="py-6" data-reports-section-target="content">
+            <%= render partial: "reports/transactions_breakdown", locals: {
+              transactions: @transactions,
+              period_type: @period_type,
+              start_date: @start_date,
+              end_date: @end_date
+            } %>
           </div>
-        </div>
-        <div class="p-6" data-reports-section-target="content">
-          <%= render partial: "reports/transactions_breakdown", locals: {
-            transactions: @transactions,
-            period_type: @period_type,
-            start_date: @start_date,
-            end_date: @end_date
-          } %>
-        </div>
+        </details>
       </section>
     <% end %>
   <% else %>
