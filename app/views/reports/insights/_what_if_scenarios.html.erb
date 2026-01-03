@@ -1,0 +1,202 @@
+<% return unless data.present? %>
+
+<div class="space-y-6">
+  <%# Easy Wins %>
+  <% if data[:easy_wins] && data[:easy_wins][:actions].any? %>
+    <div class="bg-success/10 border border-success/30 rounded-xl p-5">
+      <div class="flex items-center gap-2 mb-4">
+        <%= icon("zap", class: "w-5 h-5 text-success") %>
+        <h4 class="text-sm font-medium text-success">
+          <%= t("reports.insights.what_if.easy_wins") %>
+        </h4>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div class="bg-container rounded-lg p-3 text-center">
+          <p class="text-2xl font-semibold text-success"><%= data[:easy_wins][:total_monthly_savings][:formatted] %></p>
+          <p class="text-xs text-secondary"><%= t("reports.insights.what_if.monthly_potential") %></p>
+        </div>
+        <div class="bg-container rounded-lg p-3 text-center">
+          <p class="text-2xl font-semibold text-success"><%= data[:easy_wins][:total_annual_savings][:formatted] %></p>
+          <p class="text-xs text-secondary"><%= t("reports.insights.what_if.annual_potential") %></p>
+        </div>
+        <div class="bg-container rounded-lg p-3 text-center">
+          <p class="text-2xl font-semibold text-success">+<%= data[:easy_wins][:savings_rate_impact] %>%</p>
+          <p class="text-xs text-secondary"><%= t("reports.insights.what_if.savings_rate_boost") %></p>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <% data[:easy_wins][:actions].each do |action| %>
+          <% difficulty_class = case action[:difficulty]
+            when :easy then 'bg-success/20 text-success'
+            when :moderate then 'bg-warning/20 text-warning'
+            else 'bg-secondary/20 text-secondary'
+          end %>
+
+          <div class="flex items-center justify-between p-3 bg-container rounded-lg">
+            <div class="flex items-center gap-3">
+              <span class="text-xs px-2 py-0.5 rounded-full <%= difficulty_class %>">
+                <%= action[:difficulty].to_s.humanize %>
+              </span>
+              <span class="text-sm text-primary"><%= action[:action] %></span>
+            </div>
+            <div class="text-right">
+              <p class="font-medium text-success"><%= action[:monthly_savings][:formatted] %>/mo</p>
+              <p class="text-xs text-tertiary"><%= action[:annual_savings][:formatted] %>/yr</p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Impact Comparison %>
+  <% if data[:impact_summary].any? %>
+    <div class="bg-container rounded-xl shadow-border-xs p-5">
+      <h4 class="text-sm font-medium text-secondary mb-4">
+        <%= t("reports.insights.what_if.scenario_comparison") %>
+      </h4>
+
+      <div class="space-y-3">
+        <% data[:impact_summary].each_with_index do |scenario, index| %>
+          <% is_current = index == 0 %>
+          <% bar_width = scenario[:savings_rate] > 0 ? [scenario[:savings_rate], 50].min * 2 : 0 %>
+          <% bar_color = is_current ? 'bg-secondary' : 'bg-success' %>
+
+          <div class="border <%= is_current ? 'border-primary' : 'border-secondary' %> rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-medium text-primary <%= is_current ? 'flex items-center gap-2' : '' %>">
+                <%= scenario[:name] %>
+                <% if is_current %>
+                  <span class="text-xs px-1.5 py-0.5 bg-primary/10 rounded text-secondary">Current</span>
+                <% end %>
+              </span>
+              <span class="text-lg font-semibold <%= scenario[:savings_rate] >= 20 ? 'text-success' : scenario[:savings_rate] >= 0 ? 'text-warning' : 'text-destructive' %>">
+                <%= scenario[:savings_rate] %>%
+              </span>
+            </div>
+
+            <%# Progress bar %>
+            <div class="h-2 bg-container rounded-full overflow-hidden mb-2">
+              <div class="h-full <%= bar_color %> rounded-full transition-all" style="width: <%= bar_width %>%;"></div>
+            </div>
+
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-tertiary"><%= t("reports.insights.what_if.monthly_savings") %></span>
+              <span class="font-medium <%= scenario[:monthly_savings][:amount] >= 0 ? 'text-success' : 'text-destructive' %>">
+                <%= scenario[:monthly_savings][:formatted] %>
+              </span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Category Reduction Scenarios %>
+  <% if data[:category_scenarios].any? %>
+    <div class="bg-container rounded-xl shadow-border-xs p-5">
+      <h4 class="text-sm font-medium text-secondary mb-4">
+        <%= t("reports.insights.what_if.category_reductions") %>
+      </h4>
+
+      <div class="space-y-4">
+        <% data[:category_scenarios].each do |category| %>
+          <div class="border border-secondary rounded-lg p-4">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full" style="background-color: <%= category[:category][:color] %>;"></div>
+                <span class="font-medium text-primary"><%= category[:category][:name] %></span>
+              </div>
+              <span class="text-sm text-secondary"><%= t("reports.insights.what_if.current_label") %>: <%= category[:current][:formatted] %></span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+              <% category[:reductions].each do |reduction| %>
+                <div class="bg-container rounded-lg p-3 text-center hover:bg-success/10 transition-colors cursor-default">
+                  <p class="text-xs text-tertiary mb-1"><%= t("reports.insights.what_if.cut_by", percent: reduction[:percent]) %></p>
+                  <p class="font-medium text-success"><%= reduction[:monthly_savings][:formatted] %>/mo</p>
+                  <p class="text-xs text-secondary"><%= reduction[:annual_savings][:formatted] %>/yr</p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Subscription Scenarios %>
+  <% if data[:subscription_scenarios].any? %>
+    <div class="bg-container rounded-xl shadow-border-xs p-5">
+      <h4 class="text-sm font-medium text-secondary mb-4">
+        <%= t("reports.insights.what_if.subscription_review") %>
+      </h4>
+
+      <div class="space-y-2">
+        <% data[:subscription_scenarios].each do |sub| %>
+          <% priority_class = case sub[:priority]
+            when 1 then 'bg-success/10 border-success/30'
+            when 2 then 'bg-warning/10 border-warning/30'
+            else 'bg-surface-inset border-secondary'
+          end %>
+          <% priority_badge_class = case sub[:priority]
+            when 1 then 'bg-success text-white'
+            when 2 then 'bg-warning text-white'
+            else 'bg-secondary text-white'
+          end %>
+
+          <div class="flex items-center justify-between p-3 border rounded-lg <%= priority_class %>">
+            <div class="flex items-center gap-3">
+              <span class="text-xs px-2 py-0.5 rounded <%= priority_badge_class %>">
+                <%= sub[:priority_label] %>
+              </span>
+              <div>
+                <p class="font-medium text-primary"><%= sub[:recurring_transaction][:name] %></p>
+                <% if sub[:recurring_transaction][:category] %>
+                  <p class="text-xs text-tertiary"><%= sub[:recurring_transaction][:category] %></p>
+                <% end %>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-medium text-primary"><%= sub[:monthly_cost][:formatted] %>/mo</p>
+              <p class="text-xs text-tertiary"><%= sub[:annual_cost][:formatted] %>/yr</p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Insights %>
+  <% if data[:insights].present? %>
+    <div class="space-y-2">
+      <% data[:insights].each do |insight| %>
+        <% bg_class = case insight[:severity]
+          when :positive then "bg-success/10 border-success/30"
+          when :warning then "bg-warning/10 border-warning/30"
+          when :alert then "bg-destructive/10 border-destructive/30"
+          else "bg-surface-inset border-secondary"
+        end %>
+        <% icon_class = case insight[:severity]
+          when :positive then "text-success"
+          when :warning then "text-warning"
+          when :alert then "text-destructive"
+          else "text-secondary"
+        end %>
+        <% icon_name = case insight[:severity]
+          when :positive then "lightbulb"
+          when :warning then "alert-triangle"
+          when :alert then "alert-circle"
+          else "info"
+        end %>
+
+        <div class="flex items-start gap-3 p-3 rounded-lg border <%= bg_class %>">
+          <%= icon(icon_name, class: "w-5 h-5 mt-0.5 #{icon_class}") %>
+          <p class="text-sm text-primary"><%= insight[:message] %></p>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -37,7 +37,13 @@ class ReportsController < ApplicationController
     # Transactions breakdown
     @transactions = build_transactions_breakdown
 
-    # Build reports sections for collapsible/reorderable UI
+    # Cash flow analysis with sustainability metrics
+    @cash_flow_analysis = build_cash_flow_analysis
+
+    # Actionable insights modules
+    @insights = build_insights
+
+    # Build reports sections for collapsible/reorderable UI (after insights are built)
     @reports_sections = build_reports_sections
 
     @breadcrumbs = [ [ "Home", root_path ], [ "Reports", nil ] ]
@@ -121,6 +127,70 @@ class ReportsController < ApplicationController
 
     def build_reports_sections
       all_sections = [
+        {
+          key: "cash_flow",
+          title: "reports.cash_flow.title",
+          partial: "reports/cash_flow",
+          locals: { cash_flow: @cash_flow_analysis },
+          visible: Current.family.transactions.any? && @cash_flow_analysis.present?,
+          collapsible: true
+        },
+        {
+          key: "anomaly_detection",
+          title: "reports.insights.anomaly_detection.title",
+          partial: "reports/insights/anomaly_detection",
+          locals: { data: @insights[:anomalies] },
+          visible: @insights[:anomalies].present?,
+          collapsible: true
+        },
+        {
+          key: "savings_rate",
+          title: "reports.insights.savings_rate.title",
+          partial: "reports/insights/savings_rate",
+          locals: { data: @insights[:savings_rate] },
+          visible: @insights[:savings_rate].present?,
+          collapsible: true
+        },
+        {
+          key: "debt_payoff",
+          title: "reports.insights.debt_payoff.title",
+          partial: "reports/insights/debt_payoff",
+          locals: { data: @insights[:debt_payoff] },
+          visible: @insights[:debt_payoff].present?,
+          collapsible: true
+        },
+        {
+          key: "recurring_costs",
+          title: "reports.insights.recurring_costs.title",
+          partial: "reports/insights/recurring_costs",
+          locals: { data: @insights[:recurring_costs] },
+          visible: @insights[:recurring_costs].present?,
+          collapsible: true
+        },
+        {
+          key: "merchant_intelligence",
+          title: "reports.insights.merchant_intelligence.title",
+          partial: "reports/insights/merchant_intelligence",
+          locals: { data: @insights[:merchant_intelligence] },
+          visible: @insights[:merchant_intelligence].present?,
+          collapsible: true
+        },
+        {
+          key: "cash_flow_timing",
+          title: "reports.insights.cash_flow_timing.title",
+          partial: "reports/insights/cash_flow_timing",
+          locals: { data: @insights[:cash_flow_timing] },
+          visible: @insights[:cash_flow_timing].present?,
+          collapsible: true
+        },
+        {
+          key: "what_if_scenarios",
+          title: "reports.insights.what_if.title",
+          partial: "reports/insights/what_if_scenarios",
+          locals: { data: @insights[:what_if] },
+          visible: @insights[:what_if].present?,
+          collapsible: true
+        },
         {
           key: "trends_insights",
           title: "reports.trends.title",
@@ -352,6 +422,58 @@ class ReportsController < ApplicationController
         weekday_count: 0,
         weekend_count: 0
       }
+    end
+
+    def build_cash_flow_analysis
+      analyzer = CashFlowAnalyzer.new(Current.family, period: @period)
+      analyzer.analyze
+    rescue => e
+      Rails.logger.error("Cash flow analysis failed: #{e.message}")
+      nil
+    end
+
+    def build_insights
+      return {} unless Current.family.transactions.any?
+
+      insights = {}
+
+      # Anomaly Detection
+      insights[:anomalies] = build_insight(:anomaly_detector)
+
+      # Savings Rate Context
+      insights[:savings_rate] = build_insight(:savings_rate_analyzer)
+
+      # Debt Payoff Progress
+      insights[:debt_payoff] = build_insight(:debt_payoff_analyzer)
+
+      # Recurring Cost Awareness
+      insights[:recurring_costs] = build_insight(:recurring_cost_analyzer)
+
+      # Merchant Intelligence
+      insights[:merchant_intelligence] = build_insight(:merchant_intelligence)
+
+      # Cash Flow Timing
+      insights[:cash_flow_timing] = build_insight(:cash_flow_timing_analyzer)
+
+      # What-If Scenarios
+      insights[:what_if] = build_insight(:what_if_scenario_analyzer)
+
+      insights
+    rescue => e
+      Rails.logger.error("Insights build failed: #{e.message}")
+      {}
+    end
+
+    def build_insight(analyzer_name)
+      analyzer_class = "Insights::#{analyzer_name.to_s.camelize}".constantize
+      analyzer = analyzer_class.new(Current.family, period: @period)
+      analyzer.analyze
+    rescue NameError => e
+      Rails.logger.debug("Insight analyzer not yet implemented: #{analyzer_name}")
+      nil
+    rescue => e
+      Rails.logger.error("Insight #{analyzer_name} failed: #{e.message}")
+      nil
     end
 
     def build_transactions_breakdown

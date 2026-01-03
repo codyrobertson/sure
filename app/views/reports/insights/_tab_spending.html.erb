@@ -1,0 +1,30 @@
+<%# Spending Analysis Tab: Anomalies + Merchant Intelligence %>
+<div class="space-y-8">
+  <%# Anomaly Detection Section %>
+  <% if anomalies.present? %>
+    <div>
+      <h3 class="text-base font-medium text-primary mb-4 flex items-center gap-2">
+        <%= icon("alert-triangle", class: "w-5 h-5 text-warning") %>
+        <%= t("reports.insights.anomaly_detection.title") %>
+      </h3>
+      <%= render partial: "reports/insights/anomaly_detection", locals: { data: anomalies } %>
+    </div>
+  <% end %>
+
+  <%# Merchant Intelligence Section %>
+  <% if merchants.present? %>
+    <div>
+      <h3 class="text-base font-medium text-primary mb-4 flex items-center gap-2">
+        <%= icon("store", class: "w-5 h-5 text-primary") %>
+        <%= t("reports.insights.merchant_intelligence.title") %>
+      </h3>
+      <%= render partial: "reports/insights/merchant_intelligence", locals: { data: merchants } %>
+    </div>
+  <% end %>
+
+  <% if anomalies.blank? && merchants.blank? %>
+    <div class="text-center py-12 text-secondary">
+      <p><%= t("reports.insights.no_spending_data") %></p>
+    </div>
+  <% end %>
+</div>

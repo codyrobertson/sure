@@ -108,6 +108,27 @@ en:
         showing: Showing %{count} transactions
         previous: Previous
         next: Next
+    cash_flow:
+      title: Cash Flow & Sustainability
+      coverage: Income Coverage
+      of_outflow_covered: of total outflow covered by income
+      funding_gap: Funding Gap
+      living_within_means: Living within your means
+      spending_exceeds_income: Spending more than income
+      debt_payments: Debt Payments
+      credit_cards: Credit Cards
+      loans: Loans
+      breakdown: Cash Flow Breakdown
+      income: Income
+      lifestyle_expenses: Lifestyle Expenses
+      total_outflow: Total Outflow
+      funding_sources_title: How the Gap is Funded
+      funding_sources_description: "You're spending more than you earn. Here's where the extra money is coming from:"
+      sources:
+        savings_drawdown: Savings Drawdown
+        investment_liquidation: Investment Liquidation
+        crypto_liquidation: Crypto Liquidation
+        other: Other Sources
     google_sheets_instructions:
       title_with_key: "✅ Copy URL for Google Sheets"
       title_no_key: "⚠️ API Key Required"
@@ -124,3 +145,127 @@ en:
       open_sheets: Open Google Sheets
       go_to_api_keys: Go to API Keys
       close: Got it
+    insights:
+      section_title: Financial Insights
+      no_data: No data available for this period
+      no_spending_data: No spending data available
+      no_savings_debt_data: No savings or debt data available
+      no_optimize_data: No optimization data available
+      tabs:
+        overview: Overview
+        spending: Spending
+        savings_debt: Savings & Debt
+        optimize: Optimize
+      anomaly_detection:
+        title: Spending Anomalies
+        anomalies_found: Anomalies Found
+        critical: Critical
+        warnings: Warnings
+        new_merchants: New Merchants
+        unusual_spending: Unusual Spending by Category
+        vs_average: "vs %{amount} avg"
+        current_label: Current
+        average_label: Avg
+        top_transactions: View top transactions
+        no_anomalies: No unusual spending detected. Your spending patterns are consistent with historical averages.
+        new_merchants_title: New Merchants This Period
+        new_badge: NEW
+        transaction_count:
+          one: "%{count} transaction"
+          other: "%{count} transactions"
+      savings_rate:
+        title: Savings Rate
+        current_rate: Current Savings Rate
+        target_label: "Target: %{rate}%"
+        improving: Improving
+        declining: Declining
+        stable: Stable
+        breakdown: Period Breakdown
+        income: Income
+        expenses: Expenses
+        net_savings: Net Savings
+        save_more: "Save %{amount} more to reach your target"
+        historical_trend: 12-Month Savings Rate
+        on_target: On target
+        below_target: Below target
+        negative: Negative
+        best_month: Best Month
+        worst_month: Worst Month
+      debt_payoff:
+        title: Debt Payoff Progress
+        total_debt: Total Debt
+        paid_this_period: Paid This Period
+        principal: Principal
+        interest: Interest
+        payment_breakdown: Payment Breakdown
+        your_debts: Your Debts
+        interest_rate: Interest Rate
+        monthly_payment: Monthly Payment
+        months_remaining: Months Left
+        payoff_date: Payoff Date
+        indefinite: N/A
+        total_interest_cost: "Total interest if paid as scheduled: %{amount}"
+        acceleration_title: Accelerate Your Payoff
+        acceleration_description: See how paying a little extra each month can save you time and money.
+        extra_monthly: Extra/Month
+        months_saved: Time Saved
+        interest_saved: Interest Saved
+        new_payoff: New Payoff
+        months: months
+      recurring_costs:
+        title: Recurring Costs
+        monthly_total: Monthly Total
+        annual_total: Annual Total
+        fixed_costs: Fixed Costs
+        subscriptions: Subscriptions
+        unused_title: Potentially Unused Subscriptions
+        unused_description: These subscriptions haven't been used recently. Consider if you still need them.
+        last_used: "Last used %{days} days ago"
+        upcoming_bills: Upcoming Bills
+        due_today: Due today
+        due_tomorrow: Due tomorrow
+        due_in_days: "Due in %{days} days"
+        fixed_costs_title: Fixed Monthly Costs
+        subscriptions_title: Subscriptions
+        show_all: Show all subscriptions
+      merchant_intelligence:
+        title: Merchant Intelligence
+        top_merchants: Top Merchants by Spend
+        transactions: transactions
+        avg: "Avg:"
+        new_merchants: New Merchants
+        new_badge: NEW
+        visits: visits
+        frequent_visits: Most Frequent Visits
+        visits_per_month: "~%{count} visits/month"
+        visits_label: visits
+        by_category: Top Merchants by Category
+      cash_flow_timing:
+        title: Cash Flow Timing
+        next_income: Next Expected Income
+        expected_amount: Expected amount
+        days_away: days away
+        balance_projection: 14-Day Balance Projection
+        today: Today
+        in_two_weeks: In 2 weeks
+        upcoming_bills: Upcoming Bills
+        can_afford: Covered
+        short: May be short
+        weekly_outlook: Weekly Outlook
+        this_week: This Week
+        next_week: Next Week
+        inflows: Inflows
+        outflows: Outflows
+        net: Net
+      what_if:
+        title: What-If Scenarios
+        easy_wins: Easy Wins
+        monthly_potential: Monthly Potential
+        annual_potential: Annual Potential
+        savings_rate_boost: Savings Rate Boost
+        scenario_comparison: Scenario Comparison
+        monthly_savings: Monthly Savings
+        category_reductions: Category Reduction Scenarios
+        current_label: Current
+        cut_by: "Cut %{percent}%"
+        subscription_review: Subscription Review

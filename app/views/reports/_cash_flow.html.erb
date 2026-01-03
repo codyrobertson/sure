@@ -1,0 +1,174 @@
+<% return unless cash_flow.present? %>
+
+<div class="space-y-6">
+  <%# Sustainability Overview %>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <%# Coverage Gauge %>
+    <div class="bg-surface-inset rounded-xl p-5">
+      <div class="flex items-center gap-2 mb-3">
+        <%= icon("gauge", class: "w-5 h-5 text-primary") %>
+        <h4 class="text-sm font-medium text-secondary"><%= t("reports.cash_flow.coverage") %></h4>
+      </div>
+      <% coverage = cash_flow[:sustainability][:coverage_percent] %>
+      <p class="text-3xl font-semibold <%= coverage >= 100 ? 'text-success' : coverage >= 75 ? 'text-warning' : 'text-destructive' %>">
+        <%= coverage %>%
+      </p>
+      <p class="text-sm text-tertiary mt-1"><%= t("reports.cash_flow.of_outflow_covered") %></p>
+      <div class="mt-3 h-2 bg-container rounded-full overflow-hidden">
+        <div class="h-full <%= coverage >= 100 ? 'bg-success' : coverage >= 75 ? 'bg-warning' : 'bg-destructive' %> rounded-full transition-all"
+             style="width: <%= [coverage, 100].min %>%"></div>
+      </div>
+    </div>
+
+    <%# Funding Gap %>
+    <div class="bg-surface-inset rounded-xl p-5">
+      <div class="flex items-center gap-2 mb-3">
+        <% gap_icon_class = cash_flow[:sustainability][:funding_gap].positive? ? 'text-warning' : 'text-success' %>
+        <%= icon("alert-triangle", class: "w-5 h-5 #{gap_icon_class}") %>
+        <h4 class="text-sm font-medium text-secondary"><%= t("reports.cash_flow.funding_gap") %></h4>
+      </div>
+      <p class="text-3xl font-semibold <%= cash_flow[:sustainability][:funding_gap].positive? ? 'text-destructive' : 'text-success' %>">
+        <%= Money.new(cash_flow[:sustainability][:funding_gap], Current.family.currency).format %>
+      </p>
+      <p class="text-sm text-tertiary mt-1">
+        <% if cash_flow[:sustainability][:sustainable] %>
+          <%= t("reports.cash_flow.living_within_means") %>
+        <% else %>
+          <%= t("reports.cash_flow.spending_exceeds_income") %>
+        <% end %>
+      </p>
+    </div>
+
+    <%# Debt Payments %>
+    <div class="bg-surface-inset rounded-xl p-5">
+      <div class="flex items-center gap-2 mb-3">
+        <%= icon("credit-card", class: "w-5 h-5 text-primary") %>
+        <h4 class="text-sm font-medium text-secondary"><%= t("reports.cash_flow.debt_payments") %></h4>
+      </div>
+      <p class="text-3xl font-semibold text-primary">
+        <%= Money.new(cash_flow[:debt_payments][:total], Current.family.currency).format %>
+      </p>
+      <div class="text-sm text-tertiary mt-1 space-y-0.5">
+        <% if cash_flow[:debt_payments][:credit_cards].positive? %>
+          <p><%= t("reports.cash_flow.credit_cards") %>: <%= Money.new(cash_flow[:debt_payments][:credit_cards], Current.family.currency).format %></p>
+        <% end %>
+        <% if cash_flow[:debt_payments][:loans].positive? %>
+          <p><%= t("reports.cash_flow.loans") %>: <%= Money.new(cash_flow[:debt_payments][:loans], Current.family.currency).format %></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# Cash Flow Breakdown %>
+  <div class="bg-surface-inset rounded-xl p-5">
+    <h4 class="text-sm font-medium text-secondary mb-4"><%= t("reports.cash_flow.breakdown") %></h4>
+
+    <div class="space-y-3">
+      <%# Income %>
+      <div class="flex items-center justify-between py-2 border-b border-secondary">
+        <div class="flex items-center gap-2">
+          <%= icon("trending-up", class: "w-4 h-4 text-success") %>
+          <span class="text-sm text-primary"><%= t("reports.cash_flow.income") %></span>
+        </div>
+        <span class="text-sm font-medium text-success">
+          +<%= Money.new(cash_flow[:income], Current.family.currency).format %>
+        </span>
+      </div>
+
+      <%# Lifestyle Expenses %>
+      <div class="flex items-center justify-between py-2 border-b border-secondary">
+        <div class="flex items-center gap-2">
+          <%= icon("shopping-bag", class: "w-4 h-4 text-destructive") %>
+          <span class="text-sm text-primary"><%= t("reports.cash_flow.lifestyle_expenses") %></span>
+        </div>
+        <span class="text-sm font-medium text-destructive">
+          -<%= Money.new(cash_flow[:lifestyle_expenses], Current.family.currency).format %>
+        </span>
+      </div>
+
+      <%# Debt Payments %>
+      <% if cash_flow[:debt_payments][:total].positive? %>
+        <div class="flex items-center justify-between py-2 border-b border-secondary">
+          <div class="flex items-center gap-2">
+            <%= icon("landmark", class: "w-4 h-4 text-warning") %>
+            <span class="text-sm text-primary"><%= t("reports.cash_flow.debt_payments") %></span>
+          </div>
+          <span class="text-sm font-medium text-warning">
+            -<%= Money.new(cash_flow[:debt_payments][:total], Current.family.currency).format %>
+          </span>
+        </div>
+      <% end %>
+
+      <%# Total Outflow %>
+      <div class="flex items-center justify-between py-2 bg-container-inset rounded-lg px-3 -mx-3">
+        <span class="text-sm font-medium text-primary"><%= t("reports.cash_flow.total_outflow") %></span>
+        <span class="text-sm font-semibold text-primary">
+          <%= Money.new(cash_flow[:sustainability][:total_outflow], Current.family.currency).format %>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <%# Funding Sources (if there's a gap) %>
+  <% if cash_flow[:sustainability][:funding_gap].positive? && cash_flow[:sustainability][:funding_sources].values.any?(&:positive?) %>
+    <div class="bg-warning/10 border border-warning/30 rounded-xl p-5">
+      <div class="flex items-center gap-2 mb-3">
+        <%= icon("alert-circle", class: "w-5 h-5 text-warning") %>
+        <h4 class="text-sm font-medium text-warning"><%= t("reports.cash_flow.funding_sources_title") %></h4>
+      </div>
+      <p class="text-sm text-secondary mb-3"><%= t("reports.cash_flow.funding_sources_description") %></p>
+
+      <div class="space-y-2">
+        <% cash_flow[:sustainability][:funding_sources].each do |source, amount| %>
+          <% next unless amount.positive? %>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <% icon_name = case source
+                when :savings_drawdown then "piggy-bank"
+                when :investment_liquidation then "trending-down"
+                when :crypto_liquidation then "bitcoin"
+                else "circle"
+              end %>
+              <%= icon(icon_name, class: "w-4 h-4 text-warning") %>
+              <span class="text-sm text-primary"><%= t("reports.cash_flow.sources.#{source}") %></span>
+            </div>
+            <span class="text-sm font-medium text-warning">
+              <%= Money.new(amount, Current.family.currency).format %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Insights %>
+  <% if cash_flow[:sustainability][:insights].present? %>
+    <div class="space-y-2">
+      <% cash_flow[:sustainability][:insights].each do |insight| %>
+        <% bg_class = case insight[:type]
+          when :positive then "bg-success/10 border-success/30"
+          when :warning then "bg-warning/10 border-warning/30"
+          when :alert, :critical then "bg-destructive/10 border-destructive/30"
+          else "bg-surface-inset border-secondary"
+        end %>
+        <% icon_class = case insight[:type]
+          when :positive then "text-success"
+          when :warning then "text-warning"
+          when :alert, :critical then "text-destructive"
+          else "text-secondary"
+        end %>
+        <% icon_name = case insight[:type]
+          when :positive then "check-circle"
+          when :warning then "alert-triangle"
+          when :alert, :critical then "alert-circle"
+          else "info"
+        end %>
+
+        <div class="flex items-start gap-3 p-3 rounded-lg border <%= bg_class %>">
+          <%= icon(icon_name, class: "w-5 h-5 mt-0.5 #{icon_class}") %>
+          <p class="text-sm text-primary"><%= insight[:message] %></p>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

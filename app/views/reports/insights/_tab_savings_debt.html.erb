@@ -1,0 +1,32 @@
+<%# Savings & Debt Tab - Side by side on large screens %>
+<div class="space-y-8">
+  <% if savings_rate.present? || debt_payoff.present? %>
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <%# Savings Rate Section %>
+      <% if savings_rate.present? %>
+        <div>
+          <h3 class="text-base font-medium text-primary mb-4 flex items-center gap-2">
+            <%= icon("piggy-bank", class: "w-5 h-5 text-success") %>
+            <%= t("reports.insights.savings_rate.title") %>
+          </h3>
+          <%= render partial: "reports/insights/savings_rate", locals: { data: savings_rate } %>
+        </div>
+      <% end %>
+
+      <%# Debt Payoff Section %>
+      <% if debt_payoff.present? %>
+        <div>
+          <h3 class="text-base font-medium text-primary mb-4 flex items-center gap-2">
+            <%= icon("credit-card", class: "w-5 h-5 text-destructive") %>
+            <%= t("reports.insights.debt_payoff.title") %>
+          </h3>
+          <%= render partial: "reports/insights/debt_payoff", locals: { data: debt_payoff } %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-12 text-secondary">
+      <p><%= t("reports.insights.no_savings_debt_data") %></p>
+    </div>
+  <% end %>
+</div>

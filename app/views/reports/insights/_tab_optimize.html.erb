@@ -1,0 +1,41 @@
+<%# Optimize Tab: Recurring Costs + What-If + Cash Flow Timing %>
+<div class="space-y-8">
+  <%# Recurring Costs Section %>
+  <% if recurring_costs.present? %>
+    <div>
+      <h3 class="text-base font-medium text-primary mb-4 flex items-center gap-2">
+        <%= icon("repeat", class: "w-5 h-5 text-primary") %>
+        <%= t("reports.insights.recurring_costs.title") %>
+      </h3>
+      <%= render partial: "reports/insights/recurring_costs", locals: { data: recurring_costs } %>
+    </div>
+  <% end %>
+
+  <%# Cash Flow Timing Section %>
+  <% if cash_flow_timing.present? %>
+    <div>
+      <h3 class="text-base font-medium text-primary mb-4 flex items-center gap-2">
+        <%= icon("calendar", class: "w-5 h-5 text-primary") %>
+        <%= t("reports.insights.cash_flow_timing.title") %>
+      </h3>
+      <%= render partial: "reports/insights/cash_flow_timing", locals: { data: cash_flow_timing } %>
+    </div>
+  <% end %>
+
+  <%# What-If Scenarios Section %>
+  <% if what_if.present? %>
+    <div>
+      <h3 class="text-base font-medium text-primary mb-4 flex items-center gap-2">
+        <%= icon("lightbulb", class: "w-5 h-5 text-warning") %>
+        <%= t("reports.insights.what_if.title") %>
+      </h3>
+      <%= render partial: "reports/insights/what_if_scenarios", locals: { data: what_if } %>
+    </div>
+  <% end %>
+
+  <% if recurring_costs.blank? && cash_flow_timing.blank? && what_if.blank? %>
+    <div class="text-center py-12 text-secondary">
+      <p><%= t("reports.insights.no_optimize_data") %></p>
+    </div>
+  <% end %>
+</div>

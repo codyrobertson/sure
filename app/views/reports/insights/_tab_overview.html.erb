@@ -1,0 +1,8 @@
+<%# Overview Tab: Cash Flow Analysis (the main insight) %>
+<% if cash_flow.present? %>
+  <%= render partial: "reports/cash_flow", locals: { cash_flow: cash_flow } %>
+<% else %>
+  <div class="text-center py-12 text-secondary">
+    <p><%= t("reports.insights.no_data") %></p>
+  </div>
+<% end %>
