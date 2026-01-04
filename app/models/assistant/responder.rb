@@ -149,10 +149,51 @@ class Assistant::Responder
       )
 
       unless response.success?
-        raise response.error
+        # If we get a 400 error with a previous_response_id, it's likely stale - retry without it
+        if previous_response_id.present? && stale_response_id_error?(response.error)
+          Rails.logger.warn("Stale previous_response_id detected, clearing and retrying without it")
+          chat&.update_column(:latest_assistant_response_id, nil)
+
+          response = llm.chat_response(
+            message.content,
+            model: message.ai_model,
+            instructions: instructions,
+            functions: function_tool_caller.function_definitions,
+            function_results: function_results,
+            streamer: streamer,
+            previous_response_id: nil,
+            session_id: chat_session_id,
+            user_identifier: chat_user_identifier,
+            family: message.chat&.user&.family
+          )
+        end
+
+        raise response.error unless response.success?
       end
 
       response.data
+    end
+
+    def stale_response_id_error?(error)
+      return false unless error.respond_to?(:message)
+
+      error_msg = error.message.to_s.downcase
+
+      # Only match specific patterns that indicate a stale/invalid previous_response_id
+      # OpenAI Responses API returns errors when the response ID is invalid or expired
+      stale_id_patterns = [
+        /previous_response.*not found/,
+        /previous_response.*invalid/,
+        /previous_response.*does not exist/,
+        /previous_response.*expired/,
+        /response.*id.*not found/,
+        /response.*id.*invalid/,
+        # OpenAI may return 404 for missing resources or 400 with specific messages
+        /no response found/,
+        /conversation.*not found/
+      ]
+
+      stale_id_patterns.any? { |pattern| error_msg.match?(pattern) }
     end
 
     def emit(event_name, payload = nil)
