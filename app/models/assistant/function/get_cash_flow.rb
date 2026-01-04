@@ -13,8 +13,7 @@ class Assistant::Function::GetCashFlow < Assistant::Function
   end
 
   def params_schema
-    {
-      type: "object",
+    build_schema(
       properties: {
         period: {
           type: "string",
@@ -30,7 +29,7 @@ class Assistant::Function::GetCashFlow < Assistant::Function
         }
       },
       required: []
-    }
+    )
   end
 
   def call(params = {})

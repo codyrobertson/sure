@@ -46,10 +46,6 @@ class Assistant::Function::GetTransactions < Assistant::Function
     end
   end
 
-  def strict_mode?
-    false
-  end
-
   def params_schema
     build_schema(
       required: [ "order", "page" ],

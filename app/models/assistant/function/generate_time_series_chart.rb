@@ -12,11 +12,6 @@ class Assistant::Function::GenerateTimeSeriesChart < Assistant::Function
     end
   end
 
-  # Disable strict mode since category is optional
-  def strict_mode?
-    false
-  end
-
   def params_schema
     build_schema(
       properties: {

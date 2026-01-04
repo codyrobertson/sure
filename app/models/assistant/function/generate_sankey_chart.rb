@@ -11,11 +11,6 @@ class Assistant::Function::GenerateSankeyChart < Assistant::Function
     end
   end
 
-  # Disable strict mode since show_subcategories is optional
-  def strict_mode?
-    false
-  end
-
   def params_schema
     build_schema(
       properties: {

@@ -36,22 +36,30 @@ class Assistant::Function
     build_schema
   end
 
-  # (preferred) when in strict mode, the schema needs to include all properties in required array
-  def strict_mode?
-    true
-  end
-
   def to_definition
+    schema = params_schema
+
     {
       name: name,
       description: description,
-      params_schema: params_schema,
-      strict: strict_mode?
+      params_schema: schema,
+      strict: infer_strict_mode(schema)
     }
   end
 
   private
     attr_reader :user, :progress_callback
+
+    # Automatically infer strict mode from schema structure
+    # Strict mode requires ALL properties to be in the required array
+    # If any property is optional (not in required), use non-strict mode
+    def infer_strict_mode(schema)
+      properties = schema[:properties]&.keys&.map(&:to_s) || []
+      required = schema[:required]&.map(&:to_s) || []
+
+      # Strict mode only when all properties are required
+      properties.sort == required.sort
+    end
 
     def report_progress(message)
       progress_callback&.call(message)

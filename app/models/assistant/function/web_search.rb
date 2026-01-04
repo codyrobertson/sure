@@ -20,11 +20,6 @@ class Assistant::Function::WebSearch < Assistant::Function
     end
   end
 
-  # Disable strict mode for optional parameters
-  def strict_mode?
-    false
-  end
-
   def params_schema
     build_schema(
       properties: {
