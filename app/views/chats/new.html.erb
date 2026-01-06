@@ -9,9 +9,9 @@
     <% end %>
 
     <div class="mt-auto py-8">
-      <%= render "chats/ai_greeting" %>
+      <%= render "chats/ai_greeting", page_context: @page_context, page_metadata: @page_metadata %>
     </div>
 
-    <%= render "messages/chat_form", chat: @chat %>
+    <%= render "messages/chat_form", chat: @chat, message_hint: @initial_prompt %>
   </div>
 <% end %>

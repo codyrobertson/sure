@@ -1,13 +1,27 @@
+<%# locals: (page_context: nil, page_metadata: {}) %>
+
 <div class="flex items-start w-full gap-3 p-2">
   <%= render "chats/ai_avatar" %>
 
   <div class="max-w-[85%] text-sm space-y-4 text-primary">
-    <p>Hey <%= Current.user&.first_name || "there" %>! I'm an AI assistant that can help with your finances. I have access to the web and your account data.</p>
+    <p><%= t("chats.ai_greeting.welcome", name: Current.user&.first_name || t("chats.ai_greeting.default_name")) %></p>
 
     <div class="space-y-3 mt-4">
-      <p>Here's a few questions you can ask:</p>
+      <% if page_context.present? %>
+        <p class="text-xs text-secondary flex items-center gap-1">
+          <%= icon(page_context_icon(page_context), size: "sm") %>
+          <%= t("chats.ai_greeting.suggestions_for_page", page: page_context_name(page_context)) %>
+        </p>
+      <% else %>
+        <p><%= t("chats.ai_greeting.suggestions_intro") %></p>
+      <% end %>
 
-      <% questions = smart_chat_suggestions(Current.family) %>
+      <% questions = contextual_chat_prompts(
+           family: Current.family,
+           page_context_key: page_context,
+           metadata: page_metadata || {},
+           count: 3
+         ) %>
 
       <div class="space-y-2.5">
         <% questions.each do |question| %>

@@ -1,0 +1,58 @@
+---
+en:
+  ai_prompts:
+    page_names:
+      dashboard: "Dashboard"
+      transactions: "Transactions"
+      accounts: "Accounts"
+      budgets: "Budgets"
+      reports: "Reports"
+      investments: "Investments"
+
+    dashboard:
+      analyze_net_worth: "How has my net worth changed this month?"
+      spending_breakdown: "Break down my spending by category"
+      cash_flow_analysis: "Am I living within my means?"
+      investment_performance: "How are my investments performing?"
+      savings_opportunities: "Where can I cut spending?"
+
+    transactions:
+      categorize_uncategorized:
+        one: "Categorize my 1 uncategorized transaction"
+        other: "Categorize my %{count} uncategorized transactions"
+      analyze_filtered_results: "Analyze these filtered transactions"
+      analyze_recent_spending: "What did I spend the most on recently?"
+      find_recurring: "Find my recurring transactions"
+      setup_automation: "Set up auto-categorization rules"
+
+    accounts:
+      compare_accounts: "Compare my account balances"
+      analyze_account: "Analyze %{account_name} activity"
+      account_balance_trend: "How is %{account_name} trending?"
+      net_worth_breakdown: "Show my net worth breakdown"
+      account_trends: "How are my account balances trending?"
+      sync_status: "Check account sync status"
+
+    budgets:
+      create_budget: "Help me create a budget based on my spending"
+      analyze_for_budget: "Analyze my spending to suggest budget amounts"
+      budget_vs_actual: "Am I on track with my budget this month?"
+      overspending_categories:
+        one: "Why am I over budget in 1 category?"
+        other: "Why am I over budget in %{count} categories?"
+      budget_optimization: "How can I optimize my budget?"
+      remaining_budget: "How much budget do I have left this month?"
+
+    reports:
+      income_vs_expenses: "Compare my income vs expenses"
+      spending_trends: "Show my spending trends over time"
+      category_deep_dive: "Deep dive into my %{category} spending"
+      savings_rate: "What's my savings rate?"
+      cash_flow_timing: "When do my biggest expenses hit?"
+
+    investments:
+      portfolio_performance: "How is my portfolio performing?"
+      asset_allocation: "Show my asset allocation breakdown"
+      holdings_analysis: "Analyze my top holdings"
+      dividends_income: "What dividend income am I generating?"
+      investment_comparison: "Compare my investment accounts"
