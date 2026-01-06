@@ -12,7 +12,8 @@ class Budget < ApplicationRecord
 
   monetize :budgeted_spending, :expected_income, :allocated_spending,
            :actual_spending, :available_to_spend, :available_to_allocate,
-           :estimated_spending, :estimated_income, :actual_income, :remaining_expected_income
+           :estimated_spending, :estimated_income, :actual_income, :remaining_expected_income,
+           :daily_pace, :monthly_pace, :actual_daily_pace, :projected_spending, :projected_variance
 
   class << self
     def date_to_param(date)
@@ -232,6 +233,95 @@ class Budget < ApplicationRecord
     return 0 unless remaining_expected_income.negative?
 
     remaining_expected_income.abs / expected_income.to_f * 100
+  end
+
+  # =============================================================================
+  # Projection & Pacing: Track spending pace and project end-of-period spending
+  # =============================================================================
+
+  # Number of days remaining in the budget period (including today)
+  def days_remaining
+    return 0 unless current?
+
+    (end_date - Date.current).to_i + 1
+  end
+
+  # Total number of days in the budget period
+  def total_days
+    (end_date - start_date).to_i + 1
+  end
+
+  # Number of days elapsed in the budget period (including today)
+  def days_elapsed
+    return total_days unless current?
+
+    (Date.current - start_date).to_i + 1
+  end
+
+  # The ideal daily spending rate to stay on budget
+  def daily_pace
+    return 0 unless budgeted_spending && budgeted_spending > 0
+
+    budgeted_spending / total_days.to_f
+  end
+
+  # The ideal monthly spending rate (30.44 days average month)
+  def monthly_pace
+    daily_pace * 30.44
+  end
+
+  # The actual daily spending rate based on spending so far
+  def actual_daily_pace
+    return 0 if days_elapsed == 0
+
+    actual_spending / days_elapsed.to_f
+  end
+
+  # Projected total spending at end of period based on current pace
+  def projected_spending
+    return actual_spending unless current?
+    return actual_spending if days_elapsed == 0
+
+    actual_daily_pace * total_days
+  end
+
+  # Variance between projected spending and budgeted amount
+  # Negative means under budget, positive means over budget
+  def projected_variance
+    projected_spending - (budgeted_spending || 0)
+  end
+
+  # Variance as a percentage of the budget
+  def projected_variance_percent
+    return 0 unless budgeted_spending && budgeted_spending > 0
+
+    (projected_variance / budgeted_spending.to_f) * 100
+  end
+
+  # Pace status based on current spending trajectory
+  # Returns :on_track, :over, or :under
+  def pace_status
+    return :on_track unless initialized?
+
+    variance_threshold = 5 # 5% tolerance
+
+    if projected_variance_percent > variance_threshold
+      :over
+    elsif projected_variance_percent < -variance_threshold
+      :under
+    else
+      :on_track
+    end
+  end
+
+  # Suggested daily spending amount to stay on budget for remaining days
+  def suggested_daily_spending
+    return nil unless current? && days_remaining > 0
+
+    remaining = available_to_spend
+    return nil if remaining <= 0
+
+    Money.new(remaining / days_remaining.to_f, currency)
   end
 
   private
