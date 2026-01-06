@@ -1,4 +1,4 @@
-class CreateSpendingAlerts < ActiveRecord::Migration[8.0]
+class CreateSpendingAlerts < ActiveRecord::Migration[7.2]
   def change
     create_table :spending_alerts, id: :uuid do |t|
       t.references :family, null: false, foreign_key: true, type: :uuid

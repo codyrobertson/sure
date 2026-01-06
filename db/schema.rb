@@ -1014,6 +1014,27 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_06_160040) do
     t.index ["status"], name: "index_simplefin_items_on_status"
   end
 
+  create_table "spending_alerts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "family_id", null: false
+    t.uuid "category_id"
+    t.string "alert_type", null: false
+    t.string "severity", null: false
+    t.decimal "current_amount", precision: 19, scale: 4
+    t.decimal "average_amount", precision: 19, scale: 4
+    t.decimal "deviation_percent", precision: 5, scale: 1
+    t.jsonb "metadata", default: {}
+    t.datetime "dismissed_at"
+    t.date "period_start_date", null: false
+    t.date "period_end_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_spending_alerts_on_category_id"
+    t.index ["family_id", "alert_type", "category_id", "period_start_date"], name: "index_spending_alerts_uniqueness", unique: true, where: "(dismissed_at IS NULL)"
+    t.index ["family_id", "dismissed_at", "created_at"], name: "index_spending_alerts_active"
+    t.index ["family_id", "period_start_date", "period_end_date", "created_at"], name: "index_spending_alerts_dashboard", where: "(dismissed_at IS NULL)"
+    t.index ["family_id"], name: "index_spending_alerts_on_family_id"
+  end
+
   create_table "subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "family_id", null: false
     t.string "status", null: false
@@ -1238,6 +1259,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_06_160040) do
   add_foreign_key "sessions", "users"
   add_foreign_key "simplefin_accounts", "simplefin_items"
   add_foreign_key "simplefin_items", "families"
+  add_foreign_key "spending_alerts", "categories"
+  add_foreign_key "spending_alerts", "families"
   add_foreign_key "subscriptions", "families"
   add_foreign_key "syncs", "syncs", column: "parent_id"
   add_foreign_key "taggings", "tags"
