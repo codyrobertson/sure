@@ -2,6 +2,27 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Repository Setup
+
+This is a fork of the open-source project with the following git remotes:
+
+| Remote | URL | Purpose |
+|--------|-----|---------|
+| `origin` | `https://github.com/codyrobertson/sure.git` | Cody's fork - push work here |
+| `upstream` | `https://github.com/we-promise/sure.git` | OSS repo - pull updates from here |
+
+**Working branch:** `assistant-improvements`
+
+**Sync upstream changes:**
+```bash
+git fetch upstream
+git checkout main
+git merge upstream/main
+git push origin main
+```
+
+**Docker setup uses local Homebrew PostgreSQL** (not Docker postgres) for data persistence. Database: `sure_development` on `host.docker.internal:5432`.
+
 ## Common Development Commands
 
 ### Development Server
