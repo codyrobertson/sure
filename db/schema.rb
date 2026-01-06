@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_03_042425) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_06_160040) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -422,6 +422,24 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_03_042425) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["family_id"], name: "index_family_exports_on_family_id"
+  end
+
+  create_table "goals", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "family_id", null: false
+    t.uuid "account_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.decimal "target_amount", precision: 19, scale: 4, null: false
+    t.decimal "starting_balance", precision: 19, scale: 4
+    t.string "currency", null: false
+    t.date "target_date"
+    t.string "status", default: "active", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_goals_on_account_id"
+    t.index ["family_id", "status"], name: "index_goals_on_family_and_status"
+    t.index ["family_id"], name: "index_goals_on_family_id"
+    t.index ["status"], name: "index_goals_on_status"
   end
 
   create_table "holdings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -1183,6 +1201,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_03_042425) do
   add_foreign_key "eval_runs", "eval_datasets"
   add_foreign_key "eval_samples", "eval_datasets"
   add_foreign_key "family_exports", "families"
+  add_foreign_key "goals", "accounts", on_delete: :cascade
+  add_foreign_key "goals", "families"
   add_foreign_key "holdings", "account_providers"
   add_foreign_key "holdings", "accounts", on_delete: :cascade
   add_foreign_key "holdings", "securities"
