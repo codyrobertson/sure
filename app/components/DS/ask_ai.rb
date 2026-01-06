@@ -43,7 +43,7 @@ class DS::AskAi < DesignSystemComponent
   end
 
   def input_classes
-    "flex-1 bg-transparent border-0 focus:ring-0 text-sm text-primary placeholder:text-tertiary"
+    "flex-1 bg-transparent border-0 focus:ring-0 text-sm text-primary placeholder:text-subdued"
   end
 
   def form_url
@@ -61,10 +61,6 @@ class DS::AskAi < DesignSystemComponent
     values
   end
 
-  def hotkey_data
-    { hotkey: "mod+k" }
-  end
-
   def merged_data
     data = opts[:data] || {}
     stimulus_key = stimulus_controller.tr("-", "_")
@@ -72,10 +68,9 @@ class DS::AskAi < DesignSystemComponent
     stimulus_data = stimulus_values.transform_keys { |k| "#{stimulus_key}_#{k}_value" }
 
     data.merge(
-      controller: [ stimulus_controller, "hotkey", data[:controller] ].compact.join(" "),
+      controller: [ stimulus_controller, data[:controller] ].compact.join(" "),
       **stimulus_data,
-      **hotkey_data,
-      action: [ "keydown.esc->#{stimulus_controller}#collapse", data[:action] ].compact.join(" ")
+      action: data[:action]
     )
   end
 
