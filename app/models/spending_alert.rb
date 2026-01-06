@@ -32,6 +32,8 @@ class SpendingAlert < ApplicationRecord
     update!(dismissed_at: Time.current)
   end
 
+  # Returns pre-serialized transaction data from metadata (not ActiveRecord objects).
+  # This avoids N+1 queries - data is stored at alert creation time.
   def top_transactions
     metadata&.dig("top_transactions") || []
   end
@@ -85,23 +87,16 @@ class SpendingAlert < ApplicationRecord
 
     # Create alerts for new merchants
     analysis[:new_merchants]&.each do |merchant_data|
-      alert = find_or_initialize_by(
-        family: family,
-        alert_type: :new_merchant,
-        period_start_date: period.start_date,
-        period_end_date: period.end_date,
-        dismissed_at: nil,
-        metadata: { "merchant_id" => merchant_data[:merchant][:id] }.to_json
-      )
+      merchant_id = merchant_data[:merchant][:id].to_s
 
-      # Skip if we already have an alert for this merchant
+      # Skip if we already have an alert for this merchant in this period
       existing = where(
         family: family,
         alert_type: :new_merchant,
         period_start_date: period.start_date,
         period_end_date: period.end_date,
         dismissed_at: nil
-      ).where("metadata->>'merchant_id' = ?", merchant_data[:merchant][:id].to_s).exists?
+      ).where("metadata->>'merchant_id' = ?", merchant_id).exists?
 
       next if existing
 
@@ -113,7 +108,7 @@ class SpendingAlert < ApplicationRecord
         period_end_date: period.end_date,
         current_amount: merchant_data[:total_spent][:amount],
         metadata: {
-          "merchant_id" => merchant_data[:merchant][:id],
+          "merchant_id" => merchant_id,
           "merchant_name" => merchant_data[:merchant][:name],
           "merchant_total_spent" => merchant_data[:total_spent][:formatted],
           "merchant_transaction_count" => merchant_data[:transaction_count],

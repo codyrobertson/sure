@@ -25,5 +25,10 @@ class CreateSpendingAlerts < ActiveRecord::Migration[8.0]
               unique: true,
               where: "dismissed_at IS NULL",
               name: "index_spending_alerts_uniqueness"
+    # Index for dashboard query: active alerts for a period, ordered by created_at
+    add_index :spending_alerts,
+              [:family_id, :period_start_date, :period_end_date, :created_at],
+              where: "dismissed_at IS NULL",
+              name: "index_spending_alerts_dashboard"
   end
 end
