@@ -12,12 +12,13 @@ class CreateGoals < ActiveRecord::Migration[7.2]
       t.string :currency, null: false
 
       t.date :target_date
+      t.string :status, default: "active", null: false
 
       t.timestamps
     end
 
-    add_index :goals, :family_id
-    add_index :goals, :account_id
-    add_index :goals, [:family_id, :account_id], name: "index_goals_on_family_and_account"
+    # Note: t.references already creates indexes on family_id and account_id
+    add_index :goals, :status
+    add_index :goals, [:family_id, :status], name: "index_goals_on_family_and_status"
   end
 end
