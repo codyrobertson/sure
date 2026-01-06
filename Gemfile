@@ -76,6 +76,8 @@ gem "rotp", "~> 6.3"
 gem "rqrcode", "~> 3.0"
 gem "activerecord-import"
 gem "rubyzip", "~> 2.3"
+gem "prawn", "~> 2.5"
+gem "prawn-table", "~> 0.2"
 
 # OpenID Connect & OAuth authentication
 gem "omniauth", "~> 2.1"

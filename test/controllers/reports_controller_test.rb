@@ -221,4 +221,61 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
     # Verify the CSV content is generated (should not crash)
     assert_not_nil @response.body
   end
+
+  test "export transactions as PDF" do
+    get export_transactions_reports_path(
+      format: :pdf,
+      period_type: :ytd,
+      start_date: Date.current.beginning_of_year,
+      end_date: Date.current
+    )
+
+    assert_response :ok
+    assert_equal "application/pdf", @response.media_type
+    # Verify PDF content starts with PDF header
+    assert @response.body.start_with?("%PDF"), "Response should be a valid PDF"
+  end
+
+  test "export transactions as PDF with API key authentication" do
+    api_key = api_keys(:active_key)
+    api_key.update!(source: "web") unless api_key.source == "web"
+
+    get export_transactions_reports_path(
+      format: :pdf,
+      period_type: :ytd,
+      start_date: Date.current.beginning_of_year,
+      end_date: Date.current,
+      api_key: api_key.plain_key
+    )
+
+    assert_response :ok
+    assert_equal "application/pdf", @response.media_type
+  end
+
+  test "export transactions as PDF with custom date range" do
+    get export_transactions_reports_path(
+      format: :pdf,
+      period_type: :custom,
+      start_date: 3.months.ago.to_date.to_s,
+      end_date: Date.current.to_s
+    )
+
+    assert_response :ok
+    assert_equal "application/pdf", @response.media_type
+  end
+
+  test "export transactions as PDF swaps dates when end_date is before start_date" do
+    start_date = Date.current
+    end_date = 1.month.ago.to_date
+
+    get export_transactions_reports_path(
+      format: :pdf,
+      period_type: :custom,
+      start_date: start_date.to_s,
+      end_date: end_date.to_s
+    )
+
+    assert_response :ok
+    assert_equal "application/pdf", @response.media_type
+  end
 end

@@ -79,8 +79,8 @@ class ReportsController < ApplicationController
                   type: "text/csv"
       end
 
-      # Excel and PDF exports require additional gems (caxlsx and prawn)
-      # Uncomment and install gems if needed:
+      # Excel export requires caxlsx gem
+      # Uncomment and install gem if needed:
       #
       # format.xlsx do
       #   xlsx_data = generate_transactions_xlsx
@@ -88,13 +88,13 @@ class ReportsController < ApplicationController
       #             filename: "transactions_breakdown_#{@start_date.strftime('%Y%m%d')}_to_#{@end_date.strftime('%Y%m%d')}.xlsx",
       #             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
       # end
-      #
-      # format.pdf do
-      #   pdf_data = generate_transactions_pdf
-      #   send_data pdf_data,
-      #             filename: "transactions_breakdown_#{@start_date.strftime('%Y%m%d')}_to_#{@end_date.strftime('%Y%m%d')}.pdf",
-      #             type: "application/pdf"
-      # end
+
+      format.pdf do
+        pdf_data = generate_transactions_pdf
+        send_data pdf_data,
+                  filename: "transactions_breakdown_#{@start_date.strftime('%Y%m%d')}_to_#{@end_date.strftime('%Y%m%d')}.pdf",
+                  type: "application/pdf"
+      end
     end
   end
 
@@ -815,6 +815,7 @@ class ReportsController < ApplicationController
 
     def generate_transactions_pdf
       require "prawn"
+      require "prawn/table"
 
       Prawn::Document.new(page_layout: :landscape) do |pdf|
         pdf.text "Transaction Breakdown Report", size: 20, style: :bold
