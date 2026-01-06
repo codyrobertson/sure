@@ -1,7 +1,7 @@
 ---
 nb:
   settings:
-    securities:
+    security:
       show:
         disable_mfa: Deaktiver 2FA
         disable_mfa_confirm: Er du sikker på at du vil deaktivere to-faktor autentisering?

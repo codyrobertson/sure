@@ -1,7 +1,7 @@
 ---
 tr:
   settings:
-    securities:
+    security:
       show:
         disable_mfa: 2FA'yı Devre Dışı Bırak
         disable_mfa_confirm: İki faktörlü kimlik doğrulamayı devre dışı bırakmak istediğinizden emin misiniz?

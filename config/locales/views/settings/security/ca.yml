@@ -1,7 +1,7 @@
 ---
 ca:
   settings:
-    securities:
+    security:
       show:
         disable_mfa: Desactiva 2FA
         disable_mfa_confirm: Segur que vols desactivar l'autenticació en dos passos? Això farà que el teu compte sigui menys segur.

@@ -1,7 +1,7 @@
 ---
 ro:
   settings:
-    securities:
+    security:
       show:
         disable_mfa: Dezactivează 2FA
         disable_mfa_confirm: Ești sigur că vrei să dezactivezi autentificarea cu doi factori? Acest lucru va face contul tău mai puțin sigur.

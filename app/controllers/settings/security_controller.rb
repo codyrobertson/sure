@@ -1,4 +1,4 @@
-class Settings::SecuritiesController < ApplicationController
+class Settings::SecurityController < ApplicationController
   layout "settings"
 
   def show
