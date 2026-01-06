@@ -2,6 +2,8 @@ class Budget < ApplicationRecord
   include Monetizable
 
   PARAM_DATE_FORMAT = "%b-%Y"
+  PACE_VARIANCE_THRESHOLD = 5 # Percentage tolerance for pace_status calculation
+  AVERAGE_DAYS_PER_MONTH = 30.44 # 365.25 / 12
 
   belongs_to :family
 
@@ -112,7 +114,7 @@ class Budget < ApplicationRecord
   end
 
   def current?
-    start_date == Date.today.beginning_of_month && end_date == Date.today.end_of_month
+    start_date == Date.current.beginning_of_month && end_date == Date.current.end_of_month
   end
 
   def previous_budget_param
@@ -265,9 +267,9 @@ class Budget < ApplicationRecord
     budgeted_spending / total_days.to_f
   end
 
-  # The ideal monthly spending rate (30.44 days average month)
+  # The ideal monthly spending rate based on average month length
   def monthly_pace
-    daily_pace * 30.44
+    daily_pace * AVERAGE_DAYS_PER_MONTH
   end
 
   # The actual daily spending rate based on spending so far
@@ -303,11 +305,9 @@ class Budget < ApplicationRecord
   def pace_status
     return :on_track unless initialized?
 
-    variance_threshold = 5 # 5% tolerance
-
-    if projected_variance_percent > variance_threshold
+    if projected_variance_percent > PACE_VARIANCE_THRESHOLD
       :over
-    elsif projected_variance_percent < -variance_threshold
+    elsif projected_variance_percent < -PACE_VARIANCE_THRESHOLD
       :under
     else
       :on_track

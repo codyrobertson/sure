@@ -91,16 +91,12 @@ class BudgetCategory < ApplicationRecord
   # Returns hash with suggested daily spending info or nil if not applicable
   def suggested_daily_spending
     return nil unless available_to_spend > 0
-
-    budget_date = budget.start_date
-    return nil unless budget_date.month == Date.current.month && budget_date.year == Date.current.year
-
-    days_remaining = (budget_date.end_of_month - Date.current).to_i + 1
-    return nil unless days_remaining > 0
+    return nil unless budget.current?
+    return nil unless budget.days_remaining > 0
 
     {
-      amount: Money.new((available_to_spend / days_remaining), budget.family.currency),
-      days_remaining: days_remaining
+      amount: Money.new((available_to_spend / budget.days_remaining), budget.family.currency),
+      days_remaining: budget.days_remaining
     }
   end
 
