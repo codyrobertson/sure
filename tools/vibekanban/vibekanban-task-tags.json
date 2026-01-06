@@ -1,0 +1,59 @@
+{
+  "taskTags": [
+    {
+      "name": "rails-conventions",
+      "description": "Sure Finance Rails conventions and patterns",
+      "content": "## Rails Conventions\n\n- Use `Current.user` for current user (NOT `current_user`)\n- Use `Current.family` for current family (NOT `current_family`)\n- Business logic in models, not services (`app/models/` not `app/services/`)\n- Use Rails concerns and POROs for organization\n- Models should answer questions about themselves: `account.balance_series` not `AccountSeries.new(account).call`\n- Simple validations in DB, complex validations in ActiveRecord"
+    },
+    {
+      "name": "i18n-pattern",
+      "description": "Internationalization pattern for user-facing strings",
+      "content": "## i18n Requirements\n\n- ALL user-facing strings must use `t()` helper\n- Key structure: `feature.view.element` (e.g., `goals.index.title`)\n- Update `config/locales/views/<feature>/en.yml`\n- Use interpolation for dynamic content: `t(\"users.greeting\", name: user.name)`\n- Use Rails pluralization: `t(\"items.count\", count: @items.count)`\n\n### Example Locale File\n```yaml\nen:\n  goals:\n    index:\n      title: \"Savings Goals\"\n      new_goal: \"New Goal\"\n    show:\n      progress: \"%{percent}% complete\"\n```"
+    },
+    {
+      "name": "hotwire-pattern",
+      "description": "Hotwire (Turbo + Stimulus) patterns",
+      "content": "## Hotwire Patterns\n\n### Native HTML First\n- Use `<dialog>` for modals (NOT JS modal libraries)\n- Use `<details><summary>` for disclosures\n- Use Turbo frames for partial page updates\n\n### Stimulus Controllers\n- Keep controllers < 7 targets\n- Component controllers stay in component directory\n- Global controllers in `app/javascript/controllers/`\n- Pass data via `data-*-value` attributes, not inline JS\n\n### Example\n```erb\n<div data-controller=\"toggle\">\n  <button data-action=\"click->toggle#toggle\">\n    <%= t(\"common.show_details\") %>\n  </button>\n  <div data-toggle-target=\"content\" class=\"hidden\">\n    Content here\n  </div>\n</div>\n```"
+    },
+    {
+      "name": "viewcomponent-pattern",
+      "description": "ViewComponent guidelines for Sure Finance",
+      "content": "## ViewComponent Guidelines\n\n### When to Use ViewComponents\n- Complex logic or styling patterns\n- Reusable across multiple views\n- Needs variants/sizes\n- Requires interactive behavior\n- Has configurable slots\n\n### When to Use Partials\n- Primarily static HTML\n- Used in one specific context\n- Simple template content\n\n### Structure\n```\napp/components/\n├── goal_card/\n│   ├── component.rb\n│   ├── component.html.erb\n│   └── component_controller.js  # If interactive\n```\n\n### Keep domain logic OUT of templates, IN component.rb"
+    },
+    {
+      "name": "testing-pattern",
+      "description": "Testing requirements and patterns",
+      "content": "## Testing Requirements\n\n### Framework\n- ALWAYS use Minitest + fixtures (NEVER RSpec or FactoryBot)\n- Keep fixtures minimal (2-3 per model)\n- Create edge cases on-the-fly in tests\n\n### What to Test\n- Critical business logic\n- Commands: test they were called with correct params\n- Queries: test output\n- DON'T test ActiveRecord functionality or implementation details\n\n### Example\n```ruby\n# GOOD - Testing business logic\ntest \"calculates goal progress correctly\" do\n  goal = goals(:vacation)\n  goal.update!(target_amount: 1000, current_amount: 250)\n  assert_equal 25, goal.progress_percent\nend\n\n# BAD - Testing ActiveRecord\ntest \"saves goal\" do\n  goal = Goal.new(name: \"Test\")\n  assert goal.save\nend\n```"
+    },
+    {
+      "name": "design-system",
+      "description": "TailwindCSS design system tokens",
+      "content": "## Design System\n\nReference: `app/assets/tailwind/maybe-design-system.css`\n\n### Required Tokens\n- `text-primary` instead of `text-white`\n- `bg-container` instead of `bg-white`\n- `border border-primary` instead of `border border-gray-200`\n\n### Icons\n- ALWAYS use `icon` helper in `application_helper.rb`\n- NEVER use `lucide_icon` directly\n\n### Example\n```erb\n<div class=\"bg-container border border-primary rounded-lg p-4\">\n  <h2 class=\"text-primary font-semibold\">\n    <%= t(\"goals.show.title\") %>\n  </h2>\n  <span class=\"text-secondary\">\n    <%= icon(\"target\") %>\n  </span>\n</div>\n```"
+    },
+    {
+      "name": "model-pattern",
+      "description": "Model structure and concerns pattern",
+      "content": "## Model Pattern\n\n### Standard Structure\n```ruby\nclass Goal < ApplicationRecord\n  # Associations\n  belongs_to :family\n  belongs_to :account, optional: true\n  has_many :contributions, dependent: :destroy\n\n  # Validations\n  validates :name, :target_amount, presence: true\n  validates :target_amount, numericality: { greater_than: 0 }\n\n  # Scopes\n  scope :active, -> { where(archived_at: nil) }\n  scope :by_priority, -> { order(priority: :asc) }\n\n  # Monetizable (for currency fields)\n  include Monetizable\n  monetize :target_amount, :current_amount\n\n  # Business logic methods\n  def progress_percent\n    return 0 if target_amount.zero?\n    (current_amount / target_amount * 100).round\n  end\nend\n```"
+    },
+    {
+      "name": "controller-pattern",
+      "description": "Controller structure for Sure Finance",
+      "content": "## Controller Pattern\n\n### Skinny Controllers\n- Business logic belongs in models\n- Controllers handle request/response only\n\n### Standard Structure\n```ruby\nclass GoalsController < ApplicationController\n  before_action :set_goal, only: [:show, :edit, :update, :destroy]\n\n  def index\n    @goals = Current.family.goals.active.by_priority\n  end\n\n  def create\n    @goal = Current.family.goals.build(goal_params)\n    if @goal.save\n      redirect_to @goal, notice: t(\".created\")\n    else\n      render :new, status: :unprocessable_entity\n    end\n  end\n\n  private\n\n  def set_goal\n    @goal = Current.family.goals.find(params[:id])\n  end\n\n  def goal_params\n    params.require(:goal).permit(:name, :target_amount, :target_date, :account_id)\n  end\nend\n```"
+    },
+    {
+      "name": "migration-pattern",
+      "description": "Database migration guidelines",
+      "content": "## Migration Guidelines\n\n### Generate Command\n```bash\nbin/rails g migration CreateGoals family:references name:string target_amount:decimal current_amount:decimal target_date:date\n```\n\n### Best Practices\n- Add indexes for foreign keys and frequently queried columns\n- Use `null: false` for required fields\n- Add default values where appropriate\n- Use `decimal` for monetary values (precision: 19, scale: 4)\n\n### Example\n```ruby\nclass CreateGoals < ActiveRecord::Migration[7.2]\n  def change\n    create_table :goals do |t|\n      t.references :family, null: false, foreign_key: true\n      t.references :account, foreign_key: true\n      t.string :name, null: false\n      t.decimal :target_amount, precision: 19, scale: 4, null: false\n      t.decimal :current_amount, precision: 19, scale: 4, default: 0\n      t.date :target_date\n      t.integer :priority, default: 0\n      t.datetime :archived_at\n      t.timestamps\n    end\n\n    add_index :goals, [:family_id, :archived_at]\n  end\nend\n```"
+    },
+    {
+      "name": "acceptance-criteria",
+      "description": "Standard acceptance criteria checklist",
+      "content": "## Definition of Done\n\n### Required Checks\n- [ ] Code complete and passing tests (`bin/rails test`)\n- [ ] i18n keys added for all user-facing strings\n- [ ] Mobile-responsive (or explicitly scoped out)\n- [ ] AI assistant integration (where applicable)\n- [ ] Documentation updated (CLAUDE.md if patterns change)\n- [ ] Linting passes (`bin/rubocop -a`)\n- [ ] ERB linting passes (`bundle exec erb_lint ./app/**/*.erb -a`)\n- [ ] Security scan clean (`bin/brakeman --no-pager`)"
+    },
+    {
+      "name": "ai-function-pattern",
+      "description": "AI assistant function implementation pattern",
+      "content": "## AI Function Pattern\n\n### File Location\n`app/models/assistant/functions/`\n\n### Structure\n```ruby\nclass Assistant::Functions::GoalProgress < Assistant::Function\n  class << self\n    def name = \"get_goal_progress\"\n    def description = \"Get progress on savings goals\"\n\n    def params_schema\n      {\n        type: \"object\",\n        properties: {\n          goal_name: { type: \"string\", description: \"Name of the goal (optional)\" }\n        },\n        required: [],\n        additionalProperties: false\n      }\n    end\n  end\n\n  def call\n    goals = family.goals.active\n    goals = goals.where(\"name ILIKE ?\", \"%#{params[:goal_name]}%\") if params[:goal_name].present?\n\n    goals.map do |goal|\n      {\n        name: goal.name,\n        target: goal.target_amount.to_f,\n        current: goal.current_amount.to_f,\n        progress_percent: goal.progress_percent,\n        target_date: goal.target_date&.iso8601\n      }\n    end\n  end\nend\n```"
+    }
+  ]
+}

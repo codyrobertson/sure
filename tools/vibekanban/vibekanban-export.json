@@ -1,0 +1,653 @@
+{
+  "project": "Sure Finance",
+  "projectPath": "/Users/Cody/code_projects/sure",
+  "generatedAt": "2026-01-06T19:48:55.991Z",
+  "sprints": [
+    {
+      "name": "ai-sprint-1",
+      "title": "Sprint 1: AI Discoverability - Foundation & First Wins",
+      "tasks": [
+        {
+          "title": "Week 1: Component Infrastructure",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Week 2: Page Integration",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Appendix: Technical Reference",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Next Steps After Sprint 1",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "name": "budget-sprint-1",
+      "title": "Sprint 1: Budget Intelligence Dashboard MVP",
+      "tasks": [
+        {
+          "title": "Sprint Goal",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Sprint Duration",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Success Criteria",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "TASK T1: Budget Projection & Pacing Calculations",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "TASK T2: Budget Alert Detection System",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "TASK T3: Budget Dashboard Controller & Routing",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "TASK T4: Budget Dashboard View Components",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "TASK T5: Previous Month Comparison",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "TASK T6: Budget Recommendations (AI-Powered)",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "TASK T7: Integration Testing & Bug Fixes",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "TASK T8: Documentation & Deployment Prep",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Sprint Schedule & Dependencies",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Definition of Done (Sprint Level)",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Risk Mitigation",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Success Metrics (Post-Launch)",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Notes & Assumptions",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Developer Handoff Checklist",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "name": "goals-sprint-1",
+      "title": "Sprint 1: Goals & Savings Tracking MVP",
+      "tasks": [
+        {
+          "title": "Sprint Backlog",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Sprint Schedule (10 Days)",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Risk Mitigation Checklist",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Definition of Done",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Success Metrics",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Next Steps (Post-Sprint 1)",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Questions to Resolve During Sprint",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Team Roles",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Daily Standup Template",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        },
+        {
+          "title": "Sprint Retrospective Questions",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [],
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "name": "quickwins-sprint-1",
+      "title": "Quick Wins Sprint - Task Breakdown",
+      "tasks": [
+        {
+          "title": "1: PDF Export",
+          "description": "",
+          "priority": "P2",
+          "type": "feature",
+          "subtasks": [
+            {
+              "id": "UOW-1.1",
+              "title": "Add Prawn Gem Dependency",
+              "description": "**Estimate**: 0.5 hours\n\n**Exact Action**:\n- Add `gem \"prawn\"` to Gemfile\n- Run `bundle install`\n- Verify gem installation with `bundle list | grep prawn`\n\n- `/Users/Cody/code_projects/sure/Gemfile`\n\n- [ ] Prawn gem appears in Gemfile.lock\n- [ ] Bundle install completes without errors\n- [ ] Rails console can require 'prawn' successfully",
+              "type": "infra",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-1.2",
+              "title": "Uncomment PDF Export Code",
+              "description": "**Estimate**: 0.5 hours\n\n**Exact Action**:\n- In `/Users/Cody/code_projects/sure/app/controllers/reports_controller.rb`:\n  - Uncomment lines 92-97 (PDF format block in `export_transactions` action)\n  - Verify `generate_transactions_pdf` method (lines 816-914) is intact\n- Test PDF generation in Rails console\n\n- `/Users/Cody/code_projects/sure/app/controllers/reports_controller.rb`\n\n- [ ] PDF format block is active\n- [ ] No syntax errors\n- [ ] Rails server starts without warnings",
+              "type": "backend",
+              "dependencies": "UOW-1.1"
+            },
+            {
+              "id": "UOW-1.3",
+              "title": "Create PDF Export UI Component",
+              "description": "**Estimate**: 1 hour\n\n**Exact Action**:\n- Add \"Download PDF\" button to Reports page export section\n- Add PDF icon using `icon` helper (not `lucide_icon`)\n- Wire button to `export_transactions_reports_path(format: :pdf)`\n- Use existing export dropdown pattern from CSV export\n\n- `/Users/Cody/code_projects/sure/app/views/reports/index.html.erb` or appropriate partial\n- `/Users/Cody/code_projects/sure/config/locales/en.yml` (add i18n strings)\n\n- [ ] Button appears in Reports export section\n- [ ] Button styling matches existing design system\n- [ ] Clicking button triggers PDF download\n- [ ] All user-facing strings use i18n",
+              "type": "frontend",
+              "dependencies": "UOW-1.2"
+            },
+            {
+              "id": "UOW-1.4",
+              "title": "Test PDF Export with Various Data Sets",
+              "description": "**Estimate**: 1.5 hours\n\n**Exact Action**:\n- Create controller test for PDF export in `/Users/Cody/code_projects/sure/test/controllers/reports_controller_test.rb`\n- Test with: empty data, single month, multi-month, large dataset (100+ transactions)\n- Verify PDF structure: headers, income section, expense section, totals\n- Test error handling (missing data, invalid date ranges)\n\n- `/Users/Cody/code_projects/sure/test/controllers/reports_controller_test.rb`\n\n- [ ] Test coverage for PDF export action\n- [ ] Tests verify PDF content structure\n- [ ] Tests pass with `bin/rails test`\n- [ ] No regression in existing tests",
+              "type": "tests",
+              "dependencies": "UOW-1.3"
+            },
+            {
+              "id": "UOW-1.5",
+              "title": "Add Analytics Tracking for PDF Downloads",
+              "description": "**Estimate**: 0.5 hours\n\n**Exact Action**:\n- Add analytics event when PDF is generated\n- Track: user_id, period_type, date_range, transaction_count\n- Use existing analytics pattern (if available) or add TODO for analytics integration\n\n- `/Users/Cody/code_projects/sure/app/controllers/reports_controller.rb` (line ~93, in PDF format block)\n\n- [ ] Analytics event fires on PDF download\n- [ ] Event includes all required metadata\n- [ ] No performance degradation",
+              "type": "backend",
+              "dependencies": "UOW-1.3"
+            }
+          ],
+          "metadata": {}
+        },
+        {
+          "title": "2: Surface Anomaly Alerts",
+          "description": "",
+          "priority": "P0",
+          "type": "feature",
+          "subtasks": [
+            {
+              "id": "UOW-2.1",
+              "title": "Create Notification Model",
+              "description": "**Estimate**: 1.5 hours\n\n**Exact Action**:\n- Generate migration: `rails g model Notification family:references user:references notification_type:string severity:string data:jsonb read_at:datetime`\n- Add validations: presence of family, notification_type, severity\n- Add enum for severity: `enum severity: { info: \"info\", warning: \"warning\", alert: \"alert\" }`\n- Add scopes: `scope :unread, -> { where(read_at: nil) }`\n\n- `/Users/Cody/code_projects/sure/app/models/notification.rb`\n- `/Users/Cody/code_projects/sure/db/migrate/XXXXXX_create_notifications.rb`\n\n- [ ] Migration runs cleanly with `bin/rails db:migrate`\n- [ ] Model validations work\n- [ ] Factory/fixture exists for testing",
+              "type": "data",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-2.2",
+              "title": "Create AnomalyNotificationJob",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Create background job: `app/jobs/anomaly_notification_job.rb`\n- Job fetches anomalies using `Insights::AnomalyDetector.new(family, period: Period.current_month).analyze`\n- For each anomaly with severity >= warning:\n  - Check if notification already exists (deduplicate)\n  - Create Notification record with type: \"spending_anomaly\"\n  - Include anomaly data in jsonb column (category, current, average, deviation_percent)\n\n- `/Users/Cody/code_projects/sure/app/jobs/anomaly_notification_job.rb`\n\n- [ ] Job runs successfully\n- [ ] Creates notifications for new anomalies\n- [ ] Doesn't create duplicate notifications\n- [ ] Handles edge cases (no anomalies, missing data)",
+              "type": "backend",
+              "dependencies": "UOW-2.1"
+            },
+            {
+              "id": "UOW-2.3",
+              "title": "Schedule Daily Anomaly Detection",
+              "description": "**Estimate**: 0.5 hours\n\n**Exact Action**:\n- Add sidekiq-cron schedule (or similar) to run AnomalyNotificationJob daily\n- Schedule for early morning (e.g., 6 AM local time)\n- Add job to appropriate config file (check existing scheduled jobs pattern)\n\n- Sidekiq schedule config (likely `/Users/Cody/code_projects/sure/config/initializers/sidekiq.rb` or similar)\n\n- [ ] Job appears in scheduled jobs list\n- [ ] Job runs at correct time\n- [ ] Job processes all families",
+              "type": "infra",
+              "dependencies": "UOW-2.2"
+            },
+            {
+              "id": "UOW-2.4",
+              "title": "Create Notification Component",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Create ViewComponent: `app/components/notification_component.rb`\n- Component displays notification with:\n  - Icon (alert/warning based on severity)\n  - Title and description\n  - \"Mark as read\" action\n  - Link to relevant page (Reports > Anomaly Detection)\n- Support variants: inline (dashboard), toast, list item\n\n- `/Users/Cody/code_projects/sure/app/components/notification_component.rb`\n- `/Users/Cody/code_projects/sure/app/components/notification_component.html.erb`\n- `/Users/Cody/code_projects/sure/app/components/notification_component_controller.js` (Stimulus)\n\n- [ ] Component renders correctly\n- [ ] Severity colors match design system\n- [ ] \"Mark as read\" works\n- [ ] Links to correct page",
+              "type": "frontend",
+              "dependencies": "UOW-2.1"
+            },
+            {
+              "id": "UOW-2.5",
+              "title": "Add Notifications to Dashboard",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Add notifications widget to dashboard sections in `app/controllers/pages_controller.rb`\n- Fetch unread notifications for current user/family\n- Add dashboard partial: `app/views/pages/dashboard/_notifications.html.erb`\n- Use NotificationComponent for each notification\n- Add to collapsible sections array\n\n- `/Users/Cody/code_projects/sure/app/controllers/pages_controller.rb`\n- `/Users/Cody/code_projects/sure/app/views/pages/dashboard/_notifications.html.erb` (new)\n- `/Users/Cody/code_projects/sure/config/locales/en.yml`\n\n- [ ] Widget appears on dashboard\n- [ ] Shows unread notifications\n- [ ] Widget is collapsible\n- [ ] Empty state when no notifications",
+              "type": "frontend",
+              "dependencies": "UOW-2.4"
+            },
+            {
+              "id": "UOW-2.6",
+              "title": "Add Notification Preferences",
+              "description": "**Estimate**: 1.5 hours\n\n**Exact Action**:\n- Add user preference fields (use existing preference pattern from User model)\n- Add `anomaly_notifications_enabled` boolean (default: true)\n- Add `anomaly_notification_threshold` enum (warning, alert)\n- Update AnomalyNotificationJob to respect user preferences\n\n- `/Users/Cody/code_projects/sure/app/models/user.rb`\n- `/Users/Cody/code_projects/sure/app/jobs/anomaly_notification_job.rb`\n- Database migration for user preferences (if needed)\n\n- [ ] User can toggle anomaly notifications\n- [ ] User can set threshold\n- [ ] Job respects preferences\n- [ ] Preferences persist across sessions",
+              "type": "backend",
+              "dependencies": "UOW-2.2"
+            },
+            {
+              "id": "UOW-2.7",
+              "title": "Add Notification Preferences UI",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Add notification settings to Settings > Preferences page\n- Add toggle for \"Enable spending anomaly alerts\"\n- Add dropdown for \"Alert threshold\" (Warning at 150%, Alert at 200%, Custom)\n- Use existing settings form pattern\n\n- `/Users/Cody/code_projects/sure/app/views/settings/preferences/edit.html.erb` (or similar)\n- `/Users/Cody/code_projects/sure/app/controllers/settings/preferences_controller.rb` (or similar)\n- `/Users/Cody/code_projects/sure/config/locales/en.yml`\n\n- [ ] Settings page shows notification preferences\n- [ ] Changes save correctly\n- [ ] UI matches existing design patterns\n- [ ] Help text explains thresholds",
+              "type": "frontend",
+              "dependencies": "UOW-2.6"
+            },
+            {
+              "id": "UOW-2.8",
+              "title": "Add NotificationsController",
+              "description": "**Estimate**: 1.5 hours\n\n**Exact Action**:\n- Create `app/controllers/notifications_controller.rb`\n- Add actions: `index`, `mark_as_read`, `mark_all_as_read`\n- Add routes: `resources :notifications, only: [:index] do ... end`\n- Return turbo_stream response for mark_as_read\n\n- `/Users/Cody/code_projects/sure/app/controllers/notifications_controller.rb`\n\n- `/Users/Cody/code_projects/sure/config/routes.rb`\n\n- [ ] Routes are accessible\n- [ ] mark_as_read updates notification\n- [ ] Turbo stream response works\n- [ ] Scoped to current family",
+              "type": "backend",
+              "dependencies": "UOW-2.1"
+            },
+            {
+              "id": "UOW-2.9",
+              "title": "Add Tests for Anomaly Notifications",
+              "description": "**Estimate**: 2.5 hours\n\n**Exact Action**:\n- Test Notification model validations\n- Test AnomalyNotificationJob creates notifications\n- Test NotificationComponent renders correctly\n- Test NotificationsController actions\n- Test user preferences integration\n\n- `/Users/Cody/code_projects/sure/test/models/notification_test.rb`\n- `/Users/Cody/code_projects/sure/test/jobs/anomaly_notification_job_test.rb`\n- `/Users/Cody/code_projects/sure/test/components/notification_component_test.rb`\n- `/Users/Cody/code_projects/sure/test/controllers/notifications_controller_test.rb`\n\n- [ ] All tests pass\n- [ ] Test coverage > 80%\n- [ ] Edge cases covered",
+              "type": "tests",
+              "dependencies": "All UOW-2.x"
+            },
+            {
+              "id": "UOW-2.10",
+              "title": "Add Notification Badge to Header",
+              "description": "**Estimate**: 1 hour\n\n**Exact Action**:\n- Add notification bell icon to app header/navbar\n- Show count badge for unread notifications\n- Clicking opens notifications dropdown or navigates to notifications page\n- Real-time update using Turbo Streams (optional enhancement)\n\n- `/Users/Cody/code_projects/sure/app/views/layouts/_header.html.erb` (or similar)\n- `/Users/Cody/code_projects/sure/app/javascript/controllers/notifications_controller.js` (if needed)\n\n- [ ] Bell icon appears in header\n- [ ] Badge shows correct count\n- [ ] Clicking navigates to notifications\n- [ ] Count updates when notifications read",
+              "type": "frontend",
+              "dependencies": "UOW-2.8"
+            }
+          ],
+          "metadata": {}
+        },
+        {
+          "title": "3: Budget Alert Emails",
+          "description": "",
+          "priority": "P0",
+          "type": "feature",
+          "subtasks": [
+            {
+              "id": "UOW-3.1",
+              "title": "Create BudgetAlertMailer",
+              "description": "**Estimate**: 1.5 hours\n\n**Exact Action**:\n- Create mailer: `app/mailers/budget_alert_mailer.rb` inheriting from ApplicationMailer\n- Add method: `category_threshold_reached(budget_category, user)`\n- Create email templates (HTML and text):\n  - Subject: \"Budget Alert: {{category_name}} at {{percent}}%\"\n  - Body: Show current spending, budget limit, days remaining, suggested daily spending\n- Include link to budget page\n\n- `/Users/Cody/code_projects/sure/app/mailers/budget_alert_mailer.rb`\n- `/Users/Cody/code_projects/sure/app/views/budget_alert_mailer/category_threshold_reached.html.erb`\n- `/Users/Cody/code_projects/sure/app/views/budget_alert_mailer/category_threshold_reached.text.erb`\n\n- [ ] Mailer sends successfully\n- [ ] Email renders correctly (HTML and text)\n- [ ] Links work correctly\n- [ ] Branded with app name and logo",
+              "type": "backend",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-3.2",
+              "title": "Create BudgetAlertJob",
+              "description": "**Estimate**: 2.5 hours\n\n**Exact Action**:\n- Create job: `app/jobs/budget_alert_job.rb`\n- Job logic:\n  - Fetch all current month budgets\n  - For each budget, check all budget_categories\n  - If `percent_of_budget_spent >= alert_threshold` (default 80):\n    - Check if alert already sent today (use cache or DB flag)\n    - Send email via BudgetAlertMailer\n    - Mark alert as sent\n- Handle user preferences (alert threshold, email enabled)\n\n- `/Users/Cody/code_projects/sure/app/jobs/budget_alert_job.rb`\n\n- [ ] Job runs without errors\n- [ ] Sends emails only for categories at/above threshold\n- [ ] Doesn't send duplicate emails\n- [ ] Respects user preferences",
+              "type": "backend",
+              "dependencies": "UOW-3.1"
+            },
+            {
+              "id": "UOW-3.3",
+              "title": "Add Budget Alert Tracking",
+              "description": "**Estimate**: 1.5 hours\n\n**Exact Action**:\n- Create migration: `rails g migration AddBudgetAlertsSentToBudgetCategories`\n- Add jsonb column: `alerts_sent` (stores {date => threshold} map)\n- Add method to BudgetCategory: `alert_sent_today?(threshold)`\n- Add method to BudgetCategory: `record_alert_sent(threshold)`\n\n- `/Users/Cody/code_projects/sure/app/models/budget_category.rb`\n- `/Users/Cody/code_projects/sure/db/migrate/XXXXXX_add_budget_alerts_sent_to_budget_categories.rb`\n\n- [ ] Migration runs cleanly\n- [ ] Alert tracking works correctly\n- [ ] Prevents duplicate alerts same day\n- [ ] Clears old alert data (> 30 days)",
+              "type": "data",
+              "dependencies": "UOW-3.2"
+            },
+            {
+              "id": "UOW-3.4",
+              "title": "Schedule Daily Budget Alert Job",
+              "description": "**Estimate**: 0.5 hours\n\n**Exact Action**:\n- Add sidekiq-cron schedule to run BudgetAlertJob daily\n- Schedule for evening (e.g., 8 PM local time)\n- Add to scheduled jobs config\n\n- Sidekiq schedule config\n\n- [ ] Job appears in scheduled jobs\n- [ ] Job runs at correct time\n- [ ] Job processes all families",
+              "type": "infra",
+              "dependencies": "UOW-3.2"
+            },
+            {
+              "id": "UOW-3.5",
+              "title": "Add Budget Alert Preferences to User Model",
+              "description": "**Estimate**: 1 hour\n\n**Exact Action**:\n- Add user preference fields:\n  - `budget_alerts_enabled` boolean (default: true)\n  - `budget_alert_threshold` integer (default: 80, range: 50-100)\n  - `budget_alert_email_enabled` boolean (default: true)\n- Add validation: threshold between 50-100\n- Update BudgetAlertJob to use user-specific thresholds\n\n- `/Users/Cody/code_projects/sure/app/models/user.rb`\n- `/Users/Cody/code_projects/sure/app/jobs/budget_alert_job.rb`\n- Database migration for user preferences\n\n- [ ] Preferences save correctly\n- [ ] Validation works\n- [ ] Job uses user preferences\n- [ ] Default values set correctly",
+              "type": "backend",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-3.6",
+              "title": "Add Budget Alert Preferences UI",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Add to Settings > Preferences page:\n  - Toggle: \"Enable budget alerts\"\n  - Slider: \"Alert threshold\" (50-100%, default 80%)\n  - Toggle: \"Send email alerts\"\n- Use existing form pattern\n- Show preview: \"You'll be alerted when spending reaches $X (80% of $Y budget)\"\n\n- Settings preferences view\n- Settings preferences controller\n- `/Users/Cody/code_projects/sure/config/locales/en.yml`\n\n- [ ] UI shows all preference options\n- [ ] Slider updates preview dynamically\n- [ ] Changes save correctly\n- [ ] Help text explains feature",
+              "type": "frontend",
+              "dependencies": "UOW-3.5"
+            },
+            {
+              "id": "UOW-3.7",
+              "title": "Add Budget Alert Preview to Budget Page",
+              "description": "**Estimate**: 1.5 hours\n\n**Exact Action**:\n- On budget show page, for each category near threshold:\n  - Show warning badge: \"Alert will be sent at {{threshold}}%\"\n  - Show progress indicator\n  - Link to alert preferences\n- Use existing budget category display pattern\n\n- `/Users/Cody/code_projects/sure/app/views/budgets/show.html.erb` or appropriate partial\n- `/Users/Cody/code_projects/sure/config/locales/en.yml`\n\n- [ ] Warning shows for categories approaching threshold\n- [ ] Progress indicator accurate\n- [ ] Link to preferences works\n- [ ] Updates in real-time",
+              "type": "frontend",
+              "dependencies": "UOW-3.1"
+            },
+            {
+              "id": "UOW-3.8",
+              "title": "Add Tests for Budget Alerts",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Test BudgetAlertMailer sends correctly\n- Test BudgetAlertJob logic (threshold detection, deduplication)\n- Test user preferences integration\n- Test alert tracking (sent_today?, record_sent)\n- Test mailer previews work\n\n- `/Users/Cody/code_projects/sure/test/mailers/budget_alert_mailer_test.rb`\n- `/Users/Cody/code_projects/sure/test/jobs/budget_alert_job_test.rb`\n- `/Users/Cody/code_projects/sure/test/models/budget_category_test.rb` (update)\n\n- [ ] All tests pass\n- [ ] Edge cases covered\n- [ ] Mailer preview works in dev",
+              "type": "tests",
+              "dependencies": "All UOW-3.x"
+            }
+          ],
+          "metadata": {}
+        },
+        {
+          "title": "4: Compare to Last Month Toggle",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [
+            {
+              "id": "UOW-4.1",
+              "title": "Create Period Selector Component",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Create ViewComponent: `app/components/period_selector_component.rb`\n- Component renders dropdown with period options:\n  - Current Month (MTD)\n  - Last Month (LM)\n  - Last 30 Days (30D)\n  - Last 90 Days (90D)\n  - Custom (opens date range picker)\n- Use existing Period model options\n- Component accepts current_period and callback URL\n\n- `/Users/Cody/code_projects/sure/app/components/period_selector_component.rb`\n- `/Users/Cody/code_projects/sure/app/components/period_selector_component.html.erb`\n- `/Users/Cody/code_projects/sure/app/components/period_selector_component_controller.js`\n\n- [ ] Component renders correctly\n- [ ] Dropdown shows all period options\n- [ ] Selecting period navigates with correct param\n- [ ] Current period is highlighted",
+              "type": "frontend",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-4.2",
+              "title": "Add Period Selector to Dashboard",
+              "description": "**Estimate**: 1 hour\n\n**Exact Action**:\n- Add PeriodSelectorComponent to dashboard header\n- Position next to existing filter controls\n- Wire to `pages_controller.rb` with `period` param\n- Ensure all dashboard widgets use `@period`\n\n- `/Users/Cody/code_projects/sure/app/views/pages/dashboard.html.erb` (or header partial)\n- `/Users/Cody/code_projects/sure/app/controllers/pages_controller.rb` (verify Periodable concern is included)\n\n- [ ] Selector appears in dashboard header\n- [ ] Changing period reloads dashboard with new data\n- [ ] All widgets update correctly\n- [ ] URL param persists",
+              "type": "frontend",
+              "dependencies": "UOW-4.1"
+            },
+            {
+              "id": "UOW-4.3",
+              "title": "Add Period Comparison Badge",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Add comparison logic to `pages_controller.rb`:\n  - Calculate previous period using existing `build_previous_period` pattern from reports_controller\n  - Calculate % change for key metrics (income, expenses, net savings)\n- Create ComparisonBadgeComponent:\n  - Shows \"↑ 15% vs last month\" or \"↓ 8% vs last month\"\n  - Color codes: green for positive income change, red for negative, inverse for expenses\n- Add badge to dashboard summary metrics\n\n- `/Users/Cody/code_projects/sure/app/components/comparison_badge_component.rb`\n- `/Users/Cody/code_projects/sure/app/components/comparison_badge_component.html.erb`\n\n- `/Users/Cody/code_projects/sure/app/controllers/pages_controller.rb`\n- Dashboard summary partial\n\n- [ ] Badge shows correct % change\n- [ ] Color coding works\n- [ ] Handles edge cases (zero previous value)\n- [ ] Responsive on mobile",
+              "type": "frontend",
+              "dependencies": "UOW-4.2"
+            },
+            {
+              "id": "UOW-4.4",
+              "title": "Add Default Period Preference",
+              "description": "**Estimate**: 1 hour\n\n**Exact Action**:\n- Add user preference: `default_dashboard_period` string (default: \"current_month\")\n- Update Periodable concern to use user's default when no param provided\n- Validate against Period::PERIODS keys\n\n- `/Users/Cody/code_projects/sure/app/models/user.rb`\n- `/Users/Cody/code_projects/sure/app/controllers/concerns/periodable.rb`\n- Database migration for user preferences\n\n- [ ] Preference saves correctly\n- [ ] Dashboard uses user's default period\n- [ ] URL param overrides default\n- [ ] Invalid values fall back to current_month",
+              "type": "backend",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-4.5",
+              "title": "Add Default Period Preference UI",
+              "description": "**Estimate**: 1 hour\n\n**Exact Action**:\n- Add to Settings > Preferences page:\n  - Dropdown: \"Default dashboard period\"\n  - Options: Current Month, Last Month, Last 30 Days, Last 90 Days\n- Use existing form pattern\n\n- Settings preferences view\n- Settings preferences controller\n- `/Users/Cody/code_projects/sure/config/locales/en.yml`\n\n- [ ] Dropdown shows all options\n- [ ] Selection saves correctly\n- [ ] Dashboard uses selected default\n- [ ] Change reflects immediately",
+              "type": "frontend",
+              "dependencies": "UOW-4.4"
+            },
+            {
+              "id": "UOW-4.6",
+              "title": "Add Tests for Period Comparison",
+              "description": "**Estimate**: 1 hour\n\n**Exact Action**:\n- Test PeriodSelectorComponent rendering\n- Test ComparisonBadgeComponent logic (% calculation, color coding)\n- Test user preference saves and loads\n- Test Periodable concern uses default correctly\n\n- `/Users/Cody/code_projects/sure/test/components/period_selector_component_test.rb`\n- `/Users/Cody/code_projects/sure/test/components/comparison_badge_component_test.rb`\n- `/Users/Cody/code_projects/sure/test/controllers/pages_controller_test.rb` (update)\n\n- [ ] All tests pass\n- [ ] Edge cases covered\n- [ ] Component tests verify rendering",
+              "type": "tests",
+              "dependencies": "All UOW-4.x"
+            }
+          ],
+          "metadata": {}
+        },
+        {
+          "title": "5: Improve Rule Visibility",
+          "description": "",
+          "priority": "P2",
+          "type": "feature",
+          "subtasks": [
+            {
+              "id": "UOW-5.1",
+              "title": "Create Rules Dashboard Widget",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Create widget partial: `app/views/pages/dashboard/_rules_widget.html.erb`\n- Widget shows:\n  - Active rules count\n  - Recent rule runs (last 3)\n  - \"Create your first rule\" CTA if no rules\n  - Link to rules page\n- Add to dashboard sections array in `pages_controller.rb`\n\n- `/Users/Cody/code_projects/sure/app/views/pages/dashboard/_rules_widget.html.erb`\n\n- `/Users/Cody/code_projects/sure/app/controllers/pages_controller.rb`\n- `/Users/Cody/code_projects/sure/config/locales/en.yml`\n\n- [ ] Widget appears on dashboard\n- [ ] Shows correct counts\n- [ ] Links to rules page\n- [ ] Empty state shows CTA",
+              "type": "frontend",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-5.2",
+              "title": "Add Rules Count Badge to Transaction Header",
+              "description": "**Estimate**: 1.5 hours\n\n**Exact Action**:\n- In transactions index page header, add badge: \"X rules active\"\n- Badge links to rules page\n- Only show if rules exist\n- Use existing badge styling pattern\n\n- `/Users/Cody/code_projects/sure/app/views/transactions/index.html.erb`\n- `/Users/Cody/code_projects/sure/app/controllers/transactions_controller.rb` (add `@active_rules_count`)\n- `/Users/Cody/code_projects/sure/config/locales/en.yml`\n\n- [ ] Badge shows correct count\n- [ ] Badge links to rules page\n- [ ] Hidden when no rules\n- [ ] Responsive styling",
+              "type": "frontend",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-5.3",
+              "title": "Add \"Create Rule\" Quick Action to Transaction Detail",
+              "description": "**Estimate**: 2.5 hours\n\n**Exact Action**:\n- Add button to transaction detail dropdown: \"Create rule from this transaction\"\n- Button pre-fills rule form with:\n  - Condition: transaction name matches current transaction\n  - Action: set category to current category\n- Links to `new_rule_path` with query params\n- Use existing rules_controller.rb `new` action (supports pre-filling via params)\n\n- `/Users/Cody/code_projects/sure/app/views/transactions/_transaction.html.erb` (or detail partial)\n- `/Users/Cody/code_projects/sure/config/locales/en.yml`\n\n- [ ] Button appears in transaction dropdown\n- [ ] Clicking opens rule form\n- [ ] Form pre-filled correctly\n- [ ] Save creates working rule",
+              "type": "frontend",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-5.4",
+              "title": "Add \"Auto-categorized\" Badge to Transactions",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Add method to Transaction model: `auto_categorized?`\n  - Check if transaction has `locked_attributes` including category_id\n  - OR check if category was set by a rule (requires tracking)\n- If tracking needed:\n  - Add `categorized_by_rule_id` to transactions (migration)\n  - Update rule actions to set this field\n- Add badge to transaction list item: \"Auto-categorized\"\n\n- `/Users/Cody/code_projects/sure/app/models/transaction.rb`\n- `/Users/Cody/code_projects/sure/app/models/rule.rb` (or action executor)\n- `/Users/Cody/code_projects/sure/app/views/transactions/_transaction.html.erb`\n- `/Users/Cody/code_projects/sure/config/locales/en.yml`\n- Database migration (if adding column)\n\n- [ ] Badge shows for auto-categorized transactions\n- [ ] Badge hidden for manual categorization\n- [ ] Tooltip explains which rule applied\n- [ ] Badge styling matches design system",
+              "type": "backend",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-5.5",
+              "title": "Add Rule Suggestion Banner",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- On transactions page, if user has 0 rules and 20+ transactions:\n  - Show dismissible banner: \"Save time! Create rules to auto-categorize similar transactions\"\n  - Banner includes \"Learn more\" link and \"Create rule\" button\n- Banner dismisses for 7 days when closed\n- Use browser localStorage or user preference\n\n- `/Users/Cody/code_projects/sure/app/components/rule_suggestion_banner_component.rb`\n- `/Users/Cody/code_projects/sure/app/components/rule_suggestion_banner_component.html.erb`\n\n- `/Users/Cody/code_projects/sure/app/views/transactions/index.html.erb`\n- `/Users/Cody/code_projects/sure/config/locales/en.yml`\n\n- [ ] Banner shows when conditions met\n- [ ] Banner dismisses correctly\n- [ ] Dismiss state persists\n- [ ] Links work correctly",
+              "type": "frontend",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-5.6",
+              "title": "Add Tests for Rule Visibility Features",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Test rules dashboard widget renders\n- Test rules count badge\n- Test \"Create rule\" quick action pre-fills form\n- Test auto-categorized badge logic\n- Test rule suggestion banner conditions\n\n- `/Users/Cody/code_projects/sure/test/components/rule_suggestion_banner_component_test.rb`\n- `/Users/Cody/code_projects/sure/test/models/transaction_test.rb` (update)\n- `/Users/Cody/code_projects/sure/test/controllers/transactions_controller_test.rb` (update)\n- `/Users/Cody/code_projects/sure/test/system/rules_test.rb` (system test for create flow)\n\n- [ ] All tests pass\n- [ ] System test verifies end-to-end flow\n- [ ] Edge cases covered",
+              "type": "tests",
+              "dependencies": "All UOW-5.x"
+            }
+          ],
+          "metadata": {}
+        },
+        {
+          "title": "6: Transaction/Merchant Merge UI",
+          "description": "",
+          "priority": "P1",
+          "type": "feature",
+          "subtasks": [
+            {
+              "id": "UOW-6.1",
+              "title": "Add Multi-Select to Transaction List",
+              "description": "**Estimate**: 2.5 hours\n\n**Exact Action**:\n- Add checkbox column to transaction table\n- Add \"Select all\" checkbox in header\n- Add Stimulus controller for multi-select behavior\n- Show/hide bulk actions toolbar when selections change\n- Store selected transaction IDs in controller state\n\n- `/Users/Cody/code_projects/sure/app/views/transactions/index.html.erb`\n- `/Users/Cody/code_projects/sure/app/views/transactions/_transaction.html.erb`\n- `/Users/Cody/code_projects/sure/app/javascript/controllers/transaction_multi_select_controller.js` (new)\n- `/Users/Cody/code_projects/sure/config/locales/en.yml`\n\n- [ ] Checkboxes appear in transaction list\n- [ ] Select all works\n- [ ] Selection state tracked correctly\n- [ ] Bulk actions toolbar shows/hides",
+              "type": "frontend",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-6.2",
+              "title": "Create Bulk Actions Toolbar Component",
+              "description": "**Estimate**: 1.5 hours\n\n**Exact Action**:\n- Create component: `app/components/bulk_actions_toolbar_component.rb`\n- Toolbar shows:\n  - Selected count: \"X transactions selected\"\n  - Actions dropdown: Merge, Delete, Clear selection\n  - Sticky positioning at top of table\n- Use existing design system patterns\n\n- `/Users/Cody/code_projects/sure/app/components/bulk_actions_toolbar_component.rb`\n- `/Users/Cody/code_projects/sure/app/components/bulk_actions_toolbar_component.html.erb`\n\n- [ ] Toolbar renders when items selected\n- [ ] Count updates dynamically\n- [ ] Dropdown shows all actions\n- [ ] Sticky positioning works",
+              "type": "frontend",
+              "dependencies": "UOW-6.1"
+            },
+            {
+              "id": "UOW-6.3",
+              "title": "Create TransactionMergeService",
+              "description": "**Estimate**: 3 hours\n\n**Exact Action**:\n- Create service: `app/services/transaction_merge_service.rb`\n- Service accepts: primary_transaction_id, transaction_ids_to_merge\n- Service logic:\n  - Validate all transactions belong to same family\n  - Extract attributes from primary transaction (category, merchant, tags)\n  - Update all merge transactions with primary attributes\n  - Store previous values in jsonb column for undo (24 hour retention)\n  - Return summary: {updated_count, errors}\n- Handle attribute locks (skip locked attributes)\n\n- `/Users/Cody/code_projects/sure/app/services/transaction_merge_service.rb`\n\n- [ ] Service merges transactions correctly\n- [ ] Respects attribute locks\n- [ ] Stores undo data\n- [ ] Returns useful summary\n- [ ] Handles errors gracefully",
+              "type": "backend",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-6.4",
+              "title": "Add Merge Undo Tracking",
+              "description": "**Estimate**: 1.5 hours\n\n**Exact Action**:\n- Create migration: `rails g migration AddMergeUndoDataToTransactions`\n- Add jsonb column: `merge_undo_data` (stores previous values)\n- Add datetime column: `merge_undo_expires_at`\n- Add method to Transaction: `can_undo_merge?`\n- Add cleanup job to remove expired undo data\n\n- `/Users/Cody/code_projects/sure/app/models/transaction.rb`\n- `/Users/Cody/code_projects/sure/db/migrate/XXXXXX_add_merge_undo_data_to_transactions.rb`\n- `/Users/Cody/code_projects/sure/app/jobs/cleanup_merge_undo_data_job.rb` (new)\n\n- [ ] Migration runs cleanly\n- [ ] Undo data stored correctly\n- [ ] Expiration tracked\n- [ ] Cleanup job works",
+              "type": "data",
+              "dependencies": "UOW-6.3"
+            },
+            {
+              "id": "UOW-6.5",
+              "title": "Add Bulk Merge Action to TransactionsController",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Add action to `transactions_controller.rb`: `bulk_merge`\n- Action receives: primary_id, transaction_ids[]\n- Call TransactionMergeService\n- Return turbo_stream response to update transaction list\n- Flash success/error message\n- Add route: `post :bulk_merge, on: :collection`\n\n- `/Users/Cody/code_projects/sure/app/controllers/transactions_controller.rb`\n- `/Users/Cody/code_projects/sure/config/routes.rb`\n\n- [ ] Action accessible via POST\n- [ ] Calls merge service\n- [ ] Returns turbo_stream\n- [ ] Shows flash message\n- [ ] Scoped to family",
+              "type": "backend",
+              "dependencies": "UOW-6.3, UOW-6.4"
+            },
+            {
+              "id": "UOW-6.6",
+              "title": "Create Merge Confirmation Modal",
+              "description": "**Estimate**: 2.5 hours\n\n**Exact Action**:\n- Create modal component: `app/components/transaction_merge_modal_component.rb`\n- Modal shows:\n  - Selected transactions count\n  - \"Choose primary transaction\" radio buttons\n  - Preview of changes (category, merchant, tags)\n  - Confirm/Cancel buttons\n- Use native `<dialog>` element\n- Submit triggers bulk_merge action\n\n- `/Users/Cody/code_projects/sure/app/components/transaction_merge_modal_component.rb`\n- `/Users/Cody/code_projects/sure/app/components/transaction_merge_modal_component.html.erb`\n- `/Users/Cody/code_projects/sure/app/components/transaction_merge_modal_component_controller.js`\n\n- [ ] Modal opens on \"Merge\" action\n- [ ] Shows all selected transactions\n- [ ] Primary selection works\n- [ ] Preview updates dynamically\n- [ ] Confirm triggers merge",
+              "type": "frontend",
+              "dependencies": "UOW-6.5"
+            },
+            {
+              "id": "UOW-6.7",
+              "title": "Create MerchantMergeService",
+              "description": "**Estimate**: 2.5 hours\n\n**Exact Action**:\n- Create service: `app/services/merchant_merge_service.rb`\n- Service accepts: primary_merchant_id, merchant_ids_to_merge\n- Service logic:\n  - Validate all merchants belong to same family (if family-scoped)\n  - Update all transactions with duplicate merchants to use primary merchant\n  - Delete duplicate merchant records\n  - Return summary: {transactions_updated, merchants_deleted}\n\n- `/Users/Cody/code_projects/sure/app/services/merchant_merge_service.rb`\n\n- [ ] Service merges merchants correctly\n- [ ] Updates all related transactions\n- [ ] Deletes duplicate merchants\n- [ ] Returns useful summary\n- [ ] Handles errors",
+              "type": "backend",
+              "dependencies": "None"
+            },
+            {
+              "id": "UOW-6.8",
+              "title": "Add Merchant Merge UI to Merchants Page",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- If merchants index page exists, add multi-select similar to transactions\n- If no merchants page exists, add \"Manage merchants\" link to settings\n- Add bulk merge action for merchants\n- Create merchant_merge_modal similar to transaction merge\n- Wire to MerchantMergeService\n\n- Merchant-related views (if exist)\n- `/Users/Cody/code_projects/sure/app/controllers/merchants_controller.rb` (create if needed)\n- `/Users/Cody/code_projects/sure/config/routes.rb`\n\n- [ ] Merchant list shows multi-select\n- [ ] Merge action works\n- [ ] Modal confirms merge\n- [ ] Transactions updated correctly",
+              "type": "frontend",
+              "dependencies": "UOW-6.7"
+            },
+            {
+              "id": "UOW-6.9",
+              "title": "Add Undo Merge Feature",
+              "description": "**Estimate**: 2 hours\n\n**Exact Action**:\n- Add action to transactions_controller: `undo_merge`\n- Action restores transaction attributes from merge_undo_data\n- Add \"Undo merge\" button to flash message (visible for 24 hours)\n- Button only shows if merge_undo_data exists and not expired\n- Clear undo data after restoration\n\n- `/Users/Cody/code_projects/sure/app/controllers/transactions_controller.rb`\n- `/Users/Cody/code_projects/sure/app/models/transaction.rb`\n- Flash notification partial (to include undo button)\n- `/Users/Cody/code_projects/sure/config/routes.rb`\n\n- [ ] Undo button appears in flash\n- [ ] Clicking undo restores values\n- [ ] Undo expires after 24 hours\n- [ ] Undo data cleared after use",
+              "type": "backend + frontend",
+              "dependencies": "UOW-6.4"
+            },
+            {
+              "id": "UOW-6.10",
+              "title": "Add Tests for Merge Features",
+              "description": "**Estimate**: 3 hours\n\n**Exact Action**:\n- Test TransactionMergeService logic\n- Test MerchantMergeService logic\n- Test bulk_merge controller action\n- Test undo_merge controller action\n- Test multi-select component behavior\n- Test merge modal component\n- System test for end-to-end merge flow\n\n- `/Users/Cody/code_projects/sure/test/services/transaction_merge_service_test.rb`\n- `/Users/Cody/code_projects/sure/test/services/merchant_merge_service_test.rb`\n- `/Users/Cody/code_projects/sure/test/controllers/transactions_controller_test.rb` (update)\n- `/Users/Cody/code_projects/sure/test/components/transaction_merge_modal_component_test.rb`\n- `/Users/Cody/code_projects/sure/test/system/transaction_merge_test.rb` (new)\n\n- [ ] All tests pass\n- [ ] Edge cases covered\n- [ ] System test verifies full flow\n- [ ] Undo logic tested\n\n\n## Summary\n\n### Total Units of Work: 50 UOWs\n\n### Estimated Hours by Quick Win:\n1. **PDF Export**: 4 hours (5 UOWs)\n2. **Surface Anomaly Alerts**: 16 hours (10 UOWs)\n3. **Budget Alert Emails**: 12 hours (8 UOWs)\n4. **Compare to Last Month**: 8 hours (6 UOWs)\n5. **Improve Rule Visibility**: 12 hours (6 UOWs)\n6. **Transaction/Merchant Merge**: 20 hours (10 UOWs)\n\n**Total**: 72 hours (~9 days with buffer)\n\n### Complexity Distribution:\n- **Small (S)**: 1 quick win (PDF Export)\n- **Medium (M)**: 3 quick wins (Budget Alerts, Period Toggle, Rule Visibility)\n- **Large (L)**: 2 quick wins (Anomaly Alerts, Merge UI)\n\n### Files Frequently Modified:\n- `/Users/Cody/code_projects/sure/config/locales/en.yml` (all i18n strings)\n- `/Users/Cody/code_projects/sure/app/controllers/pages_controller.rb` (dashboard)\n- `/Users/Cody/code_projects/sure/app/controllers/transactions_controller.rb` (transactions)\n- `/Users/Cody/code_projects/sure/app/models/user.rb` (preferences)\n\n### Critical Dependencies:\n- All UOWs are independently testable\n- No blocking dependencies between quick wins\n- Can be deployed incrementally\n- Feature flags recommended for gradual rollout\n\n### Pre-Development Checklist:\n- [ ] All fixtures updated for new models\n- [ ] i18n keys planned (create placeholder file)\n- [ ] Design system tokens reviewed\n- [ ] Analytics events defined\n- [ ] Feature flags configured\n- [ ] Rollback plan documented",
+              "type": "tests",
+              "dependencies": "All UOW-6.x"
+            }
+          ],
+          "metadata": {}
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalSprints": 4,
+    "totalTasks": 37,
+    "totalSubtasks": 45
+  }
+}
