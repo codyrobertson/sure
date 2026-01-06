@@ -257,9 +257,41 @@ class User < ApplicationRecord
     end
   end
 
+  # Alert preferences management
+  def alert_preferences
+    preferences&.[]("alert_settings") || default_alert_preferences
+  end
+
+  def alerts_enabled?
+    alert_preferences["enabled"] != false
+  end
+
+  def anomaly_threshold_percent
+    alert_preferences["anomaly_threshold_percent"] || 150
+  end
+
+  def update_alert_preferences(new_prefs)
+    transaction do
+      lock!
+
+      updated_prefs = (preferences || {}).deep_dup
+      updated_prefs["alert_settings"] ||= {}
+      updated_prefs["alert_settings"] = updated_prefs["alert_settings"].merge(new_prefs.stringify_keys)
+
+      update!(preferences: updated_prefs)
+    end
+  end
+
+  def default_alert_preferences
+    {
+      "enabled" => true,
+      "anomaly_threshold_percent" => 150
+    }
+  end
+
   private
     def default_dashboard_section_order
-      %w[cashflow_sankey outflows_donut net_worth_chart balance_sheet]
+      %w[spending_alerts cashflow_sankey outflows_donut inflows_donut net_worth_chart balance_sheet]
     end
 
     def default_reports_section_order

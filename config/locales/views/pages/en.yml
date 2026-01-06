@@ -41,3 +41,17 @@ en:
         categories: "Categories"
         value: "Value"
         weight: "Weight"
+      spending_alerts:
+        title: "Spending Alerts"
+        category_anomaly_title: "Unusual spending in %{category}"
+        category_anomaly_description: "You spent %{current} this period vs your average of %{average} (%{deviation} higher)"
+        new_merchant_title: "New merchant: %{merchant}"
+        new_merchant_description:
+          one: "First time spending %{amount} in %{count} transaction"
+          other: "First time spending %{amount} across %{count} transactions"
+        dismiss: "Dismiss alert"
+        view_transactions:
+          one: "View %{count} transaction"
+          other: "View %{count} transactions"
+        no_alerts_title: "No spending alerts"
+        no_alerts_description: "Your spending looks normal. We'll notify you if we detect unusual patterns."
