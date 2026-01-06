@@ -6,14 +6,18 @@ class ChatsController < ApplicationController
   def index
     @chat = nil # override application_controller default behavior of setting @chat to last viewed chat
     @chats = Current.user.chats.order(created_at: :desc)
+    set_page_context
   end
 
   def show
     set_last_viewed_chat(@chat)
+    set_page_context
   end
 
   def new
     @chat = Current.user.chats.new(title: "New chat #{Time.current.strftime("%Y-%m-%d %H:%M")}")
+    set_page_context
+    @initial_prompt = params[:prompt]
   end
 
   def create
@@ -61,5 +65,18 @@ class ChatsController < ApplicationController
 
     def chat_params
       params.require(:chat).permit(:title, :content, :ai_model)
+    end
+
+    def set_page_context
+      @page_context = params[:page_context]&.to_sym
+      @page_metadata = parse_page_metadata
+    end
+
+    def parse_page_metadata
+      return {} unless params[:metadata].present?
+
+      JSON.parse(params[:metadata]).with_indifferent_access
+    rescue JSON::ParserError
+      {}
     end
 end

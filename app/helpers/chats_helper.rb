@@ -3,11 +3,34 @@ module ChatsHelper
     :sidebar_chat
   end
 
-  def chat_view_path(chat)
-    return new_chat_path if params[:chat_view] == "new"
-    return chats_path if chat.nil? || params[:chat_view] == "all"
+  def chat_view_path(chat, page_context: nil, metadata: nil)
+    base_path = if params[:chat_view] == "new"
+      new_chat_path
+    elsif chat.nil? || params[:chat_view] == "all"
+      chats_path
+    else
+      chat.persisted? ? chat_path(chat) : new_chat_path
+    end
 
-    chat.persisted? ? chat_path(chat) : new_chat_path
+    # Add page context params if provided
+    query_params = {}
+    query_params[:page_context] = page_context if page_context.present?
+    query_params[:metadata] = metadata.to_json if metadata.present?
+
+    return base_path if query_params.empty?
+
+    uri = URI(base_path)
+    uri.query = query_params.to_query
+    uri.to_s
+  end
+
+  # Convenience method to get chat path with current page context
+  def chat_view_path_with_context(chat)
+    chat_view_path(
+      chat,
+      page_context: current_page_context_key,
+      metadata: current_page_metadata
+    )
   end
 
   def smart_chat_suggestions(family)

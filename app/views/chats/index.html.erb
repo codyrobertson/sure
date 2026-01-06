@@ -28,7 +28,7 @@
         <div class="grow flex flex-col">
           <h1 class="sr-only">Chats</h1>
           <div class="mt-auto py-8">
-            <%= render "chats/ai_greeting" %>
+            <%= render "chats/ai_greeting", page_context: @page_context, page_metadata: @page_metadata %>
           </div>
           <%= render "messages/chat_form" %>
         </div>

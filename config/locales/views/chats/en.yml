@@ -2,5 +2,9 @@
 en:
   chats:
     demo_banner_title: "Demo Mode Active"
-    demo_banner_message: "You are using an open-weights Qwen3 LLM with credits provided by Cloudflare Workers AI.  Result may vary since the codebase was mostly tested on `gpt-4.1` but your tokens don't go anywhere else to be trained with! 🤖"
-
+    demo_banner_message: "You are using an open-weights Qwen3 LLM with credits provided by Cloudflare Workers AI.  Result may vary since the codebase was mostly tested on `gpt-4.1` but your tokens don't go anywhere else to be trained with!"
+    ai_greeting:
+      welcome: "Hey %{name}! I'm an AI assistant that can help with your finances. I have access to the web and your account data."
+      default_name: "there"
+      suggestions_intro: "Here are a few questions you can ask:"
+      suggestions_for_page: "Suggestions for %{page}:"
