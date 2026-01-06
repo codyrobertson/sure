@@ -93,7 +93,8 @@ class ReportsController < ApplicationController
         pdf_data = generate_transactions_pdf
         send_data pdf_data,
                   filename: "transactions_breakdown_#{@start_date.strftime('%Y%m%d')}_to_#{@end_date.strftime('%Y%m%d')}.pdf",
-                  type: "application/pdf"
+                  type: "application/pdf",
+                  disposition: :attachment
       end
     end
   end
@@ -818,18 +819,18 @@ class ReportsController < ApplicationController
       require "prawn/table"
 
       Prawn::Document.new(page_layout: :landscape) do |pdf|
-        pdf.text "Transaction Breakdown Report", size: 20, style: :bold
-        pdf.text "Period: #{@start_date.strftime('%b %-d, %Y')} to #{@end_date.strftime('%b %-d, %Y')}", size: 12
+        pdf.text t("reports.pdf.title"), size: 20, style: :bold
+        pdf.text t("reports.pdf.period", start_date: @start_date.strftime("%b %-d, %Y"), end_date: @end_date.strftime("%b %-d, %Y")), size: 12
         pdf.move_down 20
 
         if @export_data[:income].any? || @export_data[:expenses].any?
           # Build header row
           month_headers = @export_data[:months].map { |m| m.strftime("%b %Y") }
-          header_row = [ "Category" ] + month_headers + [ "Total" ]
+          header_row = [ t("reports.pdf.category_header") ] + month_headers + [ t("reports.pdf.total_header") ]
 
           # Income section
           if @export_data[:income].any?
-            pdf.text "INCOME", size: 14, style: :bold
+            pdf.text t("reports.pdf.income_section"), size: 14, style: :bold
             pdf.move_down 10
 
             income_table_data = [ header_row ]
@@ -847,7 +848,7 @@ class ReportsController < ApplicationController
             end
 
             # Income totals row
-            totals_row = [ "TOTAL INCOME" ]
+            totals_row = [ t("reports.pdf.total_income") ]
             @export_data[:months].each do |month|
               month_total = @export_data[:income].sum { |c| c[:months][month] || 0 }
               totals_row << Money.new(month_total, Current.family.currency).format
@@ -871,7 +872,7 @@ class ReportsController < ApplicationController
 
           # Expenses section
           if @export_data[:expenses].any?
-            pdf.text "EXPENSES", size: 14, style: :bold
+            pdf.text t("reports.pdf.expenses_section"), size: 14, style: :bold
             pdf.move_down 10
 
             expenses_table_data = [ header_row ]
@@ -889,7 +890,7 @@ class ReportsController < ApplicationController
             end
 
             # Expenses totals row
-            totals_row = [ "TOTAL EXPENSES" ]
+            totals_row = [ t("reports.pdf.total_expenses") ]
             @export_data[:months].each do |month|
               month_total = @export_data[:expenses].sum { |c| c[:months][month] || 0 }
               totals_row << Money.new(month_total, Current.family.currency).format
@@ -909,8 +910,24 @@ class ReportsController < ApplicationController
             end
           end
         else
-          pdf.text "No transactions found for this period.", size: 12
+          pdf.text t("reports.pdf.no_transactions"), size: 12
         end
+      end.render
+    rescue Prawn::Errors::CannotFit => e
+      Rails.logger.error("PDF generation failed - table too wide: #{e.message}")
+      generate_error_pdf(t("reports.pdf.error_table_too_wide"))
+    rescue StandardError => e
+      Rails.logger.error("PDF generation failed: #{e.message}")
+      generate_error_pdf(t("reports.pdf.error_generic"))
+    end
+
+    def generate_error_pdf(message)
+      require "prawn"
+
+      Prawn::Document.new do |pdf|
+        pdf.text t("reports.pdf.error_title"), size: 16, style: :bold
+        pdf.move_down 10
+        pdf.text message, size: 12
       end.render
     end
 
@@ -968,9 +985,9 @@ class ReportsController < ApplicationController
         return false
       end
 
-      # Find or create a session for this API request
-      # We need to find or create a persisted session so that Current.user delegation works properly
-      session = @current_user.sessions.first_or_create!(
+      # Use existing session or build a non-persisted one for API requests
+      # This matches the pattern in Api::V1::BaseController and avoids creating orphaned sessions
+      session = @current_user.sessions.first || @current_user.sessions.build(
         user_agent: request.user_agent,
         ip_address: request.ip
       )

@@ -278,4 +278,59 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :ok
     assert_equal "application/pdf", @response.media_type
   end
+
+  test "export transactions as PDF requires authentication" do
+    sign_out
+
+    get export_transactions_reports_path(
+      format: :pdf,
+      period_type: :ytd,
+      start_date: Date.current.beginning_of_year,
+      end_date: Date.current
+    )
+
+    assert_response :redirect
+  end
+
+  test "export transactions as PDF with invalid API key" do
+    get export_transactions_reports_path(
+      format: :pdf,
+      period_type: :ytd,
+      api_key: "invalid_key"
+    )
+
+    assert_response :unauthorized
+  end
+
+  test "export transactions as PDF with expired API key" do
+    api_key = api_keys(:expired_key)
+
+    get export_transactions_reports_path(
+      format: :pdf,
+      period_type: :ytd,
+      api_key: api_key.plain_key
+    )
+
+    assert_response :unauthorized
+  end
+
+  test "export transactions as PDF with revoked API key" do
+    api_key = api_keys(:revoked_key)
+
+    get export_transactions_reports_path(
+      format: :pdf,
+      period_type: :ytd,
+      api_key: api_key.plain_key
+    )
+
+    assert_response :unauthorized
+  end
+
+  private
+
+    def sign_out
+      @user.sessions.each do |session|
+        delete session_path(session)
+      end
+    end
 end

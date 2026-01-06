@@ -282,3 +282,16 @@ en:
         current_label: Current
         cut_by: "Cut %{percent}%"
         subscription_review: Subscription Review
+    pdf:
+      title: Transaction Breakdown Report
+      period: "Period: %{start_date} to %{end_date}"
+      income_section: INCOME
+      expenses_section: EXPENSES
+      total_income: TOTAL INCOME
+      total_expenses: TOTAL EXPENSES
+      category_header: Category
+      total_header: Total
+      no_transactions: No transactions found for this period.
+      error_title: PDF Generation Error
+      error_table_too_wide: Unable to generate PDF. The table content is too wide for the page. Try selecting a shorter date range.
+      error_generic: An error occurred while generating the PDF. Please try again.
