@@ -17,6 +17,13 @@ class PagesController < ApplicationController
     @outflows_data = build_outflows_donut_data(expense_totals, family_currency)
     @inflows_data = build_inflows_donut_data(income_totals, family_currency)
 
+    # Load active spending alerts for the current period
+    @spending_alerts = Current.family.spending_alerts
+      .active
+      .for_period(@period)
+      .recent
+      .limit(5)
+
     @dashboard_sections = build_dashboard_sections
 
     @breadcrumbs = [ [ "Home", root_path ], [ "Dashboard", nil ] ]
@@ -66,6 +73,14 @@ class PagesController < ApplicationController
 
     def build_dashboard_sections
       all_sections = [
+        {
+          key: "spending_alerts",
+          title: "pages.dashboard.spending_alerts.title",
+          partial: "pages/dashboard/spending_alerts",
+          locals: { spending_alerts: @spending_alerts, period: @period },
+          visible: Current.family.accounts.any?,
+          collapsible: true
+        },
         {
           key: "cashflow_sankey",
           title: "pages.dashboard.cashflow_sankey.title",

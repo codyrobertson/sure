@@ -1,0 +1,83 @@
+<%# locals: (spending_alerts:, period:) %>
+<div id="spending-alerts-section">
+  <% if spending_alerts.any? %>
+    <div class="space-y-3 px-4">
+      <% spending_alerts.each do |alert| %>
+        <div
+          class="flex items-start gap-3 p-4 rounded-lg border <%= alert_variant_classes(alert) %>"
+          data-controller="spending-alert"
+          data-spending-alert-id-value="<%= alert.id %>">
+
+          <div class="shrink-0">
+            <%= icon alert_icon(alert), size: "sm", class: alert_icon_color(alert) %>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium text-primary truncate">
+                  <% if alert.alert_type_category_anomaly? %>
+                    <%= t("pages.dashboard.spending_alerts.category_anomaly_title",
+                          category: alert.metadata["category_name"]) %>
+                  <% else %>
+                    <%= t("pages.dashboard.spending_alerts.new_merchant_title",
+                          merchant: alert.merchant_name) %>
+                  <% end %>
+                </p>
+                <p class="text-sm text-secondary mt-1">
+                  <% if alert.alert_type_category_anomaly? %>
+                    <%= t("pages.dashboard.spending_alerts.category_anomaly_description",
+                          current: alert.metadata["current_formatted"],
+                          average: alert.metadata["average_formatted"],
+                          deviation: number_to_percentage(alert.deviation_percent - 100, precision: 0)) %>
+                  <% else %>
+                    <%= t("pages.dashboard.spending_alerts.new_merchant_description",
+                          amount: alert.metadata["merchant_total_spent"],
+                          count: alert.merchant_transaction_count) %>
+                  <% end %>
+                </p>
+              </div>
+
+              <button
+                type="button"
+                class="shrink-0 p-1 text-secondary hover:text-primary transition-colors rounded"
+                data-action="click->spending-alert#dismiss"
+                aria-label="<%= t("pages.dashboard.spending_alerts.dismiss") %>">
+                <%= icon "x", size: "sm" %>
+              </button>
+            </div>
+
+            <% if alert.alert_type_category_anomaly? && alert.top_transactions.any? %>
+              <details class="mt-2">
+                <summary class="text-xs text-secondary cursor-pointer hover:text-primary">
+                  <%= t("pages.dashboard.spending_alerts.view_transactions",
+                        count: alert.top_transactions.count) %>
+                </summary>
+                <div class="mt-2 space-y-1">
+                  <% alert.top_transactions.each do |txn| %>
+                    <div class="flex items-center justify-between text-xs text-secondary">
+                      <span class="truncate"><%= txn["name"] %></span>
+                      <span class="shrink-0 font-medium"><%= txn["amount"]["formatted"] %></span>
+                    </div>
+                  <% end %>
+                </div>
+              </details>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="h-[200px] bg-container py-4 flex flex-col items-center justify-center">
+      <div class="space-y-3 text-center flex flex-col items-center">
+        <%= render DS::FilledIcon.new(variant: :container, icon: "check-circle") %>
+        <p class="text-sm font-medium text-primary">
+          <%= t("pages.dashboard.spending_alerts.no_alerts_title") %>
+        </p>
+        <p class="text-secondary text-sm">
+          <%= t("pages.dashboard.spending_alerts.no_alerts_description") %>
+        </p>
+      </div>
+    </div>
+  <% end %>
+</div>

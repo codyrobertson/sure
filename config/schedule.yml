@@ -24,3 +24,9 @@ sync_all_accounts:
   class: "SyncAllJob"
   queue: "scheduled"
   description: "Syncs all accounts for all families"
+
+detect_spending_anomalies:
+  cron: "0 6 * * *" # every day at 6:00am
+  class: "DetectSpendingAnomaliesJob"
+  queue: "scheduled"
+  description: "Detects spending anomalies and creates alerts for all families"
