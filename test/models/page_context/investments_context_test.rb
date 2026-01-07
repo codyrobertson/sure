@@ -19,9 +19,19 @@ class PageContext::InvestmentsContextTest < ActiveSupport::TestCase
   end
 
   test "available? returns true when investment accounts exist" do
-    context = PageContext::InvestmentsContext.new(family: @family, user: @user)
+    # Ensure the family has investment accounts
+    assert @family.accounts.where(accountable_type: "Investment").exists?,
+           "Test requires family to have investment accounts"
 
-    assert context.available? == @family.accounts.where(accountable_type: "Investment").exists?
+    context = PageContext::InvestmentsContext.new(family: @family, user: @user)
+    assert context.available?
+  end
+
+  test "available? returns false when no investment accounts exist" do
+    family_without_investments = families(:empty)
+
+    context = PageContext::InvestmentsContext.new(family: family_without_investments, user: @user)
+    assert_not context.available?
   end
 
   test "prompts returns array of prompts" do
