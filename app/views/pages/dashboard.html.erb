@@ -9,21 +9,36 @@
       </p>
     </div>
 
-    <%= render DS::Link.new(
-      icon: "plus",
-      text: t("pages.dashboard.new"),
-      href: new_account_path,
-      frame: :modal,
-      class: "hidden lg:inline-flex"
-    ) %>
+    <div class="flex items-center gap-4">
+      <%# Period comparison toggle %>
+      <%= form_with url: update_preferences_pages_path, method: :patch, data: { controller: "auto-submit-form", turbo_frame: "_top" } do |form| %>
+        <label class="hidden lg:flex items-center gap-2 text-sm text-secondary cursor-pointer">
+          <%= render DS::Toggle.new(
+            id: "period_comparison",
+            name: "preferences[period_comparison_enabled]",
+            checked: Current.user.period_comparison_enabled?,
+            opts: { data: { "auto-submit-form-target": "auto" } }
+          ) %>
+          <span><%= t("pages.dashboard.compare_to_last") %></span>
+        </label>
+      <% end %>
 
-    <%= render DS::Link.new(
-        variant: "icon-inverse",
+      <%= render DS::Link.new(
         icon: "plus",
+        text: t("pages.dashboard.new"),
         href: new_account_path,
         frame: :modal,
-        class: "rounded-full lg:hidden"
+        class: "hidden lg:inline-flex"
       ) %>
+
+      <%= render DS::Link.new(
+          variant: "icon-inverse",
+          icon: "plus",
+          href: new_account_path,
+          frame: :modal,
+          class: "rounded-full lg:hidden"
+        ) %>
+    </div>
   </div>
 <% end %>
 

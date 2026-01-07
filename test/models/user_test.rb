@@ -276,4 +276,27 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.dashboard_section_collapsed?("net_worth_chart"),
       "Should return false when section key is missing from collapsed_sections"
   end
+
+  test "period_comparison_enabled? returns false by default" do
+    @user.update!(preferences: {})
+    assert_not @user.period_comparison_enabled?
+  end
+
+  test "period_comparison_enabled? returns true when enabled" do
+    @user.update!(preferences: { "period_comparison_enabled" => true })
+    assert @user.period_comparison_enabled?
+  end
+
+  test "period_comparison_enabled? returns false when disabled" do
+    @user.update!(preferences: { "period_comparison_enabled" => false })
+    assert_not @user.period_comparison_enabled?
+  end
+
+  test "update_dashboard_preferences handles period_comparison_enabled" do
+    @user.update!(preferences: {})
+    @user.update_dashboard_preferences({ "period_comparison_enabled" => true })
+    @user.reload
+
+    assert @user.period_comparison_enabled?
+  end
 end

@@ -17,6 +17,30 @@ class PagesController < ApplicationController
     @outflows_data = build_outflows_donut_data(expense_totals, family_currency)
     @inflows_data = build_inflows_donut_data(income_totals, family_currency)
 
+    # Period comparison data
+    @comparison_enabled = Current.user.period_comparison_enabled?
+    if @comparison_enabled
+      previous_period = @period.previous_period
+      prev_income_totals = Current.family.income_statement.income_totals(period: previous_period)
+      prev_expense_totals = Current.family.income_statement.expense_totals(period: previous_period)
+
+      @inflows_trend = Trend.new(
+        current: income_totals.total,
+        previous: prev_income_totals.total,
+        favorable_direction: "up"
+      )
+      @outflows_trend = Trend.new(
+        current: expense_totals.total,
+        previous: prev_expense_totals.total,
+        favorable_direction: "down"
+      )
+      @net_cashflow_trend = Trend.new(
+        current: income_totals.total - expense_totals.total,
+        previous: prev_income_totals.total - prev_expense_totals.total,
+        favorable_direction: "up"
+      )
+    end
+
     # Load active spending alerts for the current period
     @spending_alerts = Current.family.spending_alerts
       .active
@@ -68,6 +92,7 @@ class PagesController < ApplicationController
       {}.tap do |permitted|
         permitted["collapsed_sections"] = prefs[:collapsed_sections].to_unsafe_h if prefs[:collapsed_sections]
         permitted["section_order"] = prefs[:section_order] if prefs[:section_order]
+        permitted["period_comparison_enabled"] = prefs[:period_comparison_enabled] == "1" if prefs.key?(:period_comparison_enabled)
       end
     end
 
@@ -85,7 +110,12 @@ class PagesController < ApplicationController
           key: "cashflow_sankey",
           title: "pages.dashboard.cashflow_sankey.title",
           partial: "pages/dashboard/cashflow_sankey",
-          locals: { sankey_data: @cashflow_sankey_data, period: @period },
+          locals: {
+            sankey_data: @cashflow_sankey_data,
+            period: @period,
+            comparison_enabled: @comparison_enabled,
+            net_cashflow_trend: @net_cashflow_trend
+          },
           visible: Current.family.accounts.any?,
           collapsible: true
         },
@@ -93,7 +123,12 @@ class PagesController < ApplicationController
           key: "outflows_donut",
           title: "pages.dashboard.outflows_donut.title",
           partial: "pages/dashboard/outflows_donut",
-          locals: { outflows_data: @outflows_data, period: @period },
+          locals: {
+            outflows_data: @outflows_data,
+            period: @period,
+            comparison_enabled: @comparison_enabled,
+            comparison_trend: @outflows_trend
+          },
           visible: Current.family.accounts.any? && @outflows_data[:categories].present?,
           collapsible: true
         },
@@ -101,7 +136,12 @@ class PagesController < ApplicationController
           key: "inflows_donut",
           title: "pages.dashboard.inflows_donut.title",
           partial: "pages/dashboard/inflows_donut",
-          locals: { inflows_data: @inflows_data, period: @period },
+          locals: {
+            inflows_data: @inflows_data,
+            period: @period,
+            comparison_enabled: @comparison_enabled,
+            comparison_trend: @inflows_trend
+          },
           visible: Current.family.accounts.any? && @inflows_data[:categories].present?,
           collapsible: true
         },

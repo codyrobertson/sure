@@ -180,6 +180,16 @@ class Period
     end
   end
 
+  # Returns the previous period of equal duration for comparison
+  # E.g., if this period is Jan 1-31, returns Dec 1-31 (previous month)
+  def previous_period
+    duration = days
+    Period.custom(
+      start_date: start_date - duration.days,
+      end_date: end_date - duration.days
+    )
+  end
+
   private
     def key_metadata
       @key_metadata ||= PERIODS[key]
