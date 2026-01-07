@@ -1,13 +1,14 @@
 class Goal < ApplicationRecord
   include Monetizable
 
-  belongs_to :family
-  belongs_to :account
+  belongs_to :family, inverse_of: :goals
+  belongs_to :account, inverse_of: :goals
 
   validates :name, presence: true
   validates :target_amount, presence: true, numericality: { greater_than: 0 }
   validates :currency, presence: true
   validate :currency_matches_account
+  validate :account_belongs_to_family
 
   monetize :target_amount, :starting_balance
 
@@ -18,13 +19,10 @@ class Goal < ApplicationRecord
     cancelled: "cancelled"
   }, validate: true
 
-  scope :active, -> { where(status: "active") }
-  scope :completed, -> { where(status: "completed") }
-  scope :paused, -> { where(status: "paused") }
-  scope :cancelled, -> { where(status: "cancelled") }
+  # Note: enum already provides .active, .completed, .paused, .cancelled scopes
   scope :in_progress, -> { where(status: %w[active paused]) }
   scope :for_account, ->(account_id) { where(account_id: account_id) }
-  scope :by_target_date, -> { order(Arel.sql("target_date IS NULL, target_date ASC")) }
+  scope :by_target_date, -> { order(Arel.sql("CASE WHEN target_date IS NULL THEN 1 ELSE 0 END, target_date ASC")) }
   scope :recent, -> { order(created_at: :desc) }
 
   def current_balance
@@ -57,7 +55,7 @@ class Goal < ApplicationRecord
     days_remaining = (target_date - Date.current).to_i
     return false if days_remaining <= 0
 
-    required_daily_savings = remaining_amount / days_remaining
+    required_daily_savings = remaining_amount.to_f / days_remaining
     actual_daily_rate = daily_savings_rate
 
     actual_daily_rate >= required_daily_savings
@@ -81,13 +79,19 @@ class Goal < ApplicationRecord
     errors.add(:currency, "must match account currency") if currency != account.currency
   end
 
+  def account_belongs_to_family
+    return if account.nil? || family.nil?
+
+    errors.add(:account, "must belong to the same family") unless account.family_id == family_id
+  end
+
   def daily_savings_rate
-    return 0 if created_at.nil?
+    return 0.0 if created_at.nil?
 
     days_since_start = (Date.current - created_at.to_date).to_i
-    return 0 if days_since_start <= 0
+    return 0.0 if days_since_start <= 0
 
     progress_amount = current_balance - (starting_balance || 0)
-    progress_amount / days_since_start
+    progress_amount.to_f / days_since_start
   end
 end
