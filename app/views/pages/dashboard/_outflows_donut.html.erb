@@ -1,4 +1,4 @@
-<%# locals: (outflows_data:, period:) %>
+<%# locals: (outflows_data:, period:, comparison_enabled: false, comparison_trend: nil) %>
 <div id="outflows-donut-section">
   <div class="flex justify-end items-center gap-4 px-4 mb-4">
     <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "_top" } do |form| %>
@@ -34,6 +34,10 @@
               <div class="text-3xl font-medium text-primary">
                 <%= format_money Money.new(outflows_data[:total], outflows_data[:currency]) %>
               </div>
+
+              <% if comparison_enabled && comparison_trend %>
+                <%= render partial: "shared/trend_change", locals: { trend: comparison_trend, comparison_label: period.comparison_label } %>
+              <% end %>
             </div>
 
             <% outflows_data[:categories].each do |category| %>

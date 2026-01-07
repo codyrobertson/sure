@@ -352,4 +352,28 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.budget_emails_enabled?
     assert_equal 80, @user.budget_warning_threshold
   end
+
+  # Period comparison preferences tests
+  test "period_comparison_enabled? returns false by default" do
+    @user.update!(preferences: {})
+    assert_not @user.period_comparison_enabled?
+  end
+
+  test "period_comparison_enabled? returns true when enabled" do
+    @user.update!(preferences: { "period_comparison_enabled" => true })
+    assert @user.period_comparison_enabled?
+  end
+
+  test "period_comparison_enabled? returns false when disabled" do
+    @user.update!(preferences: { "period_comparison_enabled" => false })
+    assert_not @user.period_comparison_enabled?
+  end
+
+  test "update_dashboard_preferences handles period_comparison_enabled" do
+    @user.update!(preferences: {})
+    @user.update_dashboard_preferences({ "period_comparison_enabled" => true })
+    @user.reload
+
+    assert @user.period_comparison_enabled?
+  end
 end

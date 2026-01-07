@@ -81,4 +81,22 @@ class PeriodTest < ActiveSupport::TestCase
     assert_equal 5.years.ago.to_date, period.start_date
     assert_equal Date.current, period.end_date
   end
+
+  test "previous_period returns period of equal duration ending before current" do
+    period = Period.custom(start_date: Date.new(2024, 1, 1), end_date: Date.new(2024, 1, 31))
+    previous = period.previous_period
+
+    assert_equal Date.new(2023, 12, 1), previous.start_date
+    assert_equal Date.new(2023, 12, 31), previous.end_date
+    assert_equal period.days, previous.days
+  end
+
+  test "previous_period works with predefined periods" do
+    period = Period.from_key("last_30_days")
+    previous = period.previous_period
+
+    assert_equal 31, previous.days
+    assert_equal period.start_date - 31.days, previous.start_date
+    assert_equal period.end_date - 31.days, previous.end_date
+  end
 end

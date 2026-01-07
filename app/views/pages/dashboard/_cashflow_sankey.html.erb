@@ -1,6 +1,14 @@
-<%# locals: (sankey_data:, period:) %>
+<%# locals: (sankey_data:, period:, comparison_enabled: false, net_cashflow_trend: nil) %>
 <div id="cashflow-sankey-chart">
-  <div class="flex justify-end items-center gap-4 px-4 mb-4">
+  <div class="flex justify-between items-center gap-4 px-4 mb-4">
+    <% if comparison_enabled && net_cashflow_trend %>
+      <div class="flex items-center gap-2">
+        <span class="text-sm text-secondary"><%= t("pages.dashboard.cashflow_sankey.net_cashflow") %>:</span>
+        <%= render partial: "shared/trend_change", locals: { trend: net_cashflow_trend, comparison_label: period.comparison_label } %>
+      </div>
+    <% else %>
+      <div></div>
+    <% end %>
     <%= form_with url: root_path, method: :get, data: { controller: "auto-submit-form", turbo_frame: "_top" } do |form| %>
       <%= form.select :period,
                 Period.as_options,

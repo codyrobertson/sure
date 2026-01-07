@@ -355,6 +355,11 @@ class User < ApplicationRecord
     }
   end
 
+  # Period comparison preferences
+  def period_comparison_enabled?
+    preferences&.[]("period_comparison_enabled") == true
+  end
+
   private
     def default_dashboard_section_order
       %w[spending_alerts cashflow_sankey outflows_donut inflows_donut net_worth_chart balance_sheet]
