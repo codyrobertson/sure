@@ -77,4 +77,21 @@ class DS::AskAi < DesignSystemComponent
   def default_ai_model
     helpers.default_ai_model
   end
+
+  # Sanitize metadata to prevent XSS when rendering as JSON
+  def sanitize_metadata_json
+    return "{}" if metadata.blank?
+
+    # Only allow string, number, boolean, and nil values
+    safe_metadata = metadata.transform_values do |value|
+      case value
+      when String, Numeric, TrueClass, FalseClass, NilClass
+        value
+      else
+        value.to_s
+      end
+    end
+
+    safe_metadata.to_json
+  end
 end

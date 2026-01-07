@@ -19,6 +19,8 @@ export default class extends Controller {
 
   disconnect() {
     document.removeEventListener("keydown", this.boundHandleGlobalKeydown);
+    // Restore body scroll if component is removed while expanded
+    document.body.style.overflow = "";
   }
 
   handleGlobalKeydown(event) {

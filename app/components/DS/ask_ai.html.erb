@@ -1,3 +1,4 @@
+<% component_id = "ask-ai-#{SecureRandom.hex(4)}" %>
 <div <%= tag.attributes(**merged_data) %>>
   <%# Collapsed button state %>
   <button type="button"
@@ -6,7 +7,7 @@
           data-action="click->DS--ask-ai#expand"
           aria-label="<%= t("components.ask_ai.button_label") %>"
           aria-expanded="false"
-          aria-controls="ask-ai-input">
+          aria-controls="<%= component_id %>">
     <%= helpers.icon("sparkles", size: "sm") %>
     <span class="text-primary"><%= t("components.ask_ai.button_text") %></span>
     <kbd class="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-xs text-subdued bg-surface rounded border border-secondary">
@@ -15,13 +16,19 @@
   </button>
 
   <%# Expanded input state - modal overlay %>
-  <div id="ask-ai-input"
+  <div id="<%= component_id %>"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="<%= component_id %>-title"
        class="hidden fixed inset-0 z-50 flex items-start justify-center pt-[20vh] bg-overlay"
        data-DS--ask-ai-target="overlay"
        data-action="click->DS--ask-ai#handleOverlayClick">
 
     <div class="w-full max-w-lg mx-4 bg-container rounded-xl shadow-lg overflow-hidden"
          data-DS--ask-ai-target="panel">
+
+      <%# Hidden title for screen readers %>
+      <h2 id="<%= component_id %>-title" class="sr-only"><%= t("components.ask_ai.dialog_title") %></h2>
 
       <%# Input form - posts to chats#create %>
       <%= form_with model: Chat.new,
@@ -34,7 +41,7 @@
           <%= hidden_field_tag :page_context, context %>
         <% end %>
         <% if metadata.present? %>
-          <%= hidden_field_tag :metadata, metadata.to_json %>
+          <%= hidden_field_tag :metadata, sanitize_metadata_json %>
         <% end %>
 
         <div class="flex items-center gap-3">
