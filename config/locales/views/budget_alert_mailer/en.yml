@@ -15,6 +15,7 @@ en:
       action_prompt: "Review your spending and adjust your budget to get back on track."
       cta: "View Budget"
       footer: "You can manage your email notification preferences in your account settings."
+      unsubscribe: "Unsubscribe from budget alerts"
     budget_warning:
       subject: "%{product_name}: Budget categories nearing limit"
       greeting: "Hi %{name},"
@@ -30,3 +31,4 @@ en:
       action_prompt: "Consider adjusting your spending to stay within budget for the rest of the month."
       cta: "View Budget"
       footer: "You can manage your email notification preferences in your account settings."
+      unsubscribe: "Unsubscribe from budget alerts"

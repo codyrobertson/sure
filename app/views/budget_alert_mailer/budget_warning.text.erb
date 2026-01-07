@@ -11,3 +11,4 @@
 <%= t(".cta") %>: <%= budgets_url %>
 
 <%= t(".footer") %>
+<%= t(".unsubscribe") %>: <%= budget_email_unsubscribe_url(token: @user.generate_token_for(:budget_email_unsubscribe)) %>

@@ -41,6 +41,11 @@ class User < ApplicationRecord
     unconfirmed_email
   end
 
+  generates_token_for :budget_email_unsubscribe, expires_in: 30.days do
+    # Include preferences hash to invalidate token if preferences change
+    budget_email_preferences.to_json
+  end
+
   def pending_email_change?
     unconfirmed_email.present?
   end

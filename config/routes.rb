@@ -69,6 +69,7 @@ Rails.application.routes.draw do
   resource :password_reset, only: %i[new create edit update]
   resource :password, only: %i[edit update]
   resource :email_confirmation, only: :new
+  resource :budget_email_unsubscribe, only: %i[show create]
 
   resources :users, only: %i[update destroy] do
     delete :reset, on: :member

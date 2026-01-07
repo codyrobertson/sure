@@ -29,4 +29,7 @@
 
 <%= link_to t(".cta"), budgets_url, class: "button" %>
 
-<p class="footer"><%= t(".footer") %></p>
+<p class="footer">
+  <%= t(".footer") %>
+  <%= link_to t(".unsubscribe"), budget_email_unsubscribe_url(token: @user.generate_token_for(:budget_email_unsubscribe)), style: "color: #64748b;" %>
+</p>

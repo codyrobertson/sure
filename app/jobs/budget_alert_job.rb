@@ -18,6 +18,9 @@ class BudgetAlertJob < ApplicationJob
     budget = Budget.find_or_bootstrap(family, start_date: Date.current)
     return unless budget&.initialized?
 
+    # Clean up old alert history records
+    cleanup_old_alert_history(budget)
+
     # Find categories that are over budget or near limit
     over_budget_categories = budget.budget_categories.select(&:over_budget?)
     near_limit_categories = budget.budget_categories.select(&:near_limit?)
@@ -38,59 +41,72 @@ class BudgetAlertJob < ApplicationJob
       bc.percent_of_budget_spent >= user.budget_warning_threshold
     end
 
-    # Send exceeded alert
-    if over_budget_categories.any? && user.budget_exceeded_emails_enabled?
-      unless already_sent_exceeded_alert?(user, budget, over_budget_categories)
+    # Send exceeded alerts for each category
+    if user.budget_exceeded_emails_enabled?
+      new_exceeded_categories = over_budget_categories.reject do |bc|
+        BudgetAlertHistory.already_sent?(
+          user: user,
+          budget: budget,
+          budget_category: bc,
+          alert_type: "exceeded"
+        )
+      end
+
+      if new_exceeded_categories.any?
         BudgetAlertMailer.with(
           user: user,
           budget: budget,
-          over_budget_categories: over_budget_categories
+          over_budget_categories: new_exceeded_categories
         ).budget_exceeded.deliver_later
 
-        record_sent_alert(user, budget, :exceeded, over_budget_categories)
-        Rails.logger.info("Sent budget exceeded email to user #{user.id} for #{over_budget_categories.count} categories")
+        new_exceeded_categories.each do |bc|
+          BudgetAlertHistory.record_alert!(
+            user: user,
+            budget: budget,
+            budget_category: bc,
+            alert_type: "exceeded"
+          )
+        end
+
+        Rails.logger.info("Sent budget exceeded email to user #{user.id} for #{new_exceeded_categories.count} categories")
       end
     end
 
-    # Send warning alert
-    if filtered_near_limit.any? && user.budget_warning_emails_enabled?
-      unless already_sent_warning_alert?(user, budget, filtered_near_limit)
+    # Send warning alerts for each category
+    if user.budget_warning_emails_enabled?
+      new_warning_categories = filtered_near_limit.reject do |bc|
+        BudgetAlertHistory.already_sent?(
+          user: user,
+          budget: budget,
+          budget_category: bc,
+          alert_type: "warning"
+        )
+      end
+
+      if new_warning_categories.any?
         BudgetAlertMailer.with(
           user: user,
           budget: budget,
-          near_limit_categories: filtered_near_limit
+          near_limit_categories: new_warning_categories
         ).budget_warning.deliver_later
 
-        record_sent_alert(user, budget, :warning, filtered_near_limit)
-        Rails.logger.info("Sent budget warning email to user #{user.id} for #{filtered_near_limit.count} categories")
+        new_warning_categories.each do |bc|
+          BudgetAlertHistory.record_alert!(
+            user: user,
+            budget: budget,
+            budget_category: bc,
+            alert_type: "warning"
+          )
+        end
+
+        Rails.logger.info("Sent budget warning email to user #{user.id} for #{new_warning_categories.count} categories")
       end
     end
   end
 
-  # Track sent alerts in user preferences to avoid duplicate emails
-  def already_sent_exceeded_alert?(user, budget, categories)
-    sent_alerts = user.preferences&.dig("budget_alerts_sent", budget.id.to_s, "exceeded") || []
-    category_ids = categories.map { |c| c.id.to_s }.sort
-    sent_alerts.include?(category_ids)
-  end
-
-  def already_sent_warning_alert?(user, budget, categories)
-    sent_alerts = user.preferences&.dig("budget_alerts_sent", budget.id.to_s, "warning") || []
-    category_ids = categories.map { |c| c.id.to_s }.sort
-    sent_alerts.include?(category_ids)
-  end
-
-  def record_sent_alert(user, budget, alert_type, categories)
-    category_ids = categories.map { |c| c.id.to_s }.sort
-
-    user.transaction do
-      user.lock!
-      updated_prefs = (user.preferences || {}).deep_dup
-      updated_prefs["budget_alerts_sent"] ||= {}
-      updated_prefs["budget_alerts_sent"][budget.id.to_s] ||= {}
-      updated_prefs["budget_alerts_sent"][budget.id.to_s][alert_type.to_s] ||= []
-      updated_prefs["budget_alerts_sent"][budget.id.to_s][alert_type.to_s] << category_ids
-      user.update!(preferences: updated_prefs)
-    end
+  # Clean up old budget alert history records to prevent unbounded growth
+  # Keeps only the current budget's alert history
+  def cleanup_old_alert_history(current_budget)
+    BudgetAlertHistory.cleanup_old_records!(keep_budget_ids: [current_budget.id])
   end
 end
