@@ -7,11 +7,11 @@ class AiPromptsHelperTest < ActionView::TestCase
   setup do
     @family = families(:dylan_family)
     @user = users(:family_admin)
-    Current.user = @user
+    Current.session = @user.sessions.create!
   end
 
   teardown do
-    Current.user = nil
+    Current.reset
   end
 
   test "contextual_chat_prompts returns prompts for valid page context" do
