@@ -1,0 +1,16 @@
+<div class="flex items-center justify-between rounded-xl bg-gray-900 px-4 text-sm text-white w-full py-1.5 mb-4">
+  <div class="flex items-center gap-2">
+    <%= check_box_tag "merchant_selection", 1, true, class: "checkbox checkbox--dark", data: { action: "bulk-select#deselectAll" } %>
+
+    <p data-bulk-select-target="selectionBarText"></p>
+  </div>
+
+  <div class="flex items-center gap-1 text-secondary">
+    <%= turbo_frame_tag "merge_merchant_modal" %>
+    <%= form_with url: new_merchant_merge_path, method: :get, data: { turbo_frame: "merge_merchant_modal" } do %>
+      <button type="button" data-bulk-select-scope-param="" data-action="bulk-select#submitBulkRequest" class="p-1.5 group hover:bg-inverse flex items-center justify-center rounded-md" title="<%= t("family_merchants.selection_bar.merge") %>">
+        <%= icon "git-merge", class: "group-hover:text-inverse" %>
+      </button>
+    <% end %>
+  </div>
+</div>

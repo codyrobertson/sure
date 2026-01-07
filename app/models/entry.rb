@@ -96,5 +96,49 @@ class Entry < ApplicationRecord
 
       all.size
     end
+
+    # Merge multiple entries into a single primary entry. The primary entry
+    # is kept and updated with the provided attributes, while duplicate entries
+    # are destroyed. Returns the primary entry.
+    #
+    # @param primary_entry_id [String] The ID of the entry to keep
+    # @param merge_params [Hash] Optional attributes to update on the primary entry
+    # @option merge_params [Boolean] :sum_amounts If true, sum all amounts into the primary
+    # @return [Entry] The merged primary entry
+    def bulk_merge!(primary_entry_id, merge_params = {})
+      entries = all.to_a
+      return nil if entries.empty?
+
+      primary_entry = entries.find { |e| e.id.to_s == primary_entry_id.to_s }
+      raise ActiveRecord::RecordNotFound, "Primary entry not found in selection" unless primary_entry
+
+      duplicates = entries.reject { |e| e.id == primary_entry.id }
+      return primary_entry if duplicates.empty?
+
+      transaction do
+        if merge_params[:sum_amounts]
+          total_amount = entries.sum(&:amount)
+          primary_entry.update!(amount: total_amount)
+        end
+
+        # Collect unique tags from all entries being merged
+        if primary_entry.transaction?
+          all_tag_ids = entries.flat_map { |e| e.transaction? ? e.transaction.tag_ids : [] }.uniq
+          if all_tag_ids.any?
+            primary_entry.transaction.update!(tag_ids: all_tag_ids)
+            primary_entry.transaction.lock_attr!(:tag_ids)
+          end
+        end
+
+        # Destroy duplicates and sync their accounts
+        affected_accounts = duplicates.map(&:account).uniq
+        duplicates.each(&:destroy!)
+        affected_accounts.each(&:sync_later)
+
+        primary_entry.sync_account_later
+      end
+
+      primary_entry
+    end
   end
 end
