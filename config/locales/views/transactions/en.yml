@@ -43,6 +43,12 @@ en:
       settings: Settings
       tags_label: Tags
       uncategorized: "(uncategorized)"
+      rule_applied: Auto-categorized
+      rule_applied_title: Auto-categorized by rule
+      rule_applied_tooltip: "Category set by rule: %{rule_name}"
+      view_rule: View Rule
+      applied_rules: Applied Rules
+      applied_rules_description: This transaction has been modified by the following rules.
     header:
       edit_categories: Edit categories
       edit_imports: Edit imports

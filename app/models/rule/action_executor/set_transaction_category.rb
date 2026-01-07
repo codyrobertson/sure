@@ -22,7 +22,8 @@ class Rule::ActionExecutor::SetTransactionCategory < Rule::ActionExecutor
       txn.enrich_attribute(
         :category_id,
         category.id,
-        source: "rule"
+        source: "rule",
+        metadata: rule_metadata
       )
     end
   end

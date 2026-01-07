@@ -5,6 +5,10 @@ class Rule::ActionExecutor
     @rule = rule
   end
 
+  def rule_metadata
+    { rule_id: rule.id }
+  end
+
   def key
     self.class.name.demodulize.underscore
   end
