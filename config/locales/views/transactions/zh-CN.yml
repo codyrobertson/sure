@@ -68,6 +68,8 @@ zh-CN:
     show:
       account_label: 账户
       amount: 金额
+      applied_rules: 已应用规则
+      applied_rules_description: 此交易已被以下规则修改。
       category_label: 分类
       date_label: 日期
       delete: 删除
@@ -84,7 +86,11 @@ zh-CN:
       note_label: 备注
       note_placeholder: 请输入备注
       overview: 概览
+      rule_applied: 自动分类
+      rule_applied_title: 由规则自动分类
+      rule_applied_tooltip: "分类由规则设置：%{rule_name}"
       settings: 设置
       tags_label: 标签
       uncategorized: "（未分类）"
+      view_rule: 查看规则
     toggle_recurring_section: 切换即将发生的定期交易显示

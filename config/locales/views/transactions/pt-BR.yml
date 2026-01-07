@@ -23,6 +23,8 @@ pt-BR:
     show:
       account_label: Conta
       amount: Valor
+      applied_rules: Regras aplicadas
+      applied_rules_description: Esta transação foi modificada pelas seguintes regras.
       category_label: Categoria
       date_label: Data
       delete: Excluir
@@ -40,9 +42,13 @@ pt-BR:
       note_label: Notas
       note_placeholder: Digite uma nota
       overview: Visão geral
+      rule_applied: Auto-categorizado
+      rule_applied_title: Auto-categorizado por regra
+      rule_applied_tooltip: "Categoria definida por regra: %{rule_name}"
       settings: Configurações
       tags_label: Tags
       uncategorized: "(sem categoria)"
+      view_rule: Ver regra
     header:
       edit_categories: Editar categorias
       edit_imports: Editar importações
