@@ -1,6 +1,24 @@
 ---
 en:
   transactions:
+    selection_bar:
+      edit: Edit
+      merge: Merge duplicates
+      delete: Delete
+    merges:
+      new:
+        title: Merge Transactions
+        subtitle:
+          one: Merging %{count} transaction
+          other: Merging %{count} transactions
+        select_primary: Select the transaction to keep. The others will be deleted.
+        sum_amounts: Sum amounts from all transactions
+        cancel: Cancel
+        merge: Merge Transactions
+      create:
+        success:
+          one: Successfully merged %{count} duplicate transaction
+          other: Successfully merged %{count} duplicate transactions
     form:
       account: Account
       account_prompt: Select an Account

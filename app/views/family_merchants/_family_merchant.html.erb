@@ -1,6 +1,17 @@
 <%# locals: (family_merchant:) %>
 
 <tr class="border-b border-subdued last:border-0 hover:bg-surface-hover">
+  <td class="py-3 px-4 w-8">
+    <%= check_box_tag "merchant_#{family_merchant.id}",
+                      family_merchant.id,
+                      false,
+                      class: "checkbox checkbox--light",
+                      data: {
+                        id: family_merchant.id,
+                        bulk_select_target: "row",
+                        action: "bulk-select#toggleRowSelection"
+                      } %>
+  </td>
   <td class="py-3 px-4 text-sm text-primary">
     <div class="flex w-full items-center gap-2.5">
       <% if family_merchant.logo_url %>
@@ -18,10 +29,10 @@
   </td>
   <td class="py-3 px-4 text-sm text-right align-middle">
     <%= render DS::Menu.new do |menu| %>
-      <% menu.with_item(variant: "link", text: "Edit", href: edit_family_merchant_path(family_merchant), icon: "pencil", data: { turbo_frame: "modal" }) %>
+      <% menu.with_item(variant: "link", text: t("family_merchants.family_merchant.edit"), href: edit_family_merchant_path(family_merchant), icon: "pencil", data: { turbo_frame: "modal" }) %>
       <% menu.with_item(
         variant: "button",
-        text: "Delete",
+        text: t("family_merchants.family_merchant.delete"),
         href: family_merchant_path(family_merchant),
         icon: "trash-2",
         method: :delete,

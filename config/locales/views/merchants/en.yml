@@ -14,6 +14,8 @@ en:
       empty: No merchants yet
       new: New merchant
       title: Merchants
+      merchant: merchant
+      merchants: merchants
       family_title: Family merchants
       family_empty: No family merchants yet
       provider_title: Provider merchants
@@ -23,14 +25,30 @@ en:
         merchant: Merchant
         actions: Actions
         source: Source
-    merchant:
-      confirm_accept: Delete merchant
-      confirm_body: Are you sure you want to delete this merchant? Removing this merchant
-        will unlink all associated transactions and may effect your reporting.
-      confirm_title: Delete merchant?
-      delete: Delete merchant
-      edit: Edit merchant
+    family_merchant:
+      edit: Edit
+      delete: Delete
+    selection_bar:
+      merge: Merge merchants
     new:
       title: New merchant
     update:
       success: Merchant updated successfully
+  merchant:
+    merges:
+      new:
+        title: Merge Merchants
+        subtitle:
+          one: Merging %{count} merchant
+          other: Merging %{count} merchants
+        explanation: Select a target merchant to merge the selected merchants into. All transactions will be reassigned to the target.
+        merging: Merchants to merge
+        transactions: transactions
+        select_target: Select a target merchant
+        target_merchant: Target Merchant
+        cancel: Cancel
+        merge: Merge Merchants
+      create:
+        success:
+          one: Successfully merged %{count} merchant into %{target}
+          other: Successfully merged %{count} merchants into %{target}

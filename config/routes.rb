@@ -146,6 +146,10 @@ Rails.application.routes.draw do
 
   resources :family_merchants, only: %i[index new create edit update destroy]
 
+  namespace :merchant do
+    resource :merge, only: %i[new create]
+  end
+
   resources :transfers, only: %i[new create destroy show update]
 
   resources :imports, only: %i[index new show create destroy] do
@@ -174,6 +178,7 @@ Rails.application.routes.draw do
   namespace :transactions do
     resource :bulk_deletion, only: :create
     resource :bulk_update, only: %i[new create]
+    resource :merge, only: %i[new create]
   end
 
   resources :transactions, only: %i[index new create show update destroy] do
