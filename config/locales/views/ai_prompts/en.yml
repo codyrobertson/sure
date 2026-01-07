@@ -56,3 +56,10 @@ en:
       holdings_analysis: "Analyze my top holdings"
       dividends_income: "What dividend income am I generating?"
       investment_comparison: "Compare my investment accounts"
+
+    fallback:
+      spending_breakdown: "Show my spending breakdown"
+      net_worth_trend: "How is my net worth trending?"
+      recurring_expenses: "What are my recurring expenses?"
+      financial_health: "Give me a financial health checkup"
+      categorize_transactions: "Help me categorize transactions"
