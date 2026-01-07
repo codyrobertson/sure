@@ -106,7 +106,8 @@ class Entry < ApplicationRecord
     # @option merge_params [Boolean] :sum_amounts If true, sum all amounts into the primary
     # @return [Entry] The merged primary entry
     def bulk_merge!(primary_entry_id, merge_params = {})
-      entries = all.to_a
+      # Eager load associations to prevent N+1 queries
+      entries = all.includes(:account, entryable: :tags).to_a
       return nil if entries.empty?
 
       primary_entry = entries.find { |e| e.id.to_s == primary_entry_id.to_s }
