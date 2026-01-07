@@ -1,0 +1,14 @@
+---
+en:
+  components:
+    ask_ai:
+      button_text: "Ask AI"
+      button_label: "Open AI assistant"
+      dialog_title: "AI Assistant"
+      placeholder: "Ask anything about your finances..."
+      submit_label: "Send message"
+      loading: "Thinking..."
+      disclaimer: "AI responses are informational only."
+      view_full_chat: "View full conversation"
+      hint_submit: "to send"
+      hint_close: "to close"

@@ -1,0 +1,94 @@
+<% component_id = "ask-ai-#{SecureRandom.hex(4)}" %>
+<div <%= tag.attributes(**merged_data) %>>
+  <%# Collapsed button state %>
+  <button type="button"
+          class="<%= button_classes %>"
+          data-DS--ask-ai-target="button"
+          data-action="click->DS--ask-ai#expand"
+          aria-label="<%= t("components.ask_ai.button_label") %>"
+          aria-expanded="false"
+          aria-controls="<%= component_id %>">
+    <%= helpers.icon("sparkles", size: "sm") %>
+    <span class="text-primary"><%= t("components.ask_ai.button_text") %></span>
+    <kbd class="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-xs text-subdued bg-surface rounded border border-secondary">
+      <span class="text-[10px]">&#8984;</span>K
+    </kbd>
+  </button>
+
+  <%# Expanded input state - modal overlay %>
+  <div id="<%= component_id %>"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="<%= component_id %>-title"
+       class="hidden fixed inset-0 z-50 flex items-start justify-center pt-[20vh] bg-overlay"
+       data-DS--ask-ai-target="overlay"
+       data-action="click->DS--ask-ai#handleOverlayClick">
+
+    <div class="w-full max-w-lg mx-4 bg-container rounded-xl shadow-lg overflow-hidden"
+         data-DS--ask-ai-target="panel">
+
+      <%# Hidden title for screen readers %>
+      <h2 id="<%= component_id %>-title" class="sr-only"><%= t("components.ask_ai.dialog_title") %></h2>
+
+      <%# Input form - posts to chats#create %>
+      <%= form_with model: Chat.new,
+                    url: form_url,
+                    class: "p-4",
+                    data: { turbo: true, "DS--ask-ai-target": "form" } do |f| %>
+
+        <%= f.hidden_field :ai_model, value: default_ai_model %>
+        <% if context.present? %>
+          <%= hidden_field_tag :page_context, context %>
+        <% end %>
+        <% if metadata.present? %>
+          <%= hidden_field_tag :metadata, sanitize_metadata_json %>
+        <% end %>
+
+        <div class="flex items-center gap-3">
+          <%= helpers.icon("sparkles", size: "md", class: "fg-primary shrink-0") %>
+          <%= f.text_area :content,
+                          placeholder: placeholder_text,
+                          class: input_classes,
+                          rows: 1,
+                          autofocus: true,
+                          data: {
+                            "DS--ask-ai-target": "input",
+                            action: "input->DS--ask-ai#autoResize keydown->DS--ask-ai#handleKeydown"
+                          } %>
+          <button type="submit"
+                  class="shrink-0"
+                  data-DS--ask-ai-target="submitButton"
+                  aria-label="<%= t("components.ask_ai.submit_label") %>">
+            <%= helpers.icon("arrow-up", as_button: true, type: "submit") %>
+          </button>
+        </div>
+      <% end %>
+
+      <%# Loading state - shown while submitting %>
+      <div class="hidden px-4 pb-4"
+           data-DS--ask-ai-target="loading">
+        <div class="flex items-center gap-3 text-secondary text-sm">
+          <div class="animate-spin">
+            <%= helpers.icon("loader-2", size: "sm") %>
+          </div>
+          <span><%= t("components.ask_ai.loading") %></span>
+        </div>
+      </div>
+
+      <%# Footer with keyboard hints %>
+      <div class="px-4 py-2 bg-surface border-t border-secondary flex items-center justify-between text-xs text-subdued">
+        <div class="flex items-center gap-4">
+          <span class="flex items-center gap-1">
+            <kbd class="px-1 py-0.5 bg-container rounded border border-secondary">Enter</kbd>
+            <%= t("components.ask_ai.hint_submit") %>
+          </span>
+          <span class="flex items-center gap-1">
+            <kbd class="px-1 py-0.5 bg-container rounded border border-secondary">Esc</kbd>
+            <%= t("components.ask_ai.hint_close") %>
+          </span>
+        </div>
+        <span><%= t("components.ask_ai.disclaimer") %></span>
+      </div>
+    </div>
+  </div>
+</div>
