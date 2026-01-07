@@ -317,13 +317,30 @@ class User < ApplicationRecord
     budget_email_preferences["warning_threshold"] || 90
   end
 
+  VALID_WARNING_THRESHOLDS = [ 75, 80, 85, 90, 95 ].freeze
+
   def update_budget_email_preferences(new_prefs)
     transaction do
       lock!
 
+      # Type-cast values to proper types
+      casted_prefs = new_prefs.stringify_keys.transform_values do |v|
+        case v
+        when "1", "true", true then true
+        when "0", "false", false then false
+        else
+          v.is_a?(String) && v.match?(/^\d+$/) ? v.to_i : v
+        end
+      end
+
+      # Validate warning_threshold
+      if casted_prefs.key?("warning_threshold") && !VALID_WARNING_THRESHOLDS.include?(casted_prefs["warning_threshold"])
+        casted_prefs["warning_threshold"] = 90  # Default to safe value
+      end
+
       updated_prefs = (preferences || {}).deep_dup
       updated_prefs["budget_email_settings"] ||= {}
-      updated_prefs["budget_email_settings"] = updated_prefs["budget_email_settings"].merge(new_prefs.stringify_keys)
+      updated_prefs["budget_email_settings"] = updated_prefs["budget_email_settings"].merge(casted_prefs)
 
       update!(preferences: updated_prefs)
     end

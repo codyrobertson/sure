@@ -1,4 +1,7 @@
 class BudgetAlertMailer < ApplicationMailer
+  helper ApplicationHelper
+  helper ActionView::Helpers::NumberHelper
+
   def budget_exceeded
     @user = params[:user]
     @budget = params[:budget]
