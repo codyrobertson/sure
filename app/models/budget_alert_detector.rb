@@ -58,7 +58,8 @@ class BudgetAlertDetector
   def detect_category_alerts
     alerts = []
 
-    budget.budget_categories.each do |bc|
+    # Eager load categories to prevent N+1 queries
+    budget.budget_categories.includes(:category).each do |bc|
       next if bc.budgeted_spending.nil? || bc.budgeted_spending.zero?
 
       percent_spent = bc.percent_of_budget_spent
@@ -174,14 +175,22 @@ class BudgetAlertDetector
   end
 
   def duplicate_exists?(alert_data)
-    # Check if an identical alert was dismissed recently (within same budget period)
-    budget.budget_alerts
+    # Check if an alert at the SAME OR HIGHER threshold was dismissed for this category
+    # This allows new alerts if spending increases to a higher threshold level
+    dismissed_alerts = budget.budget_alerts
       .dismissed
       .where(budget_category: alert_data[:budget_category])
-      .where(alert_type: alert_data[:alert_type])
       .where(period_start_date: budget.start_date)
       .where(period_end_date: budget.end_date)
-      .exists?
+
+    # If we're creating a higher severity alert than any dismissed ones, allow it
+    severity_order = { info: 0, warning: 1, critical: 2 }
+    new_severity = severity_order[alert_data[:severity]] || 0
+
+    dismissed_alerts.any? do |dismissed|
+      dismissed_severity = severity_order[dismissed.severity.to_sym] || 0
+      dismissed_severity >= new_severity
+    end
   end
 
   def build_metadata(alert_data)
