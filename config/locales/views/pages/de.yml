@@ -7,6 +7,7 @@ de:
       welcome: "Willkommen zurück, %{name}"
       subtitle: "Hier siehst du, was in deinen Finanzen passiert."
       new: "Neu"
+      compare_to_last: "Mit letztem Zeitraum vergleichen"
       net_worth_chart:
         data_not_available: Für den ausgewählten Zeitraum sind keine Daten verfügbar.
         title: Nettovermögen
@@ -19,6 +20,7 @@ de:
         add_accounts: "Füge deine %{name}-Konten hinzu, um eine vollständige Übersicht zu erhalten."
       cashflow_sankey:
         title: "Cashflow"
+        net_cashflow: "Netto-Cashflow"
         no_data_title: "Keine Cashflow-Daten für diesen Zeitraum"
         no_data_description: "Füge Transaktionen hinzu, um Cashflow-Daten anzuzeigen, oder erweitere den Zeitraum."
         add_transaction: "Transaktion hinzufügen"
