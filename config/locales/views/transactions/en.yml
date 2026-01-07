@@ -1,6 +1,7 @@
 ---
 en:
   transactions:
+    unknown_name: Unknown transaction
     selection_bar:
       edit: Edit
       merge: Merge duplicates
