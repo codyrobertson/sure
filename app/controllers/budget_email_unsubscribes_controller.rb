@@ -1,5 +1,5 @@
 class BudgetEmailUnsubscribesController < ApplicationController
-  skip_before_action :authenticate, only: %i[show create]
+  skip_authentication only: %i[show create]
   layout "auth"
 
   def show
