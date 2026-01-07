@@ -4,6 +4,8 @@ class BudgetCategory < ApplicationRecord
   belongs_to :budget
   belongs_to :category
 
+  has_many :budget_alerts, dependent: :destroy
+
   validates :budget_id, uniqueness: { scope: :category_id }
 
   monetize :budgeted_spending, :available_to_spend, :avg_monthly_expense, :median_monthly_expense, :actual_spending
