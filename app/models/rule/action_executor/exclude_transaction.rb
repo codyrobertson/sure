@@ -19,7 +19,8 @@ class Rule::ActionExecutor::ExcludeTransaction < Rule::ActionExecutor
       txn.entry.enrich_attribute(
         :excluded,
         true,
-        source: "rule"
+        source: "rule",
+        metadata: rule_metadata
       )
     end
   end

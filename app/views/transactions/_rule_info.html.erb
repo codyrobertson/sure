@@ -1,0 +1,31 @@
+<%# locals: (transaction:) %>
+
+<% if transaction.enriched_by_rule? %>
+  <div class="p-3 bg-violet-50 border border-violet-200 rounded-lg space-y-3">
+    <div class="flex items-center gap-2">
+      <%= icon "sparkles", size: "sm", class: "text-violet-600" %>
+      <h4 class="text-sm font-medium text-violet-800"><%= t('transactions.show.applied_rules') %></h4>
+    </div>
+
+    <p class="text-xs text-violet-600"><%= t('transactions.show.applied_rules_description') %></p>
+
+    <div class="space-y-2">
+      <% transaction.enriching_rules.each do |rule| %>
+        <div class="flex items-center justify-between gap-2 p-2 bg-white rounded border border-violet-100">
+          <div class="min-w-0">
+            <p class="text-sm font-medium text-primary truncate"><%= rule.name || rule.primary_condition_title %></p>
+            <% if rule.name.present? %>
+              <p class="text-xs text-secondary truncate"><%= rule.primary_condition_title %></p>
+            <% end %>
+          </div>
+          <%= link_to edit_rule_path(rule),
+                class: "flex-shrink-0 inline-flex items-center gap-1 text-xs font-medium text-violet-600 hover:text-violet-800",
+                data: { turbo_frame: :modal } do %>
+            <%= icon "external-link", size: "sm", color: "current" %>
+            <%= t('transactions.show.view_rule') %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

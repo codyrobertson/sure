@@ -18,7 +18,8 @@ class TransactionsController < ApplicationController
                        .includes(
                          { entry: :account },
                          :category, :merchant, :tags,
-                         :transfer_as_inflow, :transfer_as_outflow
+                         :transfer_as_inflow, :transfer_as_outflow,
+                         :data_enrichments
                        )
 
     @pagy, @transactions = pagy(base_scope, limit: per_page)

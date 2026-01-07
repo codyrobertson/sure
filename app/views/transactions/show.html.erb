@@ -51,6 +51,15 @@
       </div>
     <% end %>
 
+    <%# Rule info section - only shown if transaction was enriched by rules %>
+    <% if @entry.transaction.enriched_by_rule? %>
+      <% dialog.with_section(title: t(".applied_rules"), open: true) do %>
+        <div class="pb-4 px-3">
+          <%= render "transactions/rule_info", transaction: @entry.transaction %>
+        </div>
+      <% end %>
+    <% end %>
+
     <% dialog.with_section(title: t(".details")) do %>
       <div class="pb-4">
         <%= styled_form_with model: @entry,

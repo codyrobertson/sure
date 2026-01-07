@@ -24,7 +24,8 @@ class Rule::ActionExecutor::SetTransactionName < Rule::ActionExecutor
       txn.entry.enrich_attribute(
         :name,
         value,
-        source: "rule"
+        source: "rule",
+        metadata: rule_metadata
       )
     end
   end

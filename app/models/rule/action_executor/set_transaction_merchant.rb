@@ -21,7 +21,8 @@ class Rule::ActionExecutor::SetTransactionMerchant < Rule::ActionExecutor
       txn.enrich_attribute(
         :merchant_id,
         merchant.id,
-        source: "rule"
+        source: "rule",
+        metadata: rule_metadata
       )
     end
   end

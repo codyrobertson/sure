@@ -23,6 +23,8 @@ nb:
     show:
       account_label: Konto
       amount: Beløp
+      applied_rules: Anvendte regler
+      applied_rules_description: Denne transaksjonen har blitt endret av følgende regler.
       category_label: Kategori
       date_label: Dato
       delete: Slett
@@ -37,9 +39,13 @@ nb:
       note_label: Notater
       note_placeholder: Skriv et notat
       overview: Oversikt
+      rule_applied: Automatisk kategorisert
+      rule_applied_title: Automatisk kategorisert av regel
+      rule_applied_tooltip: "Kategori satt av regel: %{rule_name}"
       settings: Innstillinger
       tags_label: Tagger
       uncategorized: "(ukategorisert)"
+      view_rule: Vis regel
     header:
       edit_categories: Rediger kategorier
       edit_imports: Rediger importer

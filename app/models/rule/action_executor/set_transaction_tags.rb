@@ -21,7 +21,8 @@ class Rule::ActionExecutor::SetTransactionTags < Rule::ActionExecutor
       txn.enrich_attribute(
         :tag_ids,
         [ tag.id ],
-        source: "rule"
+        source: "rule",
+        metadata: rule_metadata
       )
     end
   end

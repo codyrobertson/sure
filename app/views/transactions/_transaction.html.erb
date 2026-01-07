@@ -86,6 +86,15 @@
                       </span>
                     <% end %>
 
+                    <%# Rule-applied indicator %>
+                    <% if transaction.enriched_by_rule? %>
+                      <% category_rule = transaction.category_rule %>
+                      <span class="inline-flex items-center gap-1 text-xs font-medium rounded-full px-1.5 py-0.5 bg-violet-50 border border-violet-200 text-violet-600" title="<%= category_rule ? t('transactions.show.rule_applied_tooltip', rule_name: category_rule.name || category_rule.primary_condition_title) : t('transactions.show.rule_applied_title') %>">
+                        <%= icon "sparkles", size: "sm", color: "current" %>
+                        <span class="hidden lg:inline"><%= t('transactions.show.rule_applied') %></span>
+                      </span>
+                    <% end %>
+
                     <% if transaction.transfer.present? %>
                       <%= render "transactions/transfer_match", transaction: transaction %>
                     <% end %>

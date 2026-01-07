@@ -23,6 +23,8 @@ ro:
     show:
       account_label: Cont
       amount: Sumă
+      applied_rules: Reguli aplicate
+      applied_rules_description: Această tranzacție a fost modificată de următoarele reguli.
       category_label: Categorie
       date_label: Dată
       delete: Șterge
@@ -36,9 +38,13 @@ ro:
       note_label: Notițe
       note_placeholder: Introdu o notiță
       overview: Prezentare generală
+      rule_applied: Categorizat automat
+      rule_applied_title: Categorizat automat prin regulă
+      rule_applied_tooltip: "Categoria setată prin regulă: %{rule_name}"
       settings: Setări
       tags_label: Etichete
       uncategorized: "(necategorizat)"
+      view_rule: Vezi regulă
     header:
       edit_categories: Editează categorii
       edit_imports: Editează importuri

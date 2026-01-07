@@ -23,6 +23,8 @@ tr:
     show:
       account_label: Hesap
       amount: Tutar
+      applied_rules: Uygulanan kurallar
+      applied_rules_description: Bu işlem aşağıdaki kurallar tarafından değiştirildi.
       category_label: Kategori
       date_label: Tarih
       delete: Sil
@@ -36,9 +38,13 @@ tr:
       note_label: Notlar
       note_placeholder: Not girin
       overview: Genel Bakış
+      rule_applied: Otomatik kategorize edildi
+      rule_applied_title: Kural tarafından otomatik kategorize edildi
+      rule_applied_tooltip: "Kategori kural tarafından ayarlandı: %{rule_name}"
       settings: Ayarlar
       tags_label: Etiketler
       uncategorized: "(kategorilendirilmemiş)"
+      view_rule: Kuralı görüntüle
     header:
       edit_categories: Kategorileri düzenle
       edit_imports: İçe aktarımları düzenle

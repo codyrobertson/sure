@@ -23,6 +23,8 @@ ca:
     show:
       account_label: Compte
       amount: Import
+      applied_rules: Regles aplicades
+      applied_rules_description: Aquesta transacció ha estat modificada per les següents regles.
       category_label: Categoria
       date_label: Data
       delete: Elimina
@@ -36,9 +38,13 @@ ca:
       note_label: Notes
       note_placeholder: Introdueix una nota
       overview: Resum
+      rule_applied: Auto-categoritzat
+      rule_applied_title: Auto-categoritzat per regla
+      rule_applied_tooltip: "Categoria establerta per regla: %{rule_name}"
       settings: Configuració
       tags_label: Etiquetes
       uncategorized: "(sense categoritzar)"
+      view_rule: Veure regla
     header:
       edit_categories: Edita categories
       edit_imports: Edita importacions
