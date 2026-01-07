@@ -1,0 +1,16 @@
+<%
+  header_title t(".title")
+%>
+
+<div class="space-y-4">
+  <p class="text-secondary"><%= t(".description", email: @user.email) %></p>
+
+  <%= styled_form_with url: budget_email_unsubscribe_path(token: params[:token]), method: :post, class: "space-y-4" do |form| %>
+    <%= form.submit t(".confirm_button"), class: "w-full" %>
+  <% end %>
+
+  <p class="text-sm text-secondary text-center">
+    <%= t(".change_mind") %>
+    <%= link_to t(".settings_link"), settings_notifications_path, class: "text-primary hover:underline" %>
+  </p>
+</div>

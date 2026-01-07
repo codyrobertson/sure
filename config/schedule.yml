@@ -30,3 +30,9 @@ detect_spending_anomalies:
   class: "DetectSpendingAnomaliesJob"
   queue: "scheduled"
   description: "Detects spending anomalies and creates alerts for all families"
+
+check_budget_alerts:
+  cron: "0 7 * * *" # every day at 7:00am
+  class: "BudgetAlertJob"
+  queue: "scheduled"
+  description: "Checks budget categories and sends email alerts for overspending"

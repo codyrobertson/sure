@@ -1,0 +1,13 @@
+---
+en:
+  budget_email_unsubscribes:
+    show:
+      title: Unsubscribe from Budget Alerts
+      description: "You are about to unsubscribe %{email} from budget alert emails."
+      confirm_button: Unsubscribe
+      change_mind: "Changed your mind? Manage your preferences in"
+      settings_link: Settings
+      invalid_token: This unsubscribe link is invalid or has expired.
+    create:
+      success: You have been unsubscribed from budget alert emails.
+      invalid_token: This unsubscribe link is invalid or has expired.

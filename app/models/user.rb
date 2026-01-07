@@ -24,6 +24,8 @@ class User < ApplicationRecord
 
   enum :role, { member: "member", admin: "admin", super_admin: "super_admin" }, validate: true
 
+  scope :active, -> { where(active: true) }
+
   has_one_attached :profile_image do |attachable|
     attachable.variant :thumbnail, resize_to_fill: [ 300, 300 ], convert: :webp, saver: { quality: 80 }
     attachable.variant :small, resize_to_fill: [ 72, 72 ], convert: :webp, saver: { quality: 80 }, preprocessed: true
@@ -37,6 +39,11 @@ class User < ApplicationRecord
 
   generates_token_for :email_confirmation, expires_in: 1.day do
     unconfirmed_email
+  end
+
+  generates_token_for :budget_email_unsubscribe, expires_in: 30.days do
+    # Include preferences hash to invalidate token if preferences change
+    budget_email_preferences.to_json
   end
 
   def pending_email_change?
@@ -286,6 +293,65 @@ class User < ApplicationRecord
     {
       "enabled" => true,
       "anomaly_threshold_percent" => 150
+    }
+  end
+
+  # Budget email preferences management
+  def budget_email_preferences
+    preferences&.[]("budget_email_settings") || default_budget_email_preferences
+  end
+
+  def budget_emails_enabled?
+    budget_email_preferences["enabled"] != false
+  end
+
+  def budget_exceeded_emails_enabled?
+    budget_emails_enabled? && budget_email_preferences["exceeded_alerts"] != false
+  end
+
+  def budget_warning_emails_enabled?
+    budget_emails_enabled? && budget_email_preferences["warning_alerts"] != false
+  end
+
+  def budget_warning_threshold
+    budget_email_preferences["warning_threshold"] || 90
+  end
+
+  VALID_WARNING_THRESHOLDS = [ 75, 80, 85, 90, 95 ].freeze
+
+  def update_budget_email_preferences(new_prefs)
+    transaction do
+      lock!
+
+      # Type-cast values to proper types
+      casted_prefs = new_prefs.stringify_keys.transform_values do |v|
+        case v
+        when "1", "true", true then true
+        when "0", "false", false then false
+        else
+          v.is_a?(String) && v.match?(/^\d+$/) ? v.to_i : v
+        end
+      end
+
+      # Validate warning_threshold
+      if casted_prefs.key?("warning_threshold") && !VALID_WARNING_THRESHOLDS.include?(casted_prefs["warning_threshold"])
+        casted_prefs["warning_threshold"] = 90  # Default to safe value
+      end
+
+      updated_prefs = (preferences || {}).deep_dup
+      updated_prefs["budget_email_settings"] ||= {}
+      updated_prefs["budget_email_settings"] = updated_prefs["budget_email_settings"].merge(casted_prefs)
+
+      update!(preferences: updated_prefs)
+    end
+  end
+
+  def default_budget_email_preferences
+    {
+      "enabled" => true,
+      "exceeded_alerts" => true,
+      "warning_alerts" => true,
+      "warning_threshold" => 90
     }
   end
 

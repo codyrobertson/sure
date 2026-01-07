@@ -1,0 +1,14 @@
+<%= t(".greeting", name: @user.first_name.presence || @user.display_name) %>
+
+<%= t(".intro", budget_name: @budget.name) %>
+
+<% @near_limit_categories.each do |bc| %>
+- <%= bc.name %>: <%= t(".budgeted") %> <%= format_money(bc.budgeted_spending_money) %>, <%= t(".spent") %> <%= format_money(bc.actual_spending_money) %>, <%= t(".remaining") %> <%= format_money(bc.available_to_spend_money) %> (<%= number_to_percentage(bc.percent_of_budget_spent, precision: 0) %>)
+<% end %>
+
+<%= t(".action_prompt") %>
+
+<%= t(".cta") %>: <%= budgets_url %>
+
+<%= t(".footer") %>
+<%= t(".unsubscribe") %>: <%= budget_email_unsubscribe_url(token: @user.generate_token_for(:budget_email_unsubscribe)) %>

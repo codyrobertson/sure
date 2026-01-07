@@ -1,0 +1,68 @@
+<%= content_for :page_title, t(".page_title") %>
+
+<%= settings_section title: t(".budget_alerts_title"), subtitle: t(".budget_alerts_subtitle") do %>
+  <%= styled_form_with url: settings_notifications_path,
+                       method: :patch,
+                       scope: :budget_email_settings,
+                       data: { controller: "auto-submit-form", auto_submit_form_trigger_event_value: "change" } do |form| %>
+    <div class="space-y-4">
+      <div class="flex items-center justify-between p-3 shadow-border-xs bg-container rounded-lg">
+        <div class="space-y-1">
+          <p class="text-sm font-medium text-primary"><%= t(".enable_budget_emails") %></p>
+          <p class="text-secondary text-sm"><%= t(".enable_budget_emails_description") %></p>
+        </div>
+        <%= form.toggle :enabled,
+            checked: @user.budget_emails_enabled?,
+            data: { auto_submit_form_target: "auto" } %>
+      </div>
+
+      <div class="ml-4 space-y-4" data-budget-emails-enabled="<%= @user.budget_emails_enabled? %>">
+        <div class="flex items-center justify-between p-3 shadow-border-xs bg-container rounded-lg">
+          <div class="space-y-1">
+            <p class="text-sm font-medium text-primary"><%= t(".exceeded_alerts") %></p>
+            <p class="text-secondary text-sm"><%= t(".exceeded_alerts_description") %></p>
+          </div>
+          <%= form.toggle :exceeded_alerts,
+              checked: @user.budget_exceeded_emails_enabled?,
+              disabled: !@user.budget_emails_enabled?,
+              data: { auto_submit_form_target: "auto" } %>
+        </div>
+
+        <div class="flex items-center justify-between p-3 shadow-border-xs bg-container rounded-lg">
+          <div class="space-y-1">
+            <p class="text-sm font-medium text-primary"><%= t(".warning_alerts") %></p>
+            <p class="text-secondary text-sm"><%= t(".warning_alerts_description") %></p>
+          </div>
+          <%= form.toggle :warning_alerts,
+              checked: @user.budget_warning_emails_enabled?,
+              disabled: !@user.budget_emails_enabled?,
+              data: { auto_submit_form_target: "auto" } %>
+        </div>
+
+        <div class="p-3 shadow-border-xs bg-container rounded-lg">
+          <div class="space-y-3">
+            <div class="space-y-1">
+              <p class="text-sm font-medium text-primary"><%= t(".warning_threshold") %></p>
+              <p class="text-secondary text-sm"><%= t(".warning_threshold_description") %></p>
+            </div>
+            <div class="form-field w-32">
+              <%= form.select :warning_threshold,
+                  options_for_select(
+                    [
+                      ["75%", 75],
+                      ["80%", 80],
+                      ["85%", 85],
+                      ["90%", 90],
+                      ["95%", 95]
+                    ],
+                    @user.budget_warning_threshold
+                  ),
+                  { label: false },
+                  { disabled: !@user.budget_emails_enabled?, data: { auto_submit_form_target: "auto" } } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

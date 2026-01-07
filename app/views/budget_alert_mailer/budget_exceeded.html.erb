@@ -1,0 +1,33 @@
+<h1><%= t(".greeting", name: @user.first_name.presence || @user.display_name) %></h1>
+
+<p><%= t(".intro", budget_name: @budget.name) %></p>
+
+<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+  <thead>
+    <tr style="border-bottom: 2px solid #e2e8f0;">
+      <th style="text-align: left; padding: 8px 0; color: #64748b; font-size: 14px;"><%= t(".category_header") %></th>
+      <th style="text-align: right; padding: 8px 0; color: #64748b; font-size: 14px;"><%= t(".budgeted_header") %></th>
+      <th style="text-align: right; padding: 8px 0; color: #64748b; font-size: 14px;"><%= t(".spent_header") %></th>
+      <th style="text-align: right; padding: 8px 0; color: #64748b; font-size: 14px;"><%= t(".over_by_header") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @over_budget_categories.each do |bc| %>
+      <tr style="border-bottom: 1px solid #e2e8f0;">
+        <td style="padding: 12px 0; font-weight: 500;"><%= bc.name %></td>
+        <td style="text-align: right; padding: 12px 0;"><%= format_money(bc.budgeted_spending_money) %></td>
+        <td style="text-align: right; padding: 12px 0;"><%= format_money(bc.actual_spending_money) %></td>
+        <td style="text-align: right; padding: 12px 0; color: #dc2626; font-weight: 600;"><%= format_money(bc.available_to_spend_money.abs) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p><%= t(".action_prompt") %></p>
+
+<%= link_to t(".cta"), budgets_url, class: "button" %>
+
+<p class="footer">
+  <%= t(".footer") %>
+  <%= link_to t(".unsubscribe"), budget_email_unsubscribe_url(token: @user.generate_token_for(:budget_email_unsubscribe)), style: "color: #64748b;" %>
+</p>
