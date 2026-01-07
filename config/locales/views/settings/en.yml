@@ -89,6 +89,21 @@ en:
     securities:
       show:
         page_title: Security
+    notifications:
+      show:
+        page_title: Notifications
+        budget_alerts_title: Budget Email Alerts
+        budget_alerts_subtitle: Get notified when you're overspending or approaching budget limits
+        enable_budget_emails: Enable budget email alerts
+        enable_budget_emails_description: Receive email notifications about your budget status
+        exceeded_alerts: Over-budget alerts
+        exceeded_alerts_description: Get notified when a budget category exceeds its limit
+        warning_alerts: Warning alerts
+        warning_alerts_description: Get notified when a budget category is approaching its limit
+        warning_threshold: Warning threshold
+        warning_threshold_description: Get warned when you've used this percentage of your budget
+      update:
+        success: Notification preferences updated successfully
     settings_nav:
       accounts_label: Accounts
       advanced_section_title: Advanced
@@ -102,6 +117,7 @@ en:
       logout: Logout
       merchants_label: Merchants
       guides_label: Guides
+      notifications_label: Notifications
       other_section_title: More
       preferences_label: Preferences
       profile_label: Profile Info

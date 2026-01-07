@@ -276,4 +276,80 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.dashboard_section_collapsed?("net_worth_chart"),
       "Should return false when section key is missing from collapsed_sections"
   end
+
+  # Budget email preferences tests
+  test "budget_email_preferences returns defaults when not set" do
+    @user.update!(preferences: {})
+
+    prefs = @user.budget_email_preferences
+    assert_equal true, prefs["enabled"]
+    assert_equal true, prefs["exceeded_alerts"]
+    assert_equal true, prefs["warning_alerts"]
+    assert_equal 90, prefs["warning_threshold"]
+  end
+
+  test "budget_emails_enabled? returns true by default" do
+    @user.update!(preferences: {})
+    assert @user.budget_emails_enabled?
+  end
+
+  test "budget_emails_enabled? returns false when disabled" do
+    @user.update_budget_email_preferences("enabled" => false)
+    assert_not @user.budget_emails_enabled?
+  end
+
+  test "budget_exceeded_emails_enabled? respects both master and exceeded toggle" do
+    @user.update!(preferences: {})
+
+    # Both enabled by default
+    assert @user.budget_exceeded_emails_enabled?
+
+    # Disable exceeded alerts only
+    @user.update_budget_email_preferences("exceeded_alerts" => false)
+    assert_not @user.budget_exceeded_emails_enabled?
+
+    # Re-enable exceeded but disable master
+    @user.update_budget_email_preferences("exceeded_alerts" => true, "enabled" => false)
+    assert_not @user.budget_exceeded_emails_enabled?
+  end
+
+  test "budget_warning_emails_enabled? respects both master and warning toggle" do
+    @user.update!(preferences: {})
+
+    # Both enabled by default
+    assert @user.budget_warning_emails_enabled?
+
+    # Disable warning alerts only
+    @user.update_budget_email_preferences("warning_alerts" => false)
+    assert_not @user.budget_warning_emails_enabled?
+
+    # Re-enable warning but disable master
+    @user.update_budget_email_preferences("warning_alerts" => true, "enabled" => false)
+    assert_not @user.budget_warning_emails_enabled?
+  end
+
+  test "budget_warning_threshold returns custom value when set" do
+    @user.update!(preferences: {})
+    assert_equal 90, @user.budget_warning_threshold
+
+    @user.update_budget_email_preferences("warning_threshold" => 75)
+    assert_equal 75, @user.budget_warning_threshold
+  end
+
+  test "update_budget_email_preferences merges with existing preferences" do
+    @user.update!(preferences: { "other_setting" => "value" })
+
+    @user.update_budget_email_preferences("enabled" => false)
+    @user.reload
+
+    assert_equal "value", @user.preferences["other_setting"]
+    assert_not @user.budget_emails_enabled?
+
+    # Update another setting, should preserve enabled=false
+    @user.update_budget_email_preferences("warning_threshold" => 80)
+    @user.reload
+
+    assert_not @user.budget_emails_enabled?
+    assert_equal 80, @user.budget_warning_threshold
+  end
 end

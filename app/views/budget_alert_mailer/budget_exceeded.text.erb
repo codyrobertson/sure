@@ -1,0 +1,13 @@
+<%= t(".greeting", name: @user.first_name.presence || @user.display_name) %>
+
+<%= t(".intro", budget_name: @budget.name) %>
+
+<% @over_budget_categories.each do |bc| %>
+- <%= bc.name %>: <%= t(".budgeted") %> <%= format_money(bc.budgeted_spending_money) %>, <%= t(".spent") %> <%= format_money(bc.actual_spending_money) %>, <%= t(".over_by") %> <%= format_money(bc.available_to_spend_money.abs) %>
+<% end %>
+
+<%= t(".action_prompt") %>
+
+<%= t(".cta") %>: <%= budgets_url %>
+
+<%= t(".footer") %>

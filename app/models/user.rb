@@ -289,6 +289,48 @@ class User < ApplicationRecord
     }
   end
 
+  # Budget email preferences management
+  def budget_email_preferences
+    preferences&.[]("budget_email_settings") || default_budget_email_preferences
+  end
+
+  def budget_emails_enabled?
+    budget_email_preferences["enabled"] != false
+  end
+
+  def budget_exceeded_emails_enabled?
+    budget_emails_enabled? && budget_email_preferences["exceeded_alerts"] != false
+  end
+
+  def budget_warning_emails_enabled?
+    budget_emails_enabled? && budget_email_preferences["warning_alerts"] != false
+  end
+
+  def budget_warning_threshold
+    budget_email_preferences["warning_threshold"] || 90
+  end
+
+  def update_budget_email_preferences(new_prefs)
+    transaction do
+      lock!
+
+      updated_prefs = (preferences || {}).deep_dup
+      updated_prefs["budget_email_settings"] ||= {}
+      updated_prefs["budget_email_settings"] = updated_prefs["budget_email_settings"].merge(new_prefs.stringify_keys)
+
+      update!(preferences: updated_prefs)
+    end
+  end
+
+  def default_budget_email_preferences
+    {
+      "enabled" => true,
+      "exceeded_alerts" => true,
+      "warning_alerts" => true,
+      "warning_threshold" => 90
+    }
+  end
+
   private
     def default_dashboard_section_order
       %w[spending_alerts cashflow_sankey outflows_donut inflows_donut net_worth_chart balance_sheet]
