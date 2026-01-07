@@ -24,6 +24,8 @@ class User < ApplicationRecord
 
   enum :role, { member: "member", admin: "admin", super_admin: "super_admin" }, validate: true
 
+  scope :active, -> { where(active: true) }
+
   has_one_attached :profile_image do |attachable|
     attachable.variant :thumbnail, resize_to_fill: [ 300, 300 ], convert: :webp, saver: { quality: 80 }
     attachable.variant :small, resize_to_fill: [ 72, 72 ], convert: :webp, saver: { quality: 80 }, preprocessed: true

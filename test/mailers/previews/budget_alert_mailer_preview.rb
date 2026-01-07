@@ -1,9 +1,9 @@
 # Preview all emails at http://localhost:3000/rails/mailers/budget_alert_mailer
 class BudgetAlertMailerPreview < ActionMailer::Preview
   def budget_exceeded
-    user = User.first
-    family = user.family
-    budget = Budget.find_or_bootstrap(family, start_date: Date.current)
+    user = User.first || preview_user
+    family = user.family || preview_family
+    budget = Budget.find_or_bootstrap(family, start_date: Date.current) || preview_budget
 
     # Find categories that are over budget, or create mock ones
     over_budget_categories = budget.budget_categories.select(&:over_budget?)
@@ -34,9 +34,9 @@ class BudgetAlertMailerPreview < ActionMailer::Preview
   end
 
   def budget_warning
-    user = User.first
-    family = user.family
-    budget = Budget.find_or_bootstrap(family, start_date: Date.current)
+    user = User.first || preview_user
+    family = user.family || preview_family
+    budget = Budget.find_or_bootstrap(family, start_date: Date.current) || preview_budget
 
     # Find categories near limit, or create mock ones
     near_limit_categories = budget.budget_categories.select(&:near_limit?)
@@ -66,5 +66,29 @@ class BudgetAlertMailerPreview < ActionMailer::Preview
       budget: budget,
       near_limit_categories: near_limit_categories
     ).budget_warning
+  end
+
+  private
+
+  def preview_user
+    OpenStruct.new(
+      first_name: "Preview",
+      email: "preview@example.com",
+      display_name: "Preview User",
+      family: preview_family
+    )
+  end
+
+  def preview_family
+    OpenStruct.new(
+      currency: "USD"
+    )
+  end
+
+  def preview_budget
+    OpenStruct.new(
+      name: "January 2026",
+      budget_categories: []
+    )
   end
 end
