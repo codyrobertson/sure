@@ -45,13 +45,17 @@ module ChatsHelper
 
   private
 
+  FALLBACK_ICONS = {
+    spending_breakdown: "pie-chart",
+    net_worth_trend: "trending-up",
+    recurring_expenses: "repeat",
+    financial_health: "sparkles",
+    categorize_transactions: "tag"
+  }.freeze
+
   def fallback_suggestions
-    [
-      { icon: "pie-chart", text: "Show my spending breakdown" },
-      { icon: "trending-up", text: "How is my net worth trending?" },
-      { icon: "repeat", text: "What are my recurring expenses?" },
-      { icon: "sparkles", text: "Give me a financial health checkup" },
-      { icon: "tag", text: "Help me categorize transactions" }
-    ]
+    FALLBACK_ICONS.map do |key, icon|
+      { icon: icon, text: I18n.t("ai_prompts.fallback.#{key}") }
+    end
   end
 end
